@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { scoreAttempt } from '../domain/scoring'
-import { closeAttempt, createAttempt, inspectDecoy, submitHazardAnswer } from '../domain/session'
+import { closeAttempt, createAttempt, inspectDecoy, setAttemptMode, submitHazardAnswer } from '../domain/session'
 import { readStoredSession, writeStoredSession } from '../domain/storage'
 import { SessionContext, type SessionApi, type SessionState } from './session-context'
 
@@ -29,8 +29,14 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const api: SessionApi = {
     ...state,
-    startAttempt() {
-      replace({ attempt: createAttempt('2d'), result: null, restoreError: false })
+    startAttempt(mode) {
+      replace({ attempt: createAttempt(mode), result: null, restoreError: false })
+    },
+    setMode(mode) {
+      const current = stateRef.current
+      if (!current.attempt) return
+      const attempt = setAttemptMode(current.attempt, mode)
+      if (attempt !== current.attempt) replace({ ...current, attempt })
     },
     submitAnswer(hazardId, choiceId) {
       const current = stateRef.current

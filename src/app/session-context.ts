@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import type { AssessmentResult, Attempt, SubmitStatus } from '../domain/types'
+import type { AssessmentResult, Attempt, SceneMode, SubmitStatus } from '../domain/types'
 
 export type SessionState = {
   attempt: Attempt | null
@@ -8,7 +8,8 @@ export type SessionState = {
 }
 
 export type SessionApi = SessionState & {
-  startAttempt: () => void
+  startAttempt: (mode: SceneMode) => void
+  setMode: (mode: SceneMode) => void
   submitAnswer: (hazardId: string, choiceId: string) => SubmitStatus
   markDecoy: (decoyId: string) => void
   finishAttempt: () => AssessmentResult | null

@@ -22,10 +22,8 @@ export function ResultsSummary({ result, attempt }: ResultsSummaryProps) {
         <div className="score-copy">
           <p className="eyebrow">Your Training Snapshot</p>
           <h1>Score: {result.score} / 100</h1>
-          <p className="score-label">
-            {scoreLabel(result.score)}
-            <span> Prototype label, not a certification.</span>
-          </p>
+          <p className="score-label">{scoreLabel(result.score)}</p>
+          <p className="score-note">Prototype label, not a certification.</p>
           <p>
             Hazards identified: {result.identifiedHazards} / {result.totalHazards}
           </p>

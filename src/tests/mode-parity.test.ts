@@ -45,7 +45,7 @@ describe('3D rings use the shared scenario positions', () => {
     const html = warehouseMarkup(spots, true)
     for (const spot of spots) {
       expect(html).toContain(`data-hotspot="${spot.id}"`)
-      expect(html).toContain(`position="${spot.hotspot.x} ${spot.hotspot.y + 0.65} ${spot.hotspot.z}"`)
+      expect(html).toContain(`position="${spot.hotspot.x} 0 ${spot.hotspot.z}"`)
     }
   })
 })

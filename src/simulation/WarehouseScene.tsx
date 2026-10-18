@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import 'aframe'
 import { DECOYS } from '../domain/decoys'
 import { WAREHOUSE_HAZARDS } from '../domain/hazards'
+import { ESTABLISHING_VIEW, GLIDE_START, RESET_VIEW_EVENT } from './cameraPose'
+import { SceneLoading } from './SceneLoading'
+import { registerSceneComponents } from './sceneComponents'
 import { warehouseMarkup } from './warehouseMarkup'
 
 type WarehouseSceneProps = {
@@ -14,12 +17,8 @@ type WarehouseSceneProps = {
 
 type SceneEl = HTMLElement & {
   pause?: () => void
-  renderer?: { dispose?: () => void }
-}
-
-type AFrameApi = {
-  components: Record<string, unknown>
-  registerComponent: (name: string, definition: object) => void
+  renderer?: { dispose?: () => void; xr?: { enabled: boolean } }
+  querySelector: (selector: string) => HTMLElement | null
 }
 
 /**
@@ -28,7 +27,7 @@ type AFrameApi = {
  * React does not own the <a-scene> tree. Camera movement stays inside A-Frame
  * so a look or a step does not re-render the page. Listeners are removed when
  * the component unmounts. StrictMode runs the effect twice; the first scene
- * is removed before the second one is created, and room-bounds is registered once.
+ * is removed before the second one is created.
  */
 export function WarehouseScene({
   assessedIds,
@@ -40,6 +39,7 @@ export function WarehouseScene({
   const hostRef = useRef<HTMLDivElement>(null)
   const onSelectRef = useRef(onSelect)
   const onUnavailableRef = useRef(onUnavailable)
+  const reducedRef = useRef(reducedMotion)
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
@@ -49,6 +49,10 @@ export function WarehouseScene({
   useEffect(() => {
     onUnavailableRef.current = onUnavailable
   }, [onUnavailable])
+
+  useEffect(() => {
+    reducedRef.current = reducedMotion
+  }, [reducedMotion])
 
   useEffect(() => {
     const host = hostRef.current
@@ -68,39 +72,66 @@ export function WarehouseScene({
       listeners.push({ type, fn })
     }
 
+    function onResetView() {
+      const camera = scene?.querySelector('[data-camera]')
+      if (!camera) return
+      camera.setAttribute('room-bounds', 'walking: false')
+      camera.setAttribute('look-controls', 'enabled: false')
+      if (reducedRef.current) {
+        camera.setAttribute('position', ESTABLISHING_VIEW.position)
+        camera.setAttribute('rotation', ESTABLISHING_VIEW.rotation)
+        return
+      }
+      camera.removeAttribute('pose-glide')
+      camera.setAttribute('pose-glide', 'dur: 900')
+    }
+
     const timeout = window.setTimeout(fail, 12000)
 
     try {
-      registerRoomBounds()
+      registerSceneComponents()
       scene = document.createElement('a-scene') as SceneEl
       scene.setAttribute('embedded', '')
-      scene.setAttribute('renderer', 'antialias: true; colorManagement: true; toneMapping: no')
+      scene.setAttribute('renderer', 'antialias: true; colorManagement: true; toneMapping: no; logarithmicDepthBuffer: false')
       scene.setAttribute('vr-mode-ui', 'enabled: false')
       scene.setAttribute('device-orientation-permission-ui', 'enabled: false')
       scene.setAttribute('keyboard-shortcuts', 'enterVR: false')
       scene.setAttribute('loading-screen', 'enabled: false')
-      scene.setAttribute('background', 'color: #0B1220')
-      scene.setAttribute('fog', 'type: linear; color: #0B1220; near: 12; far: 26')
+      scene.setAttribute('background', 'color: #163047')
+      scene.setAttribute('fog', 'type: linear; color: #163047; near: 10; far: 26')
       // Fill the scene before it joins the document. A-Frame looks for a camera
       // during connectedCallback. If the camera is added afterwards, that search
       // creates a default camera, our markup replaces it, and "loaded" never fires.
       scene.innerHTML = `
         ${warehouseMarkup(sceneSpots(), reducedMotion)}
-        <a-entity data-camera position="0.6 1.6 3.1" camera="fov: 68" ${cameraControls(reducedMotion)} room-bounds>
-          <a-entity cursor="rayOrigin: mouse" raycaster="objects: .hotspot"></a-entity>
-        </a-entity>
+        ${cameraMarkup(reducedMotion)}
       `
       listen('loaded', () => {
-        if (!alive) return
+        if (!alive || !scene) return
         window.clearTimeout(timeout)
+        // The screenshot component reads pixels back from the GPU. We never take
+        // those shots, and the raycaster only needs the marker meshes.
+        scene.removeAttribute('screenshot')
+        if (scene.renderer?.xr) scene.renderer.xr.enabled = false
         setReady(true)
+      })
+      listen('glide-ended', (event) => {
+        const camera = event.target
+        if (!(camera instanceof HTMLElement) || !camera.hasAttribute('data-camera')) return
+        if (reducedRef.current) return
+        // look-controls keeps its own yaw. Copy the shot we just eased into, or the
+        // next frame snaps the camera back to looking straight ahead.
+        syncLookControls(camera)
+        camera.setAttribute('look-controls', 'enabled: true')
+        camera.setAttribute('floor-walk', 'enabled: true')
       })
       listen('click', (event) => {
         const id = hotspotId(event.target)
         if (id) onSelectRef.current(id)
       })
-      listen('mouseenter', (event) => scaleHotspot(event.target, '1.16 1.16 1.16'))
+      listen('mouseenter', (event) => scaleHotspot(event.target, '1.12 1.12 1.12'))
       listen('mouseleave', (event) => scaleHotspot(event.target, '1 1 1'))
+      window.addEventListener(RESET_VIEW_EVENT, onResetView)
       host.appendChild(scene)
     } catch {
       window.clearTimeout(timeout)
@@ -110,6 +141,7 @@ export function WarehouseScene({
     return () => {
       alive = false
       window.clearTimeout(timeout)
+      window.removeEventListener(RESET_VIEW_EVENT, onResetView)
       setReady(false)
       if (scene) {
         for (const item of listeners) scene.removeEventListener(item.type, item.fn)
@@ -131,12 +163,14 @@ export function WarehouseScene({
     const inspected = new Set(inspectedIds)
     host.querySelectorAll<HTMLElement>('[data-hotspot]').forEach((node) => {
       const id = node.getAttribute('data-hotspot') ?? ''
-      const kind = node.getAttribute('data-kind')
       const done = assessed.has(id) || inspected.has(id)
-      const color = done ? '#42DDC5' : kind === 'decoy' ? '#D5E4F2' : '#F2C46D'
-      node.querySelectorAll('.hotspot').forEach((mesh) => {
+      const color = done ? '#42DDC5' : '#F2C46D'
+      node.querySelectorAll('.marker-ring, .marker-glow').forEach((mesh) => {
         mesh.setAttribute('color', color)
       })
+      const badge = node.querySelector('.badge-face')
+      const src = done ? node.getAttribute('data-check') : node.getAttribute('data-badge')
+      if (badge && src) badge.setAttribute('src', src)
     })
   }, [ready, assessedKey, inspectedKey, assessedIds, inspectedIds])
 
@@ -144,11 +178,7 @@ export function WarehouseScene({
     <div className="scene-3d-frame">
       {/* React must not render children into this node, or it will delete the scene. */}
       <div className="scene-3d-host" ref={hostRef} aria-hidden="true" />
-      {ready ? null : (
-        <p className="scene-loading" role="status">
-          Loading the 3D warehouse…
-        </p>
-      )}
+      {ready ? null : <SceneLoading />}
     </div>
   )
 }
@@ -160,9 +190,20 @@ function sceneSpots() {
   ]
 }
 
-function cameraControls(reducedMotion: boolean): string {
-  if (reducedMotion) return ''
-  return 'look-controls="pointerLockEnabled: false; magicWindowTrackingEnabled: false" wasd-controls="fly: false; acceleration: 16"'
+function cameraMarkup(reducedMotion: boolean): string {
+  const cursor = `<a-entity cursor="rayOrigin: mouse; fuse: false; mouseCursorStylesEnabled: false" raycaster="objects: .hotspot; interval: 120; far: 24"></a-entity>`
+  if (reducedMotion) {
+    return `
+      <a-entity data-camera position="${ESTABLISHING_VIEW.position}" rotation="${ESTABLISHING_VIEW.rotation}" camera="fov: 58" room-bounds>
+        ${cursor}
+      </a-entity>
+    `
+  }
+  return `
+    <a-entity data-camera position="${GLIDE_START.position}" rotation="${GLIDE_START.rotation}" camera="fov: 58" look-controls="enabled: false; pointerLockEnabled: false; magicWindowTrackingEnabled: false" floor-walk="enabled: false" room-bounds pose-glide="dur: 1200">
+      ${cursor}
+    </a-entity>
+  `
 }
 
 function hotspotId(target: EventTarget | null): string | null {
@@ -176,17 +217,15 @@ function scaleHotspot(target: EventTarget | null, scale: string) {
   root?.setAttribute('scale', scale)
 }
 
-/** Keeps the camera inside the room without a physics engine. */
-function registerRoomBounds() {
-  const aframe = (window as Window & { AFRAME?: AFrameApi }).AFRAME
-  if (!aframe || aframe.components['room-bounds']) return
-  aframe.registerComponent('room-bounds', {
-    tick(this: { el: { object3D?: { position: { x: number; y: number; z: number } } } }) {
-      const position = this.el.object3D?.position
-      if (!position) return
-      position.x = Math.min(5.3, Math.max(-5.3, position.x))
-      position.z = Math.min(3.3, Math.max(-4.6, position.z))
-      position.y = 1.6
-    },
-  })
+function syncLookControls(camera: HTMLElement) {
+  const look = (camera as HTMLElement & { components?: Record<string, LookControls> }).components?.['look-controls']
+  const rotation = (camera as HTMLElement & { object3D?: { rotation: { x: number; y: number } } }).object3D?.rotation
+  if (!look?.pitchObject || !look.yawObject || !rotation) return
+  look.pitchObject.rotation.x = rotation.x
+  look.yawObject.rotation.y = rotation.y
+}
+
+type LookControls = {
+  pitchObject?: { rotation: { x: number } }
+  yawObject?: { rotation: { y: number } }
 }

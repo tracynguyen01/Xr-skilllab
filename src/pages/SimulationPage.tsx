@@ -19,7 +19,9 @@ import { DECOYS, getDecoy } from '../domain/decoys'
 import { getHazard, WAREHOUSE_HAZARDS } from '../domain/hazards'
 import { elapsedSeconds, formatElapsed } from '../domain/time'
 import type { Attempt, SceneMode } from '../domain/types'
+import { RESET_VIEW_EVENT } from '../simulation/cameraPose'
 import { highlightHotspot } from '../simulation/hotspotHighlight'
+import { SceneLoading } from '../simulation/SceneLoading'
 import { InspectionList, Warehouse2D, WarehousePreview } from '../simulation/Warehouse2D'
 import { canUseWebGL, prefersReducedMotion } from '../simulation/webgl'
 import { primaryView } from '../simulation/viewChoice'
@@ -160,7 +162,13 @@ function ActiveSimulation({
     <section className={show3d ? 'wrap sim-layout is-3d' : 'wrap sim-layout'}>
       <div className="sim-stage">
         {show3d ? (
-          <Suspense fallback={<SceneLoading />}>
+          <Suspense
+            fallback={
+              <div className="scene-3d-frame">
+                <SceneLoading />
+              </div>
+            }
+          >
             <WarehouseScene
               assessedIds={Object.keys(attempt.answers)}
               inspectedIds={attempt.inspectedDecoyIds}
@@ -218,6 +226,11 @@ function ActiveSimulation({
         <h2 className="list-heading">How to move</h2>
         <p>{show3d ? SCENE_INSTRUCTIONS_3D : SCENE_INSTRUCTIONS_2D}</p>
         {show3d && reducedMotion ? <p className="note">{REDUCED_MOTION_NOTE}</p> : null}
+        {show3d ? (
+          <button type="button" className="btn btn-secondary view-reset" onClick={() => window.dispatchEvent(new Event(RESET_VIEW_EVENT))}>
+            Reset view
+          </button>
+        ) : null}
         <h2 className="list-heading">Action history</h2>
         <ActionHistory attempt={attempt} />
         <div className="panel-actions">
@@ -293,16 +306,6 @@ function ActionHistory({ attempt }: { attempt: Attempt }) {
         <li key={item}>{item}</li>
       ))}
     </ul>
-  )
-}
-
-function SceneLoading() {
-  return (
-    <div className="scene-3d-frame">
-      <p className="scene-loading" role="status">
-        Loading the 3D warehouse…
-      </p>
-    </div>
   )
 }
 

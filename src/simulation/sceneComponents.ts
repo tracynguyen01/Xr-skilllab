@@ -51,9 +51,9 @@ function registerFaceCamera(aframe: AFrameApi) {
       const camera = this.el.sceneEl?.camera
       if (!camera || !lookTarget) return
       camera.getWorldPosition(lookTarget)
+      // A plane's front is +Z. Object3D.lookAt points that +Z at the target.
+      // A camera looks down -Z, so an extra half-turn here would hide the number.
       this.el.object3D.lookAt(lookTarget)
-      // A plane shows its front on +Z. lookAt aims -Z at the camera, so turn it around.
-      this.el.object3D.rotateY(Math.PI)
     },
   })
 }

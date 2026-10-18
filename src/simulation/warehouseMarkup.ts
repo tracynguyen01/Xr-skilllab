@@ -56,7 +56,7 @@ export function warehouseMarkup(spots: readonly Spot[], reducedMotion: boolean):
 
 function floor(): string {
   return `
-    <a-box width="12.2" height="0.16" depth="10.2" position="0 -0.08 -1" material="color: #314862; roughness: 0.86"></a-box>
+    <a-box width="12.2" height="0.16" depth="14.2" position="0 -0.08 1" material="color: #314862; roughness: 0.86"></a-box>
     <a-box width="1.7" height="0.02" depth="8.6" position="0.7 0.012 -0.6" material="color: #3d5674; roughness: 0.75"></a-box>
     <a-box width="0.045" height="0.025" depth="8.6" position="-0.12 0.03 -0.6" material="color: ${GOLD}; roughness: 0.45"></a-box>
     <a-box width="0.045" height="0.025" depth="8.6" position="1.52 0.03 -0.6" material="color: ${GOLD}; roughness: 0.45"></a-box>

@@ -1,12 +1,12 @@
 # XR SkillLab
 
-Independent educational prototype. A visitor inspects an illustrated warehouse, chooses a response for four safety hazards, and gets a transparent score plus offline Scenario Coach feedback.
+Independent educational prototype. A visitor inspects a warehouse in 3D or in an accessible 2D view, chooses a response for four safety hazards, and gets a transparent score plus offline Scenario Coach feedback.
 
 This is not a Next XR Group product, not an accredited safety course, and not a certified assessment.
 
 **Developer:** Tracy Nguyen · [github.com/tracynguyen01](https://github.com/tracynguyen01)
 
-The intended GitHub Pages address, after the site is published, is:
+The published site is:
 
 https://tracynguyen01.github.io/Xr-skilllab/
 
@@ -16,11 +16,13 @@ The repository name is case-sensitive. Do not deploy this as `/xr-skilllab/`.
 
 - Homepage, simulation, results, How It Works, Project Story, About, and a 404 page
 - Keyboard-accessible 2D Warehouse Safety Challenge
+- A-Frame warehouse on the same hazards and the same score, loaded only when 3D opens
+- Drag to look, WASD or arrow keys to move, and an inspection list that does not need a mouse
 - Deterministic score: 15 points for assessing a hazard, plus 10 for the preferred action, once per hazard
 - Offline Scenario Coach. No AI service and no network call
 - Same-tab session storage, with an in-memory fallback
 
-3D mode is not built. The simulation says so. The hazard list and scoring functions are ready for a later A-Frame scene to call.
+On a wide screen with WebGL, the intro offers **Begin in 3D** first. On a narrow screen it offers the 2D inspector first, with **Try 3D**. If WebGL is missing, the page says 3D is not available and the 2D exercise is the whole task. Switching views does not clear answers.
 
 ## Setup
 
@@ -46,7 +48,7 @@ npm run build
 npm run preview
 ```
 
-`npm run lint` uses oxlint. `npm run test` uses Vitest. `npm run test:e2e` builds the site and runs a Playwright check that the page does not scroll sideways at common widths.
+`npm run lint` uses oxlint. `npm run test` uses Vitest. `npm run test:e2e` builds the site and runs Playwright checks: no sideways scroll, the 3D scene loading, a finished 3D attempt, and the WebGL fallback.
 
 ## Architecture
 
@@ -58,6 +60,7 @@ See [docs/architecture.md](docs/architecture.md). Short version:
 - Attempt rules in `src/domain/session.ts`
 - Offline coach in `src/domain/coach.ts`
 - 2D illustration and buttons share positions in `src/simulation/sceneObjects.ts`
+- 3D rings use `hotspot` on each hazard and decoy. `src/simulation/WarehouseScene.tsx` is loaded only for the 3D view
 
 The score is rules, not a model. A future AI Worker must not change it.
 
@@ -74,7 +77,7 @@ One-time repository setting, if it is not already set:
 2. Go to **Settings → Pages**.
 3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
 
-Until that is set, and until this branch is merged to `main`, the Pages URL is not live. A green build is not the same thing as a checked deployment.
+Pushes to `main` publish the site. A green build on another branch is not the same thing as a checked deployment.
 
 The production build writes asset URLs under `/Xr-skilllab/`. Confirm `dist/index.html` references `/Xr-skilllab/assets/...` if you change the repository name.
 
@@ -82,7 +85,8 @@ The production build writes asset URLs under `/Xr-skilllab/`. Confirm `dist/inde
 
 - Illustrative training only. It does not replace induction, emergency procedures, or professional safety advice.
 - Source notes on each hazard are for later expert review. They are not citations of a law or standard.
-- No 3D scene, no headset mode, no accounts, no analytics, and no contact form.
+- 3D is a browser scene made of simple shapes. It does not require a headset, and the headset button is hidden.
+- No accounts, no analytics, and no contact form.
 - No live AI coach. The Scenario Coach is local rules.
 - No measured claim that the exercise improves workplace performance.
 - A licence file has not been added. Inter and Manrope are bundled with Fontsource under the SIL Open Font License.

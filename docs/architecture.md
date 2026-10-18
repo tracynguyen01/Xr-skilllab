@@ -9,7 +9,7 @@ Visitor's browser
 │   Home, How It Works, Project Story, About           │
 │   Simulation                                         │
 │     2D illustrated warehouse   (live)                │
-│     A-Frame scene              (not built)           │
+│     A-Frame scene              (live, lazy loaded)   │
 │   Assessment engine            (pure TypeScript)     │
 │   Scenario rubric              (typed local data)    │
 │   Scenario Coach               (offline rules)       │
@@ -42,20 +42,21 @@ Assessment result
 
 The coach in `src/domain/coach.ts` reads that result. It has no `fetch`. It may mention a hazard as correct only when the result already says `identified` and `correct`.
 
-## Shared contract for 3D
+## Shared contract for 2D and 3D
 
-The 2D inspector must not be a separate quiz. These are the pieces a later A-Frame scene should reuse without editing:
+The 2D inspector and the A-Frame scene are two views of one exercise. Neither one scores a click by itself.
 
-| Piece | File | 3D note |
+| Piece | File | Note |
 |---|---|---|
-| Hazard text, choices, correct id, source note | `src/domain/hazards.ts` | `hotspot` is `{x, y, z}` reserved for the future scene. Those numbers have not been placed in a 3D room yet. |
-| Decoys | `src/domain/decoys.ts` | Same "No issue found here" rule |
-| Record one answer | `src/domain/session.ts` | Call `submitHazardAnswer`. Do not add points in the scene. |
-| Score | `src/domain/scoring.ts` | Call `scoreAttempt` |
-| Coach | `src/domain/coach.ts` | Call `buildScenarioCoach` |
+| Hazard text, choices, correct id, source note, 3D position | `src/domain/hazards.ts` | `hotspot` is `{x, y, z}` in metres |
+| Decoys | `src/domain/decoys.ts` | Same "No issue found here" rule, plus a 3D hotspot |
+| Record one answer | `src/domain/session.ts` | `submitHazardAnswer` and `setAttemptMode` |
+| Score | `src/domain/scoring.ts` | `scoreAttempt`. `mode` does not change points |
+| Coach | `src/domain/coach.ts` | `buildScenarioCoach` |
 | 2D picture positions | `src/simulation/sceneObjects.ts` | Percent positions for the SVG only |
+| 3D scene | `src/simulation/WarehouseScene.tsx` | Loaded with `React.lazy` from the simulation page |
 
-`Attempt.mode` may be `'3d'` later. Scoring tests already check that the same answers in both modes produce the same result.
+A-Frame is imported only by that scene file. Camera movement is handled inside A-Frame, not in React state. The scene adds and removes its own listeners, and it does not use a React wrapper or a physics engine.
 
 ## Routing and hosting
 
@@ -71,5 +72,5 @@ Vite `base` is `/Xr-skilllab/` because the repository name is `Xr-skilllab`. Ass
 
 - No API key and no Worker
 - No analytics
-- No 3D engine dependency yet, so the bundle is not paying for a scene that is not on screen
+- A-Frame is a separate chunk, loaded when the 3D view opens, not in the main bundle
 - No fake metrics, testimonials, or company marks

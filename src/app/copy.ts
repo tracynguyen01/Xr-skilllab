@@ -29,5 +29,14 @@ export const EMPTY_RESULTS =
 
 export const RESTORE_ERROR = "We couldn't restore your previous attempt. Start a new one below."
 
-export const COMING_SOON =
-  '3D mode coming soon. The next version adds an A-Frame warehouse on this same page. It will use this hazard list, these choices, and the same scoring functions. The score does not depend on which view you use.'
+export const WEBGL_FALLBACK =
+  "3D isn't available on this device. You can complete the full exercise in 2D."
+
+export const SCENE_INSTRUCTIONS_3D =
+  'Drag to look around. Use WASD or the arrow keys to move. The inspection list works with a keyboard and a screen reader, and it scores the same way as the 3D rings.'
+
+export const SCENE_INSTRUCTIONS_2D =
+  'Select a marked point, or use the inspection list. Tab moves between them. Escape closes a dialog.'
+
+export const REDUCED_MOTION_NOTE =
+  'Motion is reduced, so the 3D camera stays still. Use the inspection list to choose each point.'

@@ -46,16 +46,16 @@ export function HowItWorksPage() {
         cannot see why a number moved. The coach can talk about the result. It cannot decide the result.
       </p>
 
-      <h2>Why there is a 2D scene first</h2>
+      <h2>Why 2D stays next to 3D</h2>
       <p>
-        The full exercise has to work without WebGL, a headset, or a mouse. The illustrated warehouse and the
-        inspection list share one hazard catalogue and one scoring module. The 3D scene, when it is added, should call
-        those same functions.
+        The full exercise has to work without WebGL, a headset, or a mouse. The 3D warehouse and the illustrated
+        inspector share one hazard catalogue and one scoring module. Choosing a ring and choosing a list button call
+        the same function. If 3D cannot start, the 2D view is the whole exercise, not a lesser one.
       </p>
 
       <h2>Stack in this version</h2>
       <ul>
-        <li>React, TypeScript, and Vite</li>
+        <li>React, TypeScript, Vite, and A-Frame (loaded only on the simulation page)</li>
         <li>Hash routing, so a refresh on GitHub Pages still finds the page</li>
         <li>Vitest for the scoring, session, and coach rules</li>
         <li>GitHub Actions for checks, and GitHub Pages for static hosting after merge</li>
@@ -64,8 +64,8 @@ export function HowItWorksPage() {
       <h2>Limitations</h2>
       <ul>
         <li>Not a formal safety course, and not reviewed by a safety professional yet.</li>
-        <li>The warehouse is an illustration, not a measured digital twin.</li>
-        <li>There is no 3D scene and no live AI model in this version.</li>
+        <li>The warehouse is an illustration in 2D and a primitive scene in 3D, not a measured digital twin.</li>
+        <li>3D needs WebGL. It does not ask for a headset. There is no live AI model in this version.</li>
         <li>There is no account, saved history across visits, or LMS connection.</li>
         <li>No claim is made that using the demo improves real workplace performance.</li>
       </ul>

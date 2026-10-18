@@ -29,15 +29,15 @@ export function ProjectPage() {
 
       <h2>Architecture</h2>
       <p>
-        The React site, the 2D inspector, the rubric, the scoring functions, and the Scenario Coach all live in the
-        static bundle. Session state stays in the tab. A later A-Frame scene and an optional AI Worker are drawn on
-        the How It Works page as future layers. They are not part of this build.
+        The React site, the 2D inspector, the A-Frame warehouse, the rubric, the scoring functions, and the Scenario
+        Coach all live in the static bundle. A-Frame is loaded only when a 3D view opens. Session state stays in the
+        tab. An optional AI Worker is drawn on the How It Works page as a future layer. It is not part of this build.
       </p>
 
       <h2>Engineering choices</h2>
       <ul>
         <li>Static first, because GitHub Pages can host the demo without a server or a secret.</li>
-        <li>2D before 3D, so the assessment works even when WebGL does not.</li>
+        <li>2D beside 3D, so the assessment works even when WebGL does not.</li>
         <li>Hash routing, so project-site refreshes do not 404.</li>
         <li>The model does not mark the work. Rules do, and tests check the arithmetic.</li>
       </ul>
@@ -54,7 +54,7 @@ export function ProjectPage() {
       <h2>Known limitations</h2>
       <ul>
         <li>Not a WHS training package and not a certificate.</li>
-        <li>The scene is a drawn illustration, with a 3D warehouse still to come.</li>
+        <li>The 3D scene is built from simple shapes. It is not a scanned warehouse.</li>
         <li>No LMS, no accounts, and no verified learning-effectiveness claim.</li>
         <li>Source notes are placeholders for expert review. They are not citations of a standard.</li>
       </ul>
@@ -62,7 +62,6 @@ export function ProjectPage() {
       <h2>Roadmap</h2>
       <p>Marked as future, not as work already done:</p>
       <ul>
-        <li>Future: A-Frame warehouse wired to the same scoring functions.</li>
         <li>Future: optional AI Worker that rephrases the coach text and cannot change points.</li>
         <li>Future: a second scenario only after this one has been used and tightened.</li>
       </ul>

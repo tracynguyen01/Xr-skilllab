@@ -107,7 +107,11 @@ function SceneLegend() {
   )
 }
 
-export function InspectionList({ attempt, onSelect }: Warehouse2DProps) {
+type InspectionListProps = Warehouse2DProps & {
+  onHighlight?: (id: string | null) => void
+}
+
+export function InspectionList({ attempt, onSelect, onHighlight }: InspectionListProps) {
   const hazards = WAREHOUSE_HAZARDS.map((hazard) => ({
     id: hazard.id,
     title: hazard.title,
@@ -127,7 +131,12 @@ export function InspectionList({ attempt, onSelect }: Warehouse2DProps) {
     <ul className="inspect-list" aria-label="Inspection list">
       {[...hazards, ...decoys].map((item) => (
         <li key={item.id}>
-          <button type="button" onClick={() => onSelect(item.id)}>
+          <button
+            type="button"
+            onClick={() => onSelect(item.id)}
+            onFocus={() => onHighlight?.(item.id)}
+            onBlur={() => onHighlight?.(null)}
+          >
             <span className="list-kind">{item.kind}</span>
             <span className="list-copy">
               <span className="list-title">{item.title}</span>

@@ -1,7 +1,7 @@
 /**
  * Shared types for the warehouse scenario.
- * The 2D inspector and the future A-Frame scene should both use these
- * shapes so scoring does not depend on how the visitor found a hazard.
+ * The 2D inspector and the A-Frame scene both use these shapes so scoring
+ * does not depend on how the visitor found a hazard.
  */
 
 export type SceneMode = '2d' | '3d'
@@ -24,8 +24,8 @@ export type Hazard = {
   shortDescription: string
   educationalExplanation: string
   /**
-   * Reserved for the future 3D scene. Not used to place 2D markers.
-   * Reposition these when the A-Frame warehouse is built and looked at.
+   * Position of the 3D ring, in metres. The 2D picture does not use this.
+   * Keep x between -5 and 5, and z between -5 and 3, so it stays inside the room.
    */
   hotspot: Hotspot3D
   choices: HazardChoice[]
@@ -43,6 +43,8 @@ export type Decoy = {
   inspectionMessage: string
   explanation: string
   sourceReference: string
+  /** Where the 3D ring sits. The 2D picture uses sceneObjects.ts instead. */
+  hotspot: Hotspot3D
 }
 
 export type HazardAnswer = {

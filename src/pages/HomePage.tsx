@@ -9,7 +9,7 @@ const STEPS = [
   {
     number: '01',
     title: 'Explore',
-    text: 'Inspect the illustrated warehouse. A 3D view is planned later, on the same hazards.',
+    text: 'Inspect the warehouse in 3D, or use the accessible 2D scene. Both use the same hazards.',
   },
   {
     number: '02',
@@ -54,12 +54,12 @@ export function HomePage() {
       <section className="band" aria-label="What this version includes">
         <div className="wrap">
           <ul className="strip">
+            <li>3D warehouse</li>
             <li>Accessible 2D scene</li>
             <li>Transparent scoring</li>
             <li>Offline Scenario Coach</li>
-            <li>No account required</li>
           </ul>
-          <p className="band-note">Coming next: a 3D warehouse scene, then an optional AI coach that cannot change the score.</p>
+          <p className="band-note">No account required. An optional AI coach is not connected, and it would not be able to change the score.</p>
         </div>
       </section>
 
@@ -121,13 +121,13 @@ export function HomePage() {
         </div>
         <ul className="chips" aria-label="Technologies in this version">
           <li>React</li>
+          <li>A-Frame</li>
           <li>TypeScript</li>
           <li>Vite</li>
           <li>Deterministic scoring</li>
           <li>Vitest</li>
         </ul>
         <ul className="chips chips-future" aria-label="Roadmap technologies">
-          <li>A-Frame 3D · roadmap</li>
           <li>AI Worker · roadmap</li>
         </ul>
         <p className="independence">{INDEPENDENCE_DISCLAIMER}</p>

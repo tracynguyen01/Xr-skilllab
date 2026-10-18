@@ -4,7 +4,7 @@ import type { Attempt, SceneMode, SubmitStatus } from './types'
 
 /**
  * Attempt rules shared by every view.
- * The future 3D scene should call these functions and must not score clicks itself.
+ * Both the 2D inspector and the 3D scene call these functions. Neither one scores a click itself.
  * A hazard is stored once: a second submission returns the original attempt unchanged.
  */
 
@@ -62,6 +62,12 @@ export function inspectDecoy(
       inspectedDecoyIds: [...attempt.inspectedDecoyIds, decoyId],
     },
   }
+}
+
+/** Switches the view. Answers and the score stay as they are. */
+export function setAttemptMode(attempt: Attempt, mode: SceneMode): Attempt {
+  if (attempt.mode === mode) return attempt
+  return { ...attempt, mode }
 }
 
 /** Marks the attempt finished. A second call keeps the original end time. */

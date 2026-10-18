@@ -13,6 +13,7 @@ export const DECOYS: readonly Decoy[] = [
     explanation:
       'In this illustration the extinguisher is mounted and the space in front of it is clear. It is a decoy, not one of the four scored hazards. A real check would still follow the site’s own equipment inspection rules.',
     sourceReference: SOURCE_NOTE,
+    hotspot: { x: -5.55, y: 1.35, z: -1.4 },
   },
   {
     id: 'clear-aisle',
@@ -22,6 +23,7 @@ export const DECOYS: readonly Decoy[] = [
     explanation:
       'This part of the illustration is tidy on purpose. It is a decoy, not a scored hazard. The exercise is about the four defined unsafe conditions, not about declaring a real aisle safe.',
     sourceReference: SOURCE_NOTE,
+    hotspot: { x: -3.5, y: 0.7, z: -3.3 },
   },
 ]
 

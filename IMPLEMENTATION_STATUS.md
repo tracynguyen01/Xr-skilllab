@@ -1,7 +1,7 @@
 # Implementation status
 
-Milestone: P0 2D training loop (Epics A, B, and the relevant parts of D).  
-3D scene (Epic C) and the AI Worker (Epic E) are not in this milestone.
+Milestone: P0 training loop, including the 3D warehouse (Epics A, B, C, and the relevant parts of D).  
+The AI Worker (Epic E) is not in this version.
 
 ## Implemented
 
@@ -12,12 +12,20 @@ Milestone: P0 2D training loop (Epics A, B, and the relevant parts of D).
 - Dark visual system using the specified colour tokens
 - Illustrated warehouse, drawn in code, with four hazards and two decoys
 - Keyboard-accessible 2D inspector, dialog, progress, informational timer, reset, and finish
-- Clearly marked "3D mode coming soon" note. There is no dead 3D button
+- A-Frame 1.8 warehouse built from primitives, loaded only on the simulation page
+- Same four hazards and two decoys, same assessment panel, and the same pure score in 2D and 3D
+- Desktop (1024px and wider, when WebGL works) offers Begin in 3D first. Narrower screens offer 2D first, with Try 3D
+- If WebGL is missing or the scene fails, the page says 3D is not available and the 2D exercise continues
+- Switching between 2D and 3D does not clear answers
+- Drag to look, WASD or arrow keys to move, and an HTML inspection list for keyboard and screen-reader users
+- Reduced motion turns off ring pulse and camera controls
+- The A-Frame VR button is hidden. A headset is not required
 - Pure scoring: 15 + 10 per hazard, once, decoys worth 0
 - Results breakdown and offline Scenario Coach
 - Try Again clears the attempt, answers, decoy checks, timer, and score
 - Same-tab `sessionStorage`, with an in-memory fallback
-- Unit tests for the scoring matrix, session rules, coach rules, content, and a route/loop smoke test
+- Unit tests for scoring, session rules, 2D/3D score parity, coach rules, content, and a route/loop smoke test
+- Playwright checks for overflow, 3D load, a finished 3D attempt, the WebGL fallback, and the narrow-screen intro
 - GitHub Actions CI and Pages deploy workflows
 - Developer name Tracy Nguyen and GitHub profile link on About and Project Story
 - Contact email hidden, because none was supplied
@@ -30,30 +38,30 @@ Local commands on 18 October 2026, Node 22:
 |---|---|
 | `npm run typecheck` | Pass |
 | `npm run lint` | Pass |
-| `npm run test` | Pass, 26 tests |
-| `npm run build` | Pass |
+| `npm run test` | Pass, 30 tests |
+| `npm run test:e2e` | Pass, 9 Playwright tests |
+| `npm run build` | Pass. Main chunk about 318 kB (100 kB gzip). Lazy 3D chunk about 1.32 MB (358 kB gzip). A-Frame is only in the lazy chunk |
 
-`dist/index.html` references `/Xr-skilllab/assets/...` and `/Xr-skilllab/favicon.svg`.
+Browser checks on 18 October 2026, Chromium via Playwright:
 
-Browser checks on 18 October 2026, Chrome only:
+- 3D scene loads at 1280px, an attempt can be finished from the inspection list, and the results page shows the shared score
+- Missing WebGL shows the fallback sentence and stays in 2D
+- A 390px-wide intro offers Use 2D Inspector and Try 3D
+- No horizontal overflow on the checked routes at 360, 390, 768, 1024, 1280, and 1440
+- Edge, Firefox, Safari, Android, and iOS were not run
 
-- Interactive Chrome walkthrough of the full loop: start, preferred answer for the blocked exit, finish at 25/100, Scenario Coach text, Try Again back to a fresh attempt.
-- Playwright screenshots of the production build at 1440×900 and 390×844: homepage, mid-attempt, and results. No horizontal overflow seen at 390px.
-- Edge, Firefox, Safari, Android, and iOS were not run.
-
-GitHub Pages is not live until this is merged to `main` and Pages is set to GitHub Actions.
+The live site updates when this is merged to `main` and the Deploy GitHub Pages workflow succeeds. A green pull-request build does not publish.
 
 ## Deferred
 
-- A-Frame warehouse, hotspot placement, and WebGL fallback (Epic C)
 - Optional AI Worker (Epic E). The offline coach is the coaching that exists today
+- Headset / VR mode. The enter-VR control is hidden
+- A scanned warehouse. The 3D room is primitives, and the 2D view is an illustration
 - Volunteer usability study
-- Browser matrix beyond the browser used for the screenshots in this milestone
+- Browser matrix beyond Chromium
 - Lighthouse scores. None are claimed
 - A repository licence chosen by the owner
 
 ## Blocked on the owner
 
-- Settings → Pages → Source must be **GitHub Actions** or the deploy workflow will not publish
-- The Pages URL is live only after this work is merged to `main` and that setting is on
 - Contact email, if one should be shown later

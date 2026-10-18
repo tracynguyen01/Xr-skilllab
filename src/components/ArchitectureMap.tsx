@@ -4,7 +4,7 @@ const LAYERS = [
     cards: [
       { title: 'React site', text: 'Pages, navigation, and the results view.', state: 'Live' },
       { title: '2D inspector', text: 'Illustrated warehouse, keyboard access, same hazards.', state: 'Live' },
-      { title: '3D scene', text: 'A-Frame warehouse. Not built in this version.', state: 'Future' },
+      { title: '3D scene', text: 'A-Frame warehouse. Same hazards and the same score as 2D.', state: 'Live' },
     ],
   },
   {

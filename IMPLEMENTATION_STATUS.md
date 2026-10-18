@@ -35,7 +35,13 @@ Local commands on 18 October 2026, Node 22:
 
 `dist/index.html` references `/Xr-skilllab/assets/...` and `/Xr-skilllab/favicon.svg`.
 
-Browser screenshots are a separate check. GitHub Pages is not live until this is merged to `main` and Pages is set to GitHub Actions.
+Browser checks on 18 October 2026, Chrome only:
+
+- Interactive Chrome walkthrough of the full loop: start, preferred answer for the blocked exit, finish at 25/100, Scenario Coach text, Try Again back to a fresh attempt.
+- Playwright screenshots of the production build at 1440×900 and 390×844: homepage, mid-attempt, and results. No horizontal overflow seen at 390px.
+- Edge, Firefox, Safari, Android, and iOS were not run.
+
+GitHub Pages is not live until this is merged to `main` and Pages is set to GitHub Actions.
 
 ## Deferred
 

@@ -143,8 +143,8 @@ export function WarehouseArt() {
         <rect x="-40" y="-66" width="80" height="128" rx="3" fill="#1d7a52" />
         <rect x="-16" y="-20" width="32" height="46" rx="2" fill="#d9f3e8" opacity="0.28" />
         <circle cx="24" cy="6" r="4" fill="#d7efe4" />
-        <rect x="-32" y="-108" width="64" height="22" rx="4" fill="#10281e" stroke="#42ddc5" />
-        <text x="0" y="-93" textAnchor="middle" fill="#f5f8fc" fontSize="12" fontFamily="ui-sans-serif, system-ui">
+        <rect x="-40" y="-118" width="80" height="28" rx="4" fill="#10281e" stroke="#42ddc5" strokeWidth="2" />
+        <text x="0" y="-99" textAnchor="middle" fill="#f5f8fc" fontSize="16" fontFamily="ui-sans-serif, system-ui" fontWeight="700">
           EXIT
         </text>
       </g>
@@ -168,17 +168,17 @@ export function WarehouseArt() {
       <Crate x={exit.x - 16} y={exit.y + 58} w={56} h={46} fill="#d2ad74" />
       <Crate x={exit.x + 28} y={exit.y + 74} w={46} h={34} />
 
-      {/* Tidy decoy stack. */}
-      <Pallet x={aisle.x - 58} y={aisle.y + 28} w={112} />
-      <Crate x={aisle.x - 52} y={aisle.y - 8} w={48} h={34} />
-      <Crate x={aisle.x + 2} y={aisle.y - 8} w={48} h={34} />
-      <Crate x={aisle.x - 46} y={aisle.y - 48} w={44} h={32} />
-      <Crate x={aisle.x + 2} y={aisle.y - 48} w={44} h={32} />
+      {/* Tidy decoy stack, centred on its marker. */}
+      <Pallet x={aisle.x - 54} y={aisle.y + 28} w={108} />
+      <Crate x={aisle.x - 48} y={aisle.y - 6} w={46} h={32} />
+      <Crate x={aisle.x + 2} y={aisle.y - 6} w={46} h={32} />
+      <Crate x={aisle.x - 42} y={aisle.y - 42} w={42} h={30} />
+      <Crate x={aisle.x + 4} y={aisle.y - 42} w={42} h={30} />
 
-      {/* Unstable stack: top crate tilted and overhanging. */}
-      <Pallet x={load.x - 46} y={load.y + 18} w={100} />
-      <Crate x={load.x - 40} y={load.y - 18} w={58} h={36} fill="#c9a36b" />
-      <Crate x={load.x - 8} y={load.y - 58} w={62} h={36} fill="#d08a62" top="#e7b08a" side="#a86442" tilt={-16} />
+      {/* Unstable stack. The tilted crate sits on the marker, not below it. */}
+      <Pallet x={load.x - 48} y={load.y + 34} w={104} />
+      <Crate x={load.x - 42} y={load.y + 2} w={56} h={32} fill="#c9a36b" />
+      <Crate x={load.x - 16} y={load.y - 36} w={64} h={34} fill="#d08a62" top="#e7b08a" side="#a86442" tilt={-14} />
 
       {/* Spill and a cone that is not standing up. */}
       <ellipse cx={spill.x} cy={spill.y} rx="54" ry="20" fill="#17675f" />

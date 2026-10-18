@@ -40,15 +40,15 @@ export function WarehousePreview() {
           {SCENE_MARKERS.map((marker, index) => (
             <span
               key={marker.id}
-              className={`hotspot-pin ${marker.kind === 'hazard' ? 'is-hazard' : 'is-decoy'} align-${marker.labelSide}`}
+              className={`hotspot-pin ${marker.kind === 'hazard' ? 'is-hazard' : 'is-decoy'}`}
               style={{ left: `${marker.x}%`, top: `${marker.y}%` }}
               aria-hidden="true"
             >
               <span className="pin-dot">{index + 1}</span>
-              <span className="pin-label">{marker.shortLabel}</span>
             </span>
           ))}
         </div>
+        <SceneLegend />
       </div>
       <figcaption>Illustrative warehouse for the safety challenge. Not a photograph of a real site.</figcaption>
     </figure>
@@ -69,7 +69,7 @@ export function Warehouse2D({ attempt, onSelect }: Warehouse2DProps) {
       </div>
       <div className="scene-stage">
         <WarehouseArt />
-        {SCENE_MARKERS.map((marker) => {
+        {SCENE_MARKERS.map((marker, index) => {
           const assessed = marker.kind === 'hazard' && Boolean(attempt.answers[marker.id])
           const inspected = marker.kind === 'decoy' && attempt.inspectedDecoyIds.includes(marker.id)
           const status = statusFor(marker.id, marker.kind, attempt)
@@ -77,20 +77,33 @@ export function Warehouse2D({ attempt, onSelect }: Warehouse2DProps) {
             <button
               key={marker.id}
               type="button"
-              className={`hotspot align-${marker.labelSide} ${assessed ? 'is-assessed' : ''} ${inspected ? 'is-inspected' : ''} ${marker.kind === 'hazard' ? 'is-hazard' : 'is-decoy'}`}
+              className={`hotspot ${assessed ? 'is-assessed' : ''} ${inspected ? 'is-inspected' : ''} ${marker.kind === 'hazard' ? 'is-hazard' : 'is-decoy'}`}
               style={{ left: `${marker.x}%`, top: `${marker.y}%` }}
               onClick={() => onSelect(marker.id)}
-              aria-label={`${titleFor(marker.id)}. ${status}`}
+              aria-label={`${index + 1}. ${titleFor(marker.id)}. ${status}`}
             >
               <span className="hotspot-dot" aria-hidden="true">
-                {assessed || inspected ? '✓' : ''}
+                {index + 1}
               </span>
-              <span className="hotspot-name">{marker.shortLabel}</span>
             </button>
           )
         })}
       </div>
+      <SceneLegend />
     </div>
+  )
+}
+
+function SceneLegend() {
+  return (
+    <ol className="scene-legend">
+      {SCENE_MARKERS.map((marker, index) => (
+        <li key={marker.id} className={marker.kind}>
+          <span>{index + 1}</span>
+          {marker.shortLabel}
+        </li>
+      ))}
+    </ol>
   )
 }
 

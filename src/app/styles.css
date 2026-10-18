@@ -228,9 +228,9 @@ main:focus {
 
 .btn-secondary,
 .btn-ghost {
-  background: transparent;
+  background: rgba(17, 28, 46, 0.65);
   color: var(--text);
-  border-color: var(--border);
+  border-color: #6d86a3;
 }
 
 .btn-secondary:hover,
@@ -264,6 +264,7 @@ main:focus {
   color: var(--muted);
   font-size: 1.125rem;
   max-width: 42rem;
+  margin-bottom: 0;
 }
 
 .hero-actions,
@@ -272,8 +273,8 @@ main:focus {
 .panel-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 1.1rem 0;
+  gap: 14px;
+  margin: 1.35rem 0 1rem;
 }
 
 .caption,
@@ -315,14 +316,15 @@ main:focus {
 
 .strip {
   list-style: none;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin: 0;
   padding: 0;
 }
 
 .strip li {
+  flex: 1 1 160px;
   background: rgba(17, 28, 46, 0.8);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -534,9 +536,10 @@ main:focus {
 
 .chrome-tag {
   margin-left: auto;
-  border: 1px solid var(--border);
+  border: 1px solid #6d86a3;
   border-radius: 999px;
-  padding: 0.1rem 0.5rem;
+  padding: 0.1rem 0.55rem;
+  color: var(--text);
 }
 
 .scene-stage {
@@ -562,8 +565,8 @@ main:focus {
 }
 
 .hotspot {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   border: 0;
   background: transparent;
@@ -573,17 +576,18 @@ main:focus {
 
 .hotspot-dot,
 .pin-dot {
-  width: 28px;
-  height: 28px;
-  margin: 8px;
+  width: 32px;
+  height: 32px;
+  margin: 4px;
   border-radius: 999px;
   display: grid;
   place-items: center;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 800;
   color: #1a1406;
   background: var(--warning);
-  box-shadow: 0 0 0 6px rgba(242, 196, 109, 0.18);
+  border: 2px solid #fff8e8;
+  box-shadow: 0 0 0 4px rgba(8, 14, 24, 0.8), 0 0 0 8px rgba(242, 196, 109, 0.35);
 }
 
 .hotspot.is-decoy .hotspot-dot,
@@ -604,34 +608,45 @@ main:focus {
   animation: pulse 2.6s ease-out infinite;
 }
 
-.hotspot-name,
-.pin-label {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  white-space: nowrap;
-  background: rgba(8, 14, 24, 0.88);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 999px;
-  padding: 0.15rem 0.5rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  pointer-events: none;
-}
-
-.align-right .hotspot-name,
-.align-right .pin-label {
-  left: calc(100% - 6px);
-}
-
-.align-left .hotspot-name,
-.align-left .pin-label {
-  right: calc(100% - 6px);
-}
-
 .pin-dot {
   margin: 0;
+}
+
+.scene-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  list-style: none;
+  margin: 0;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--border);
+  background: #0d1726;
+}
+
+.scene-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.scene-legend span {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 99px;
+  display: grid;
+  place-items: center;
+  background: var(--warning);
+  color: #1a1406;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.scene-legend .decoy span {
+  background: #d5e4f2;
 }
 
 .hotspot-pin {
@@ -747,8 +762,10 @@ main:focus {
   background: #0d1726;
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 0.75rem;
-  align-items: flex-start;
+  padding: 0.8rem 0.85rem;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 4.2rem minmax(0, 1fr);
   cursor: pointer;
 }
 
@@ -757,13 +774,13 @@ main:focus {
 }
 
 .list-kind {
-  flex: none;
+  grid-row: 1 / span 2;
+  align-self: start;
+  padding-top: 0.15rem;
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--teal);
-  width: 3.4rem;
-  padding-top: 0.2rem;
 }
 
 .list-copy {
@@ -784,9 +801,9 @@ main:focus {
 }
 
 .list-status {
-  flex: none;
-  max-width: 9rem;
-  text-align: right;
+  grid-column: 2;
+  text-align: left;
+  font-weight: 700;
 }
 
 .list-status.is-assessed,
@@ -889,6 +906,8 @@ main:focus {
 
 .source-note summary {
   cursor: pointer;
+  color: var(--teal);
+  font-weight: 650;
 }
 
 .results-page {
@@ -977,9 +996,18 @@ main:focus {
   padding: 1.2rem;
 }
 
+.coach-card h3 {
+  margin-top: 1.35rem;
+}
+
 .coach-card ul {
-  margin: 0 0 1rem;
-  padding-left: 1.1rem;
+  margin: 0.4rem 0 1rem;
+  padding-left: 1.15rem;
+}
+
+.coach-card li {
+  margin: 0 0 0.75rem;
+  line-height: 1.6;
 }
 
 .next-step {
@@ -1036,6 +1064,7 @@ main:focus {
 
 .arch-card {
   padding: 0.95rem 1rem 1rem;
+  border-color: #3d5674;
 }
 
 .arch-card.is-future {
@@ -1135,10 +1164,6 @@ main:focus {
 }
 
 @media (min-width: 720px) {
-  .strip {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
   .steps,
   .arch-cards {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1195,13 +1220,8 @@ main:focus {
 }
 
 @media (max-width: 720px) {
-  .hotspot-name,
-  .pin-label {
-    display: none;
-  }
-
-  .list-status {
-    max-width: 6.5rem;
+  .inspect-list button {
+    grid-template-columns: 3.6rem minmax(0, 1fr);
   }
 }
 

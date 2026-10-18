@@ -30,6 +30,7 @@ html {
 body {
   margin: 0;
   min-width: 320px;
+  overflow-wrap: break-word;
   background:
     radial-gradient(900px 480px at 90% -10%, rgba(66, 221, 197, 0.14), transparent 55%),
     radial-gradient(700px 420px at -10% 10%, rgba(132, 191, 255, 0.12), transparent 50%),
@@ -132,6 +133,7 @@ main:focus {
   width: min(1120px, calc(100% - 32px));
   margin-inline: auto;
   min-height: 72px;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -141,6 +143,7 @@ main:focus {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
   color: var(--text);
   text-decoration: none;
   font-family: var(--display);
@@ -267,6 +270,16 @@ main:focus {
   margin-bottom: 0;
 }
 
+.hero-copy,
+.hero-visual,
+.scene-figure,
+.scene-frame,
+.sim-stage,
+.sim-panel,
+.split > * {
+  min-width: 0;
+}
+
 .hero-actions,
 .results-actions,
 .dialog-actions,
@@ -311,25 +324,47 @@ main:focus {
 }
 
 .band {
-  padding: 8px 0 20px;
+  padding: 4px 0 28px;
 }
 
+/* Chips sit in .wrap, the same column as the hero. Do not add .wrap to the
+   list itself: .strip sets margin, which would cancel .wrap's auto margins
+   and pin the first chip to the viewport edge. */
 .strip {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
   margin: 0;
   padding: 0;
 }
 
 .strip li {
-  flex: 1 1 160px;
+  flex: 0 1 auto;
+  max-width: 100%;
+  text-align: center;
   background: rgba(17, 28, 46, 0.8);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 0.85rem 1rem;
+  padding: 0.85rem 1.1rem;
   font-weight: 650;
+}
+
+/* Two equal chips per row on a tablet, one per row on a phone.
+   Otherwise three chips fit and the fourth sits alone. */
+@media (max-width: 900px) {
+  .strip li {
+    flex: 1 1 calc(50% - 10px);
+    max-width: calc(50% - 5px);
+  }
+}
+
+@media (max-width: 520px) {
+  .strip li {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
 }
 
 .band-note {
@@ -499,10 +534,12 @@ main:focus {
 
 .scene-chrome {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 8px 10px;
   min-height: 42px;
-  padding: 0 12px;
+  min-width: 0;
+  padding: 8px 12px;
   color: var(--muted);
   font-size: 0.85rem;
   border-bottom: 1px solid var(--border);
@@ -616,6 +653,7 @@ main:focus {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 14px;
+  min-width: 0;
   list-style: none;
   margin: 0;
   padding: 10px 14px 12px;
@@ -627,10 +665,10 @@ main:focus {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  max-width: 100%;
   color: var(--text);
   font-size: 0.9rem;
   font-weight: 650;
-  white-space: nowrap;
 }
 
 .scene-legend span {
@@ -1030,6 +1068,7 @@ main:focus {
 }
 
 .prose-page a {
+  overflow-wrap: anywhere;
   text-underline-offset: 3px;
 }
 
@@ -1210,7 +1249,6 @@ main:focus {
   .hero {
     grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
     gap: 48px;
-    min-height: calc(100vh - 88px);
     padding-top: 36px;
   }
 

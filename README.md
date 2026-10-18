@@ -41,11 +41,12 @@ The `/Xr-skilllab/` prefix is the Vite `base` used for the project site. It appl
 npm run typecheck
 npm run lint
 npm run test
+npm run test:e2e
 npm run build
 npm run preview
 ```
 
-`npm run lint` uses oxlint. `npm run test` uses Vitest.
+`npm run lint` uses oxlint. `npm run test` uses Vitest. `npm run test:e2e` builds the site and runs a Playwright check that the page does not scroll sideways at common widths.
 
 ## Architecture
 
@@ -64,7 +65,7 @@ The score is rules, not a model. A future AI Worker must not change it.
 
 Workflows:
 
-- `.github/workflows/ci.yml` runs install, typecheck, lint, test, and build on pull requests and on pushes to `main`
+- `.github/workflows/ci.yml` runs install, typecheck, lint, unit tests, the overflow check, and build on pull requests and on pushes to `main`
 - `.github/workflows/deploy.yml` publishes `dist/` with the official GitHub Pages actions when `main` is pushed
 
 One-time repository setting, if it is not already set:

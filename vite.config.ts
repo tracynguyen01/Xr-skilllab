@@ -13,5 +13,7 @@ export default defineConfig({
     setupFiles: './src/tests/setup.ts',
     css: true,
     restoreMocks: true,
+    // Playwright specs live in e2e/ and are not Vitest tests.
+    exclude: ['**/node_modules/**', '**/dist/**', 'e2e/**'],
   },
 })

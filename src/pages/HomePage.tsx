@@ -52,13 +52,15 @@ export function HomePage() {
       </section>
 
       <section className="band" aria-label="What this version includes">
-        <ul className="strip wrap">
-          <li>Accessible 2D scene</li>
-          <li>Transparent scoring</li>
-          <li>Offline Scenario Coach</li>
-          <li>No account required</li>
-        </ul>
-        <p className="wrap band-note">Coming next: a 3D warehouse scene, then an optional AI coach that cannot change the score.</p>
+        <div className="wrap">
+          <ul className="strip">
+            <li>Accessible 2D scene</li>
+            <li>Transparent scoring</li>
+            <li>Offline Scenario Coach</li>
+            <li>No account required</li>
+          </ul>
+          <p className="band-note">Coming next: a 3D warehouse scene, then an optional AI coach that cannot change the score.</p>
+        </div>
       </section>
 
       <section className="section wrap">

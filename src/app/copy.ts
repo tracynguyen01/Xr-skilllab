@@ -33,7 +33,7 @@ export const WEBGL_FALLBACK =
   "3D isn't available on this device. You can complete the full exercise in 2D."
 
 export const SCENE_INSTRUCTIONS_3D =
-  'Drag to look around. Use WASD or the arrow keys to move. The inspection list works with a keyboard and a screen reader, and it scores the same way as the 3D rings.'
+  'Drag to look around. Use WASD or the arrow keys to move. Reset view returns to the opening shot. The inspection list works with a keyboard and a screen reader, and it scores the same way as the 3D markers.'
 
 export const SCENE_INSTRUCTIONS_2D =
   'Select a marked point, or use the inspection list. Tab moves between them. Escape closes a dialog.'

@@ -13,6 +13,7 @@ The AI Worker (Epic E) is not in this version.
 - Illustrated warehouse, drawn in code, with four hazards and two decoys
 - Keyboard-accessible 2D inspector, dialog, progress, informational timer, reset, and finish
 - A-Frame 1.8 warehouse built from primitives, loaded only on the simulation page
+- 3D opens on an elevated view of the whole room, with floor markers, numbered badges, and a Reset view control
 - Same four hazards and two decoys, same assessment panel, and the same pure score in 2D and 3D
 - Desktop (1024px and wider, when WebGL works) offers Begin in 3D first. Narrower screens offer 2D first, with Try 3D
 - If WebGL is missing or the scene fails, the page says 3D is not available and the 2D exercise continues

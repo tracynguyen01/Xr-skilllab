@@ -73,17 +73,21 @@ export function WarehouseScene({
     }
 
     function onResetView() {
-      const camera = scene?.querySelector('[data-camera]')
-      if (!camera) return
-      camera.setAttribute('room-bounds', 'walking: false')
-      camera.setAttribute('look-controls', 'enabled: false')
+      const rig = scene?.querySelector('[data-rig]')
+      if (!(rig instanceof HTMLElement)) return
+      const camera = rig.querySelector('[data-camera]')
+      // Look offsets live on the child. Zero them so the rig's downward pose is the shot.
+      zeroLookOffsets(camera)
+      if (camera instanceof HTMLElement) camera.setAttribute('look-controls', 'enabled: false')
+      rig.setAttribute('floor-walk', 'enabled: false')
+      rig.setAttribute('room-bounds', 'walking: false')
       if (reducedRef.current) {
-        camera.setAttribute('position', ESTABLISHING_VIEW.position)
-        camera.setAttribute('rotation', ESTABLISHING_VIEW.rotation)
+        rig.setAttribute('position', ESTABLISHING_VIEW.position)
+        rig.setAttribute('rotation', ESTABLISHING_VIEW.rotation)
         return
       }
-      camera.removeAttribute('pose-glide')
-      camera.setAttribute('pose-glide', 'dur: 900')
+      rig.removeAttribute('pose-glide')
+      rig.setAttribute('pose-glide', 'dur: 900')
     }
 
     const timeout = window.setTimeout(fail, 12000)
@@ -116,14 +120,15 @@ export function WarehouseScene({
         setReady(true)
       })
       listen('glide-ended', (event) => {
-        const camera = event.target
-        if (!(camera instanceof HTMLElement) || !camera.hasAttribute('data-camera')) return
+        const rig = event.target
+        if (!(rig instanceof HTMLElement) || !rig.hasAttribute('data-rig')) return
         if (reducedRef.current) return
-        // look-controls keeps its own yaw. Copy the shot we just eased into, or the
-        // next frame snaps the camera back to looking straight ahead.
-        syncLookControls(camera)
-        camera.setAttribute('look-controls', 'enabled: true')
-        camera.setAttribute('floor-walk', 'enabled: true')
+        const camera = rig.querySelector('[data-camera]')
+        // The rig already holds the downward pitch. look-controls must start at zero
+        // on the child, or its next tick replaces that pitch with its own offsets.
+        zeroLookOffsets(camera)
+        if (camera instanceof HTMLElement) camera.setAttribute('look-controls', 'enabled: true')
+        rig.setAttribute('floor-walk', 'enabled: true')
       })
       listen('click', (event) => {
         const id = hotspotId(event.target)
@@ -192,16 +197,18 @@ function sceneSpots() {
 
 function cameraMarkup(reducedMotion: boolean): string {
   const cursor = `<a-entity cursor="rayOrigin: mouse; fuse: false; mouseCursorStylesEnabled: false" raycaster="objects: .hotspot; interval: 120; far: 24"></a-entity>`
-  if (reducedMotion) {
-    return `
-      <a-entity data-camera position="${ESTABLISHING_VIEW.position}" rotation="${ESTABLISHING_VIEW.rotation}" camera="fov: 58" room-bounds>
+  // Position and pitch live on the rig. look-controls only adds a delta on the child,
+  // so it cannot overwrite the opening shot the way it did when it owned the camera.
+  const look = reducedMotion
+    ? ''
+    : ` look-controls="enabled: false; pointerLockEnabled: false; magicWindowTrackingEnabled: false"`
+  const rigPose = reducedMotion ? ESTABLISHING_VIEW : GLIDE_START
+  const rigMotion = reducedMotion ? '' : ` pose-glide="dur: 1200" floor-walk="enabled: false"`
+  return `
+    <a-entity data-rig position="${rigPose.position}" rotation="${rigPose.rotation}" room-bounds${rigMotion}>
+      <a-entity data-camera camera="fov: 70" position="0 0 0" rotation="0 0 0"${look}>
         ${cursor}
       </a-entity>
-    `
-  }
-  return `
-    <a-entity data-camera position="${GLIDE_START.position}" rotation="${GLIDE_START.rotation}" camera="fov: 58" look-controls="enabled: false; pointerLockEnabled: false; magicWindowTrackingEnabled: false" floor-walk="enabled: false" room-bounds pose-glide="dur: 1200">
-      ${cursor}
     </a-entity>
   `
 }
@@ -217,15 +224,26 @@ function scaleHotspot(target: EventTarget | null, scale: string) {
   root?.setAttribute('scale', scale)
 }
 
-function syncLookControls(camera: HTMLElement) {
+function zeroLookOffsets(camera: Element | null) {
+  if (!(camera instanceof HTMLElement)) return
   const look = (camera as HTMLElement & { components?: Record<string, LookControls> }).components?.['look-controls']
-  const rotation = (camera as HTMLElement & { object3D?: { rotation: { x: number; y: number } } }).object3D?.rotation
-  if (!look?.pitchObject || !look.yawObject || !rotation) return
-  look.pitchObject.rotation.x = rotation.x
-  look.yawObject.rotation.y = rotation.y
+  const object3D = (camera as HTMLElement & { object3D?: { rotation: { x: number; y: number; z: number } } }).object3D
+  if (look?.pitchObject) look.pitchObject.rotation.x = 0
+  if (look?.yawObject) look.yawObject.rotation.y = 0
+  if (look?.magicWindowDeltaEuler) {
+    look.magicWindowDeltaEuler.x = 0
+    look.magicWindowDeltaEuler.y = 0
+    look.magicWindowDeltaEuler.z = 0
+  }
+  if (object3D) {
+    object3D.rotation.x = 0
+    object3D.rotation.y = 0
+    object3D.rotation.z = 0
+  }
 }
 
 type LookControls = {
   pitchObject?: { rotation: { x: number } }
   yawObject?: { rotation: { y: number } }
+  magicWindowDeltaEuler?: { x: number; y: number; z: number }
 }

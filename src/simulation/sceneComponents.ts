@@ -34,9 +34,9 @@ function registerRoomBounds(aframe: AFrameApi) {
       if (!this.data.walking) return
       const position = this.el.object3D?.position
       if (!position) return
-      position.x = clamp(position.x, -5.15, 5.15)
-      position.z = clamp(position.z, -4.9, 3.15)
-      const step = Math.min(1, (delta || 16) / 180)
+      const step = Math.min(1, (delta || 16) / 220)
+      position.x += (clamp(position.x, -5.15, 5.15) - position.x) * step
+      position.z += (clamp(position.z, -4.9, 3.15) - position.z) * step
       position.y += (WALK_EYE_HEIGHT - position.y) * step
     },
   })
@@ -70,6 +70,7 @@ function registerFloorWalk(aframe: AFrameApi) {
     schema: { enabled: { type: 'boolean', default: true } },
     init(this: WalkEl) {
       this.keys = new Set()
+      this.forward = new aframe.THREE.Vector3()
       this.onKeyDown = (event: KeyboardEvent) => {
         if (!this.data.enabled || this.el.dataset.gliding === 'true' || !canWalk(event)) return
         if (!MOVE_KEYS.includes(event.code)) return
@@ -106,13 +107,16 @@ function registerFloorWalk(aframe: AFrameApi) {
       if (length === 0) return
       strafe /= length
       forward /= length
-      const yaw = this.el.object3D.rotation.y
-      const sin = Math.sin(yaw)
-      const cos = Math.cos(yaw)
+      const camera = this.el.querySelector('[data-camera]') as (HTMLElement & { getObject3D?: (name: string) => { getWorldDirection: (out: Vec3) => void } }) | null
+      const lens = camera?.getObject3D?.('camera')
+      if (!lens) return
+      lens.getWorldDirection(this.forward)
+      const flat = Math.hypot(this.forward.x, this.forward.z) || 1
+      const nx = this.forward.x / flat
+      const nz = this.forward.z / flat
       const step = WALK_SPEED * Math.min(0.05, (delta || 16) / 1000)
-      // Heading: +Z yaw turns the camera toward -X. Forward is -Z in that frame.
-      position.x += (strafe * cos - forward * sin) * step
-      position.z += (-strafe * sin - forward * cos) * step
+      position.x += (strafe * -nz + forward * nx) * step
+      position.z += (strafe * nx + forward * nz) * step
     },
   })
 }
@@ -146,6 +150,7 @@ function registerPoseGlide(aframe: AFrameApi) {
       position.y = lerp(this.from.y, target.y, t)
       position.z = lerp(this.from.z, target.z, t)
       const rotation = this.el.object3D.rotation
+      rotation.order = 'YXZ'
       rotation.x = lerp(this.fromRotation.x, deg(targetRotation.x), t)
       rotation.y = lerp(this.fromRotation.y, deg(targetRotation.y), t)
       rotation.z = 0
@@ -161,6 +166,7 @@ type WalkEl = {
   data: { enabled: boolean }
   el: HTMLElement & { object3D: { position: Vec3; rotation: Vec3 } }
   keys: Set<string>
+  forward: Vec3
   onKeyDown: (event: KeyboardEvent) => void
   onKeyUp: (event: KeyboardEvent) => void
   onBlur: () => void
@@ -169,7 +175,7 @@ type WalkEl = {
 type GlideEl = {
   data: { dur: number }
   el: HTMLElement & {
-    object3D: { position: Vec3; rotation: Vec3 }
+    object3D: { position: Vec3; rotation: Vec3 & { order: string } }
     dataset: DOMStringMap
     removeAttribute: (name: string) => void
     emit: (name: string) => void

@@ -55,6 +55,35 @@ test('missing WebGL falls back to the 2D exercise', async ({ page }) => {
   await expect(page.locator('a-scene')).toHaveCount(0)
 })
 
+test('the opening shot looks down and keeps every marker on screen', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto('/Xr-skilllab/#/simulate')
+  await page.getByRole('button', { name: 'Begin in 3D' }).click()
+  await expect(page.locator('.scene-3d-host canvas')).toBeVisible({ timeout: 20000 })
+  await waitForSettledShot(page)
+
+  const opening = await readFraming(page)
+  expect(opening.pitch, `pitch ${opening.pitch}`).toBeLessThan(0)
+  expectMarkersInside(opening)
+
+  await page.keyboard.down('w')
+  await page.waitForTimeout(700)
+  await page.keyboard.up('w')
+  const walked = await readFraming(page)
+  expect(walked.position.z).toBeLessThan(opening.position.z - 0.4)
+
+  await page.getByRole('button', { name: 'Reset view' }).click()
+  await page.waitForFunction(() => document.querySelector('[data-rig]')?.dataset.gliding === 'true')
+  await waitForSettledShot(page)
+
+  const reset = await readFraming(page)
+  expect(reset.pitch, `pitch ${reset.pitch}`).toBeLessThan(0)
+  expect(reset.position.x).toBeCloseTo(opening.position.x, 1)
+  expect(reset.position.y).toBeCloseTo(opening.position.y, 1)
+  expect(reset.position.z).toBeCloseTo(opening.position.z, 1)
+  expectMarkersInside(reset)
+})
+
 test('a narrow screen offers 2D first and an optional 3D try', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/Xr-skilllab/#/simulate')
@@ -62,3 +91,68 @@ test('a narrow screen offers 2D first and an optional 3D try', async ({ page }) 
   await expect(page.getByRole('button', { name: 'Try 3D' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Begin in 3D' })).toHaveCount(0)
 })
+
+type Framing = {
+  pitch: number
+  width: number
+  height: number
+  position: { x: number; y: number; z: number }
+  markers: Array<{ id: string; x: number; y: number; behind: boolean }>
+}
+
+async function waitForSettledShot(page: import('@playwright/test').Page) {
+  await page.waitForFunction(() => {
+    const rig = document.querySelector('[data-rig]')
+    const camera = document.querySelector('[data-camera]') as (HTMLElement & { getObject3D?: (name: string) => unknown }) | null
+    if (!rig || !camera?.getObject3D?.('camera')) return false
+    return rig.getAttribute('data-gliding') !== 'true' && rig.dataset.gliding !== 'true'
+  })
+  // Give look-controls a few ticks. It must not pitch the shot back up.
+  await page.waitForTimeout(450)
+}
+
+async function readFraming(page: import('@playwright/test').Page): Promise<Framing> {
+  return page.evaluate(() => {
+    const aframe = (window as Window & { AFRAME: { THREE: { Vector3: new () => { x: number; y: number; z: number; clone: () => { project: (camera: unknown) => { x: number; y: number; z: number } } } } } }).AFRAME
+    const cameraEl = document.querySelector('[data-camera]') as HTMLElement & {
+      getObject3D: (name: string) => { getWorldDirection: (out: { x: number; y: number; z: number }) => void }
+    }
+    const rig = document.querySelector('[data-rig]') as HTMLElement & { object3D: { position: { x: number; y: number; z: number } } }
+    const camera = cameraEl.getObject3D('camera')
+    const dir = new aframe.THREE.Vector3()
+    camera.getWorldDirection(dir)
+    const canvas = document.querySelector('.scene-3d-host canvas') as HTMLCanvasElement
+    const width = canvas.clientWidth
+    const height = canvas.clientHeight
+    const markers = [...document.querySelectorAll('[data-hotspot]')].map((node) => {
+      const el = node as HTMLElement & { object3D: { getWorldPosition: (out: { clone: () => { project: (camera: unknown) => { x: number; y: number; z: number } } }) => void } }
+      const pos = new aframe.THREE.Vector3()
+      el.object3D.getWorldPosition(pos)
+      const ndc = pos.clone().project(camera)
+      return {
+        id: el.getAttribute('data-hotspot') ?? '',
+        x: (ndc.x * 0.5 + 0.5) * width,
+        y: (-ndc.y * 0.5 + 0.5) * height,
+        behind: ndc.z > 1,
+      }
+    })
+    return {
+      pitch: Math.atan2(dir.y, Math.hypot(dir.x, dir.z)),
+      width,
+      height,
+      position: { x: rig.object3D.position.x, y: rig.object3D.position.y, z: rig.object3D.position.z },
+      markers,
+    }
+  })
+}
+
+function expectMarkersInside(frame: Framing) {
+  expect(frame.markers).toHaveLength(6)
+  for (const marker of frame.markers) {
+    expect(marker.behind, marker.id).toBe(false)
+    expect(marker.x, marker.id).toBeGreaterThan(0)
+    expect(marker.x, marker.id).toBeLessThan(frame.width)
+    expect(marker.y, marker.id).toBeGreaterThan(0)
+    expect(marker.y, marker.id).toBeLessThan(frame.height)
+  }
+}

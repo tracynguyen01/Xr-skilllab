@@ -1,16 +1,19 @@
 /**
- * The opening shot. High and off to one side, looking across the room,
- * so every marker is in frame. Walk mode later drops the camera to eye height.
+ * Opening shot, from in front of the warehouse, looking down into the room.
+ *
+ * Pitch is negative on purpose. In A-Frame (Three.js order YXZ) a positive
+ * rotation around X looks up. The last opening shot used a positive pitch,
+ * so the camera stared at the ceiling.
  */
 export const ESTABLISHING_VIEW = {
-  position: '4.15 2.95 2.35',
-  rotation: '20.47 43.71 0',
+  position: '1.1 3.5 6.4',
+  rotation: '-21.11 11.31 0',
 }
 
-/** A little further back. The camera eases from here into ESTABLISHING_VIEW. */
+/** A little further back and higher. The rig eases from here into ESTABLISHING_VIEW. */
 export const GLIDE_START = {
-  position: '5.05 3.55 3.15',
-  rotation: '21.48 44.46 0',
+  position: '1.45 4.15 7.3',
+  rotation: '-22.64 12.36 0',
 }
 
 export const WALK_EYE_HEIGHT = 1.65

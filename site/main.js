@@ -22,9 +22,18 @@ function card(sample) {
   const image = document.createElement('img')
   image.src = sample.thumbnail
   image.alt = ''
-  image.width = 960
-  image.height = 600
-  figure.append(image)
+  image.width = 1600
+  image.height = 1000
+  image.decoding = 'async'
+  const picture = document.createElement('picture')
+  if (typeof sample.thumbnail === 'string' && sample.thumbnail.endsWith('.webp')) {
+    const source = document.createElement('source')
+    source.type = 'image/avif'
+    source.srcset = sample.thumbnail.replace(/\.webp$/, '.avif')
+    picture.append(source)
+  }
+  picture.append(image)
+  figure.append(picture)
 
   const body = document.createElement('span')
   body.className = 'demo-body'

@@ -1,6 +1,8 @@
-# XR SkillLab
+# XR Concept Lab
 
 An independent educational portfolio of browser-based immersive concept demos. The home page introduces the idea. Each demo is a self-contained page.
+
+The site header and footer use the portfolio name, XR Concept Lab. The warehouse demo keeps its own name, XR SkillLab, on its page.
 
 This is not a Next XR Group product, not an accredited course, and not a certified inspection.
 
@@ -28,7 +30,7 @@ Demos are one folder plus one entry in [`site/samples.json`](site/samples.json).
 
 1. Create `site/samples/<slug>/`.
 2. Put the page at `index.html` so the URL is `/samples/<slug>/`. Keep `support.js` and the other scripts beside it, with relative paths such as `./support.js`.
-3. Add `thumbnail.webp`.
+3. Add `thumbnail.webp` and `thumbnail.avif`. Both are a 16:10 render of the scene itself: no browser chrome, no page screenshot, no scrollbar. The card uses the AVIF when the thumbnail path ends in `.webp`, and falls back to the WebP.
 4. If the page is a Fable `.dc.html` export, rename it to `index.html` and add the small “Back to all demos” link already used on the other samples. Point it at `../../`.
 5. Add one object to `site/samples.json`:
 

@@ -1,6 +1,7 @@
 import { HERO_CAPTION, HERO_EYEBROW, HERO_HEADLINE, HERO_SUBHEAD, INDEPENDENCE_DISCLAIMER } from '../app/copy'
 import { usePageTitle } from '../app/usePageTitle'
 import { Button } from '../components/Button'
+import { coachEndpoint } from '../domain/aiCoach'
 import { WAREHOUSE_HAZARDS } from '../domain/hazards'
 import { POINTS_FOR_CORRECT_ACTION, POINTS_FOR_IDENTIFYING } from '../domain/scoring'
 import { WarehousePreview } from '../simulation/Warehouse2D'
@@ -25,6 +26,7 @@ const STEPS = [
 
 export function HomePage() {
   usePageTitle('XR SkillLab')
+  const coachOn = coachEndpoint() !== null
 
   return (
     <>
@@ -59,7 +61,12 @@ export function HomePage() {
             <li>Transparent scoring</li>
             <li>Offline Scenario Coach</li>
           </ul>
-          <p className="band-note">No account required. An optional AI coach is not connected, and it would not be able to change the score.</p>
+          <p className="band-note">
+            No account required.{' '}
+            {coachOn
+              ? 'AI coaching is optional, labelled as AI, and it cannot change the score.'
+              : 'An optional AI coach is not connected, and it would not be able to change the score.'}
+          </p>
         </div>
       </section>
 
@@ -127,9 +134,15 @@ export function HomePage() {
           <li>Deterministic scoring</li>
           <li>Vitest</li>
         </ul>
-        <ul className="chips chips-future" aria-label="Roadmap technologies">
-          <li>AI Worker · roadmap</li>
-        </ul>
+        {coachOn ? (
+          <ul className="chips" aria-label="Optional coaching">
+            <li>AI coaching · optional</li>
+          </ul>
+        ) : (
+          <ul className="chips chips-future" aria-label="Roadmap technologies">
+            <li>AI Worker · off in this build</li>
+          </ul>
+        )}
         <p className="independence">{INDEPENDENCE_DISCLAIMER}</p>
       </section>
     </>

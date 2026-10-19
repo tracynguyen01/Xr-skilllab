@@ -1,8 +1,10 @@
 import { DEVELOPER_NAME, PROFILE_URL, REPO_URL } from '../app/copy'
+import { coachEndpoint } from '../domain/aiCoach'
 import { usePageTitle } from '../app/usePageTitle'
 
 export function ProjectPage() {
   usePageTitle('Project Story')
+  const coachOn = coachEndpoint() !== null
 
   return (
     <article className="wrap prose-page">
@@ -31,7 +33,8 @@ export function ProjectPage() {
       <p>
         The React site, the 2D inspector, the A-Frame warehouse, the rubric, the scoring functions, and the Scenario
         Coach all live in the static bundle. A-Frame is loaded only when a 3D view opens. Session state stays in the
-        tab. An optional AI Worker is drawn on the How It Works page as a future layer. It is not part of this build.
+        tab. An optional AI Worker can rephrase a finished result. It is deployed separately, and this build calls it
+        only when the coach URL was set. It cannot change the score.
       </p>
 
       <h2>Engineering choices</h2>
@@ -61,9 +64,8 @@ export function ProjectPage() {
 
       <h2>Roadmap</h2>
       <p>
-        The optional AI coach is implemented and switched off. This site still shows the offline Scenario Coach. The
-        model cannot change the score. Turning it on is a configuration step, described in the repository, and it needs
-        the owner's own API account.
+        The optional AI coach Worker is deployed. {coachOn ? 'This build can request it from the results page.' : 'This build does not call it.'}{' '}
+        The offline Scenario Coach stays either way, and the model cannot change the score.
       </p>
       <ul>
         <li>Future: a second scenario only after this one has been used and tightened.</li>

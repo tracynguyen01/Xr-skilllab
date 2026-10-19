@@ -1,3 +1,7 @@
+import { coachEndpoint } from '../domain/aiCoach'
+
+const coachOn = coachEndpoint() !== null
+
 const LAYERS = [
   {
     name: 'Experience',
@@ -18,7 +22,13 @@ const LAYERS = [
     name: 'Coaching',
     cards: [
       { title: 'Scenario Coach', text: 'Offline rules. Restates the score. No network call.', state: 'Live' },
-      { title: 'AI Worker', text: 'Implemented and switched off. This site does not call it. It cannot change the score.', state: 'Off' },
+      {
+        title: 'AI Worker',
+        text: coachOn
+          ? 'Optional. Rephrases a finished result when you ask. It cannot change the score.'
+          : 'Implemented and switched off. This site does not call it. It cannot change the score.',
+        state: coachOn ? 'Live' : 'Off',
+      },
     ],
   },
 ]
@@ -45,7 +55,10 @@ export function ArchitectureMap() {
           </div>
         </div>
       ))}
-      <p className="arch-host">GitHub Pages will host the static files only. This version has no database and no API key.</p>
+      <p className="arch-host">
+        GitHub Pages hosts the static files. This site has no database and no API key.
+        {coachOn ? ' The model key stays on the coach Worker.' : ''}
+      </p>
     </div>
   )
 }

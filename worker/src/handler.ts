@@ -42,7 +42,10 @@ export async function handleCoachRequest(request: Request, env: CoachEnv, deps?:
   if (origin !== ALLOWED_ORIGIN) return respond(403, { error: 'rejected' }, origin)
 
   const runtime: HandlerDeps = {
-    fetch: deps?.fetch ?? fetch,
+    // Workers throw "Illegal invocation" if the global fetch is stored and later
+    // called as a method (`runtime.fetch(...)`), because that sets `this` to the
+    // handler object. Call it as a free function instead.
+    fetch: deps?.fetch ?? ((input, init) => fetch(input, init)),
     now: deps?.now ?? Date.now,
     store: deps?.store ?? env.COACH_LIMITS ?? isolateStore,
   }

@@ -10,11 +10,11 @@ compatibility_date = "2026-10-19"
 # Cloudflare dashboard or uncomment [vars] when you are ready to spend.
 # While they are unset, POST /coach refuses to call a model.
 #
-# Optional shared limits. Without this binding, the per-IP bucket and the daily
-# cap live in memory inside each isolate. See docs/ai-coach.md.
-# [[kv_namespaces]]
-# binding = "COACH_LIMITS"
-# id = "replace-with-your-kv-namespace-id"
+# Shared per-IP bucket and daily cap. The namespace id is not a secret.
+# Do not put the Cloudflare account id in this file.
+[[kv_namespaces]]
+binding = "COACH_LIMITS"
+id = "61b4d775bf86494ea78da40c6962bd54"
 
 # [vars]
 # AI_BASE_URL = "https://api.openai.com/v1"

@@ -21,12 +21,12 @@ Visitor's browser
                   GitHub Pages
 ```
 
-An optional AI Worker sits beside the coach, not inside the score. It is implemented and switched off. The published site does not call it until `VITE_COACH_API_URL` is set at build time.
+An optional AI Worker sits beside the coach, not inside the score. It is deployed. The published site calls it when `VITE_COACH_API_URL` is set at build time.
 
 ```text
 Assessment result
     ├─ Scenario Coach (live, local, cannot invent a score)
-    └─ AI Worker (implemented, off)
+    └─ AI Worker (deployed; used when VITE_COACH_API_URL is set)
            POST /coach with scenario id, choice ids, and the rules score
            rephrases that result only
            on any failure the page keeps the Scenario Coach
@@ -57,7 +57,7 @@ The 2D inspector and the A-Frame scene are two views of one exercise. Neither on
 | Record one answer | `src/domain/session.ts` | `submitHazardAnswer` and `setAttemptMode` |
 | Score | `src/domain/scoring.ts` | `scoreAttempt`. `mode` does not change points |
 | Coach | `src/domain/coach.ts` | `buildScenarioCoach` |
-| Optional AI coach | `worker/` and `src/domain/aiCoach.ts` | Off unless `VITE_COACH_API_URL` is an https URL |
+| Optional AI coach | `worker/` and `src/domain/aiCoach.ts` | Deployed. The site calls it when `VITE_COACH_API_URL` is an https URL |
 | 2D picture positions | `src/simulation/sceneObjects.ts` | Percent positions for the SVG only |
 | 3D scene | `src/simulation/WarehouseScene.tsx` | Loaded with `React.lazy` from the simulation page |
 
@@ -75,8 +75,8 @@ Vite `base` is `/Xr-skilllab/` because the repository name is `Xr-skilllab`. Ass
 
 ## What is intentionally absent
 
-- No API key in the repository. The Worker secret is set in Cloudflare, and it is not set yet
-- The AI coach is not enabled on the published site
+- No API key in the repository. The Worker secret stays in Cloudflare
+- The published site requests AI coaching only when `VITE_COACH_API_URL` was set for that build
 - No analytics
 - A-Frame is a separate chunk, loaded when the 3D view opens, not in the main bundle
 - No fake metrics, testimonials, or company marks

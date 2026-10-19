@@ -1,8 +1,14 @@
 # Turn on the AI coach
 
-The AI coach is built and **switched off**. The live site still shows the offline Scenario Coach. Nothing on the results page calls a model until you set a public URL at build time.
+The Worker is deployed. Its URL is:
 
-The browser never holds an API key. A Cloudflare Worker checks a small JSON result, then calls the model with a key that stays in Cloudflare.
+```text
+https://xr-skilllab-coach.tracynguyen01.workers.dev/coach
+```
+
+The workers.dev subdomain is `tracynguyen01`. The model in use is `gpt-4o-mini`. The website shows **AI coaching (beta)** when the GitHub Actions variable `VITE_COACH_API_URL` is that URL at build time. A deploy that does not include the variable still shows only the offline Scenario Coach.
+
+The browser never holds an API key. The Worker checks a small JSON result, then calls the model with a key that stays in Cloudflare.
 
 You need:
 
@@ -41,7 +47,7 @@ The reply is three short lines: what went well, what to practise, and one next s
 
 ## 2. Log in from this repository
 
-Install Node.js 22 if you do not have it. From the repository root:
+Install Node.js 22 if you do not have it. Wrangler 4, which `npx wrangler` installs, needs Node.js 22. An older Node fails before the Worker deploys. From the repository root:
 
 ```bash
 npm ci
@@ -89,6 +95,8 @@ That command should not list a new `.env`, `.dev.vars`, or key file. `.dev.vars`
 
 `AI_BASE_URL` is the root that already ends in `/v1`. The Worker adds `/chat/completions`. `AI_MODEL` is that provider's model id. `AI_DAILY_CAP` is a whole number from 1 to 1000. Start with `20`.
 
+Use `gpt-4o-mini` for OpenAI. The Worker sends `max_tokens` and `temperature`. Current gpt-5 models reject those fields, so a gpt-5 id returns an error and the page falls back to the offline Scenario Coach. Stay on `gpt-4o-mini` unless the Worker code is changed to match a newer request shape.
+
 Set them in the Cloudflare dashboard: **Workers & Pages → xr-skilllab-coach → Settings → Variables**. Add each name as plain text, not as a secret (the URL and model id are not secret; the key is).
 
 Or uncomment the `[vars]` block in `worker/wrangler.toml`, edit it, and deploy. That file is committed, so only put the URL, the model id, and the cap there. Never put `AI_API_KEY` there.
@@ -112,19 +120,27 @@ From `worker/`:
 npx wrangler deploy
 ```
 
-The command prints a URL like:
+This Worker is already deployed. Run `npx wrangler deploy` again after a code change. GitHub Pages does not publish the Worker. The command prints a URL on the account subdomain. For this project that subdomain is `tracynguyen01`, and the site needs the `/coach` path on the end:
 
 ```text
-https://xr-skilllab-coach.<your-subdomain>.workers.dev
-```
-
-The site needs the `/coach` path on the end:
-
-```text
-https://xr-skilllab-coach.<your-subdomain>.workers.dev/coach
+https://xr-skilllab-coach.tracynguyen01.workers.dev/coach
 ```
 
 The Worker only answers browser calls whose `Origin` is `https://tracynguyen01.github.io`.
+
+### If every request returns 502
+
+Two causes show up before the model reply is usable.
+
+**Illegal invocation.** Cloudflare's `fetch` throws `TypeError: Illegal invocation` when it is copied onto another object and called as a method, because `this` is no longer the Workers runtime. The handler must call it as a free function:
+
+```ts
+fetch: deps?.fetch ?? ((input, init) => fetch(input, init)),
+```
+
+`fetch: deps?.fetch ?? fetch` looks equivalent and is not. That line makes every real request return 502. A unit test installs a fetch that throws when `this` is some other object, then calls the handler without a mock fetch.
+
+**gpt-5 request fields.** The outbound body sets `max_tokens` and `temperature`. gpt-5 chat models reject those. `AI_MODEL` for this deployment is `gpt-4o-mini`.
 
 ### Limits
 
@@ -132,15 +148,9 @@ Each IP address gets **5 requests**, then **one more per minute**. That counter 
 
 `AI_DAILY_CAP` counts calls that are about to reach the model, in UTC days.
 
-By default both counters live **in memory inside one Worker isolate**. A new isolate starts fresh, and two isolates do not share a count. Treat that as a basic brake.
+`worker/wrangler.toml` binds the KV namespace `COACH_LIMITS` (id `61b4d775bf86494ea78da40c6962bd54`). That id is not a secret. The account id is not in the file. Isolates share the per-IP bucket and the daily cap through this namespace. Without the binding, both counters would live in memory inside one isolate and would reset when a new isolate starts.
 
-For a shared counter, create a KV namespace and uncomment the `[[kv_namespaces]]` block in `wrangler.toml`:
-
-```bash
-npx wrangler kv namespace create COACH_LIMITS
-```
-
-Put the printed `id` in `wrangler.toml` as the binding `COACH_LIMITS`, then deploy again. The same code uses KV when that binding exists. The provider spending limit still matters, because IP limits can be avoided.
+The provider spending limit still matters, because IP limits can be avoided. To start over on a new account, `npx wrangler kv namespace create COACH_LIMITS` prints a new id. Put that id in `wrangler.toml` and deploy again.
 
 The Worker does not write request or response bodies to logs.
 
@@ -151,7 +161,7 @@ The site reads `VITE_COACH_API_URL` when GitHub Actions builds it. That value is
 1. Open the GitHub repository `tracynguyen01/Xr-skilllab`.
 2. Go to **Settings → Secrets and variables → Actions → Variables**.
 3. Add a variable named `VITE_COACH_API_URL`.
-4. Set the value to the full coach URL from step 6, including `/coach`.
+4. Set the value to `https://xr-skilllab-coach.tracynguyen01.workers.dev/coach`.
 
 ## 8. Publish the site again
 

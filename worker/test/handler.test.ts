@@ -155,6 +155,34 @@ describe('coach worker', () => {
     expect(payload).toEqual({ error: 'unavailable' })
   })
 
+  it('calls the platform fetch unbound so a method-style this does not 502', async () => {
+    const receivers: unknown[] = []
+    const original = globalThis.fetch
+    function sensitiveFetch(this: unknown, _input: RequestInfo | URL, _init?: RequestInit) {
+      receivers.push(this)
+      if (this != null && this !== globalThis) throw new TypeError('Illegal invocation')
+      return Promise.resolve(modelReply(goodText))
+    }
+    const asMethod = { fetch: sensitiveFetch }
+    expect(() => {
+      asMethod.fetch('https://example.test/v1/chat/completions', {})
+    }).toThrow('Illegal invocation')
+    receivers.length = 0
+
+    globalThis.fetch = sensitiveFetch as typeof fetch
+    try {
+      const response = await handleCoachRequest(request(validBody()), env(), {
+        store: createMemoryStore(),
+        now: () => Date.parse('2026-10-19T01:00:00.000Z'),
+      })
+      expect(response.status).toBe(200)
+      expect(receivers).toHaveLength(1)
+      expect(receivers[0] == null || receivers[0] === globalThis).toBe(true)
+    } finally {
+      globalThis.fetch = original
+    }
+  })
+
   it('returns unavailable when the provider times out', async () => {
     const fetchImpl = vi.fn(async () => {
       throw new DOMException('The operation was aborted', 'TimeoutError')

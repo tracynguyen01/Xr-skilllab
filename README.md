@@ -19,7 +19,7 @@ The repository name is case-sensitive. Do not deploy this as `/xr-skilllab/`.
 - A-Frame warehouse on the same hazards and the same score, loaded only when 3D opens
 - Drag to look, WASD or arrow keys to move, and an inspection list that does not need a mouse
 - Deterministic score: 15 points for assessing a hazard, plus 10 for the preferred action, once per hazard
-- Offline Scenario Coach. No AI service and no network call
+- Offline Scenario Coach. The optional AI coach in `worker/` is implemented and switched off
 - Same-tab session storage, with an in-memory fallback
 
 On a wide screen with WebGL, the intro offers **Begin in 3D** first. On a narrow screen it offers the 2D inspector first, with **Try 3D**. If WebGL is missing, the page says 3D is not available and the 2D exercise is the whole task. Switching views does not clear answers.
@@ -59,10 +59,11 @@ See [docs/architecture.md](docs/architecture.md). Short version:
 - Pure scoring in `src/domain/scoring.ts`
 - Attempt rules in `src/domain/session.ts`
 - Offline coach in `src/domain/coach.ts`
+- Optional AI coach in `worker/`. It is off until `VITE_COACH_API_URL` is set. See [docs/ai-coach.md](docs/ai-coach.md)
 - 2D illustration and buttons share positions in `src/simulation/sceneObjects.ts`
 - 3D rings use `hotspot` on each hazard and decoy. `src/simulation/WarehouseScene.tsx` is loaded only for the 3D view
 
-The score is rules, not a model. A future AI Worker must not change it.
+The score is rules, not a model. The optional Worker can rephrase a finished result. It cannot change the score. The published site does not call it.
 
 ## Deploy
 
@@ -79,6 +80,8 @@ One-time repository setting, if it is not already set:
 
 Pushes to `main` publish the site. A green build on another branch is not the same thing as a checked deployment.
 
+The deploy build reads the repository variable `VITE_COACH_API_URL` (Settings → Secrets and variables → Actions → Variables). It is a public URL, not a secret. While that variable is empty, the results page stays on the offline Scenario Coach. Turning the coach on later does not need a code change. The steps are in [docs/ai-coach.md](docs/ai-coach.md).
+
 The production build writes asset URLs under `/Xr-skilllab/`. Confirm `dist/index.html` references `/Xr-skilllab/assets/...` if you change the repository name.
 
 ## Limitations
@@ -87,7 +90,7 @@ The production build writes asset URLs under `/Xr-skilllab/`. Confirm `dist/inde
 - Source notes on each hazard are for later expert review. They are not citations of a law or standard.
 - 3D is a browser scene made of simple shapes. It does not require a headset, and the headset button is hidden.
 - No accounts, no analytics, and no contact form.
-- No live AI coach. The Scenario Coach is local rules.
+- The AI coach is implemented and not enabled. The live results page uses the offline Scenario Coach. Enabling it needs the owner's Cloudflare account, a model API key, and the `VITE_COACH_API_URL` variable. See [docs/ai-coach.md](docs/ai-coach.md).
 - No measured claim that the exercise improves workplace performance.
 - A licence file has not been added. Inter and Manrope are bundled with Fontsource under the SIL Open Font License.
 

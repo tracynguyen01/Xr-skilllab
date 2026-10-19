@@ -29,6 +29,8 @@ test('3D scene loads and an attempt can be finished from the list', async ({ pag
   await expect(page.getByText('4 / 4 hazards assessed')).toBeVisible()
   await page.getByRole('button', { name: 'Finish Assessment' }).click()
   await expect(page.getByRole('heading', { level: 1, name: 'Score: 100 / 100' })).toBeVisible()
+  await expect(page.getByText('Scenario Coach · offline rules')).toBeVisible()
+  await expect(page.getByText('AI coaching (beta)')).toHaveCount(0)
 
   const box = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,

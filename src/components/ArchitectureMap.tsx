@@ -18,7 +18,7 @@ const LAYERS = [
     name: 'Coaching',
     cards: [
       { title: 'Scenario Coach', text: 'Offline rules. Restates the score. No network call.', state: 'Live' },
-      { title: 'AI Worker', text: 'Could rephrase a result later. It must not change the score. Not connected.', state: 'Future' },
+      { title: 'AI Worker', text: 'Implemented and switched off. This site does not call it. It cannot change the score.', state: 'Off' },
     ],
   },
 ]
@@ -27,8 +27,8 @@ export function ArchitectureMap() {
   return (
     <div className="arch">
       <p className="arch-legend">
-        <span className="badge badge-live">Live</span> is in this version.
-        <span className="badge badge-future">Future</span> is a roadmap item, not a working feature.
+        <span className="badge badge-live">Live</span> is running on this site.
+        <span className="badge badge-off">Off</span> is in the project and this site does not call it.
       </p>
       {LAYERS.map((layer, index) => (
         <div key={layer.name} className="arch-layer">
@@ -36,8 +36,8 @@ export function ArchitectureMap() {
           <h3>{layer.name}</h3>
           <div className="arch-cards">
             {layer.cards.map((card) => (
-              <article key={card.title} className={card.state === 'Future' ? 'arch-card is-future' : 'arch-card'}>
-                <span className={card.state === 'Future' ? 'badge badge-future' : 'badge badge-live'}>{card.state}</span>
+              <article key={card.title} className={card.state === 'Off' ? 'arch-card is-off' : 'arch-card'}>
+                <span className={card.state === 'Off' ? 'badge badge-off' : 'badge badge-live'}>{card.state}</span>
                 <h4>{card.title}</h4>
                 <p>{card.text}</p>
               </article>

@@ -3,13 +3,16 @@ import { scoreLabel } from '../domain/scoring'
 import { elapsedSeconds, formatElapsed } from '../domain/time'
 import type { AssessmentResult, Attempt } from '../domain/types'
 import { buildScenarioCoach } from '../domain/coach'
+import { AiCoachSection } from './AiCoachSection'
 
 type ResultsSummaryProps = {
   result: AssessmentResult
   attempt: Attempt
+  /** Test hook. Leave unset so the build-time URL decides. */
+  aiEndpoint?: string | null
 }
 
-export function ResultsSummary({ result, attempt }: ResultsSummaryProps) {
+export function ResultsSummary({ result, attempt, aiEndpoint }: ResultsSummaryProps) {
   const coach = buildScenarioCoach(result)
   const seconds = elapsedSeconds(attempt.startedAt, attempt.endedAt)
   const radius = 54
@@ -86,6 +89,8 @@ export function ResultsSummary({ result, attempt }: ResultsSummaryProps) {
           })}
         </ol>
       </section>
+
+      <AiCoachSection result={result} attempt={attempt} endpoint={aiEndpoint} />
 
       <section className="coach-card card" aria-labelledby="coach-title">
         <p className="eyebrow">Scenario Coach · offline rules</p>

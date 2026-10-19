@@ -19,14 +19,15 @@ export function HowItWorksPage() {
       <h1>A small system with a hard line around the score</h1>
       <p className="lede">
         XR SkillLab is a static site. The browser holds the scenario, scores the attempt, and writes the coaching.
-        Nothing in this version is sent to a server.
+        This published build does not send the attempt to a server.
       </p>
 
       <h2>Architecture</h2>
       <ArchitectureMap />
       <p className="callout">
-        Trust boundary: the scoring engine is the source of truth. A future AI Worker may only rephrase a finished
-        result. It is not connected, and it would not be allowed to change points, invent actions, or certify anyone.
+        Trust boundary: the scoring engine is the source of truth. An optional AI Worker is in the repository and
+        switched off. If it is turned on later, it may only rephrase a finished result. It cannot change points, invent
+        actions, or certify anyone.
       </p>
 
       <h2>What happens in one attempt</h2>
@@ -65,7 +66,7 @@ export function HowItWorksPage() {
       <ul>
         <li>Not a formal safety course, and not reviewed by a safety professional yet.</li>
         <li>The warehouse is an illustration in 2D and a primitive scene in 3D, not a measured digital twin.</li>
-        <li>3D needs WebGL. It does not ask for a headset. There is no live AI model in this version.</li>
+        <li>3D needs WebGL. It does not ask for a headset. The optional AI coach is switched off, so feedback on this site is the offline Scenario Coach.</li>
         <li>There is no account, saved history across visits, or LMS connection.</li>
         <li>No claim is made that using the demo improves real workplace performance.</li>
       </ul>

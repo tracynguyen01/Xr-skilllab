@@ -1,0 +1,66 @@
+const list = document.querySelector('#demo-list')
+const status = document.querySelector('#demo-status')
+
+function pitchFor(sample) {
+  if (sample.slug === 'xr-skilllab') {
+    return 'Step into a warehouse, choose a response for each hazard, and read a score built from fixed rules.'
+  }
+  if (sample.slug === 'twininspect') {
+    return 'Walk a fictional home, review what the model flagged, and keep the report in the inspector’s hands.'
+  }
+  return sample.tagline
+}
+
+function card(sample) {
+  const link = document.createElement('a')
+  link.className = 'demo-card'
+  link.href = sample.href
+  link.style.setProperty('--accent', sample.accent)
+
+  const figure = document.createElement('span')
+  figure.className = 'demo-shot'
+  const image = document.createElement('img')
+  image.src = sample.thumbnail
+  image.alt = ''
+  image.width = 960
+  image.height = 600
+  figure.append(image)
+
+  const body = document.createElement('span')
+  body.className = 'demo-body'
+  const kicker = document.createElement('span')
+  kicker.className = 'eyebrow'
+  kicker.textContent = 'Concept demo'
+  const title = document.createElement('h3')
+  title.textContent = sample.title
+  const tagline = document.createElement('p')
+  tagline.className = 'tagline'
+  tagline.textContent = sample.tagline
+  const pitch = document.createElement('p')
+  pitch.className = 'pitch'
+  pitch.textContent = pitchFor(sample)
+  const tags = document.createElement('ul')
+  tags.className = 'tags'
+  for (const tag of sample.tags) {
+    const item = document.createElement('li')
+    item.textContent = tag
+    tags.append(item)
+  }
+  const cta = document.createElement('span')
+  cta.className = 'cta'
+  cta.textContent = 'Open the demo'
+
+  body.append(kicker, title, tagline, pitch, tags, cta)
+  link.append(figure, body)
+  return link
+}
+
+try {
+  const response = await fetch('samples.json')
+  if (!response.ok) throw new Error('missing list')
+  const samples = await response.json()
+  if (!Array.isArray(samples) || samples.length === 0) throw new Error('empty list')
+  for (const sample of samples) list.append(card(sample))
+} catch {
+  status.textContent = 'The demo list could not be loaded.'
+}

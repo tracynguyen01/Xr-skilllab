@@ -1,5 +1,7 @@
 # Turn on the AI coach
 
+The published pages do not call this Worker. The site is a static portfolio of concept demos. The Worker remains in `worker/` for the earlier warehouse coach, and it is not part of the current pages.
+
 The Worker is deployed. Its URL is:
 
 ```text

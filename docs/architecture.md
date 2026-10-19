@@ -10,10 +10,12 @@ Visitor's browser
 │   one card per demo                          │
 │ samples/xr-skilllab/                         │
 │   index.html + support.js + warehouse.js     │
-│   Three.js from jsDelivr, fonts from Google  │
+│ samples/oil-gas/  mining/  chemical-processing/ │
+│   index.html + support.js + scene.js         │
+│   content.js holds hazards and the score     │
 │ samples/twininspect/                         │
 │   index.html + support.js + home.js          │
-│   Three.js from jsDelivr, fonts from Google  │
+│ Three.js from jsDelivr, fonts from Google    │
 └──────────────────────────────────────────────┘
                     │
                     ▼

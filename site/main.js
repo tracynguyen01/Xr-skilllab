@@ -1,15 +1,18 @@
-const list = document.querySelector('#demo-list')
+const root = document.querySelector('#demo-groups')
 const status = document.querySelector('#demo-status')
 
-function pitchFor(sample) {
-  if (sample.slug === 'xr-skilllab') {
-    return 'Step into a warehouse, choose a response for each hazard, and read a score built from fixed rules.'
-  }
-  if (sample.slug === 'twininspect') {
-    return 'Walk a fictional home, review what the model flagged, and keep the report in the inspector’s hands.'
-  }
-  return sample.tagline
-}
+const groups = [
+  {
+    id: 'training',
+    title: 'Industry training',
+    lede: 'Four fictional floors. Warehouse, oil and gas, mining, and chemical processing. Each score comes from the same fixed rules.',
+  },
+  {
+    id: 'inspection',
+    title: 'Inspection',
+    lede: 'A remote look at one fictional home, with the report left in the inspector’s hands.',
+  },
+]
 
 function card(sample) {
   const link = document.createElement('a')
@@ -39,7 +42,7 @@ function card(sample) {
   body.className = 'demo-body'
   const kicker = document.createElement('span')
   kicker.className = 'eyebrow'
-  kicker.textContent = 'Concept demo'
+  kicker.textContent = sample.group === 'inspection' ? 'Inspection' : 'Industry training'
   const title = document.createElement('h3')
   title.textContent = sample.title
   const tagline = document.createElement('p')
@@ -47,7 +50,7 @@ function card(sample) {
   tagline.textContent = sample.tagline
   const pitch = document.createElement('p')
   pitch.className = 'pitch'
-  pitch.textContent = pitchFor(sample)
+  pitch.textContent = sample.pitch || sample.tagline
   const tags = document.createElement('ul')
   tags.className = 'tags'
   for (const tag of sample.tags) {
@@ -69,7 +72,22 @@ try {
   if (!response.ok) throw new Error('missing list')
   const samples = await response.json()
   if (!Array.isArray(samples) || samples.length === 0) throw new Error('empty list')
-  for (const sample of samples) list.append(card(sample))
+  for (const group of groups) {
+    const items = samples.filter((sample) => sample.group === group.id)
+    if (items.length === 0) continue
+    const section = document.createElement('div')
+    section.className = 'demo-group'
+    const title = document.createElement('h3')
+    title.textContent = group.title
+    const lede = document.createElement('p')
+    lede.className = 'group-lede'
+    lede.textContent = group.lede
+    const grid = document.createElement('div')
+    grid.className = items.length === 1 ? 'demo-grid is-single' : 'demo-grid'
+    for (const sample of items) grid.append(card(sample))
+    section.append(title, lede, grid)
+    root.append(section)
+  }
 } catch {
   status.textContent = 'The demo list could not be loaded.'
 }

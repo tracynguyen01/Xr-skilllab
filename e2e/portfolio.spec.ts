@@ -23,7 +23,16 @@ function watchConsole(page: Page) {
   return errors
 }
 
-test('home lists both demos and each sample opens cleanly', async ({ page }) => {
+const demos = [
+  { name: /Industry training XR SkillLab/i, heading: /learn by doing/i, where: 'skilllab' },
+  { name: /Industry training Oil & Gas/i, heading: /learn by doing/i, where: 'oil-gas' },
+  { name: /Industry training Mining/i, heading: /learn by doing/i, where: 'mining' },
+  { name: /Industry training Chemical processing/i, heading: /learn by doing/i, where: 'chemical' },
+  { name: /Inspection TwinInspect/i, heading: /inspect any home/i, where: 'twin' },
+]
+
+test('home lists every demo and each sample opens cleanly', async ({ page }) => {
+  test.setTimeout(120000)
   const errors = watchConsole(page)
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/')
@@ -31,42 +40,34 @@ test('home lists both demos and each sample opens cleanly', async ({ page }) => 
   await expect(page).toHaveTitle('XR Concept Lab')
   await expect(page.getByRole('banner').getByRole('link', { name: 'XR Concept Lab' })).toBeVisible()
   await expect(page.locator('footer')).toContainText('XR Concept Lab')
-  const skill = page.getByRole('link', { name: /Concept demo XR SkillLab/i })
-  const twin = page.getByRole('link', { name: /Concept demo TwinInspect/i })
-  await expect(skill).toBeVisible()
-  await expect(twin).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: /five ways to try the idea/i })).toBeVisible()
+  for (const demo of demos) {
+    await expect(page.getByRole('link', { name: demo.name })).toBeVisible()
+  }
   await expect(page.getByRole('link', { name: 'Tracy Nguyen' })).toHaveAttribute('href', 'https://github.com/tracynguyen01')
   await expectNoOverflow(page, 'home 1280')
 
   await page.setViewportSize({ width: 390, height: 844 })
-  await expect(skill).toBeVisible()
-  await expect(twin).toBeVisible()
+  for (const demo of demos) {
+    await expect(page.getByRole('link', { name: demo.name })).toBeVisible()
+  }
   await expectNoOverflow(page, 'home 390')
 
-  await page.setViewportSize({ width: 1280, height: 900 })
-  await skill.click()
-  await expect(page.getByRole('heading', { level: 1, name: /learn by doing/i })).toBeVisible({ timeout: 20000 })
-  await expect(page.getByRole('link', { name: 'Back to all demos' })).toBeVisible()
-  await expectNoOverflow(page, 'skilllab 1280')
-  await page.setViewportSize({ width: 390, height: 844 })
-  await expectNoOverflow(page, 'skilllab 390')
-  expect(errors, errors.join('\n')).toEqual([])
-
-  await page.getByRole('link', { name: 'Back to all demos' }).click()
-  await expect(page.getByRole('heading', { level: 1, name: /practised in the browser/i })).toBeVisible()
-
-  await page.setViewportSize({ width: 1280, height: 900 })
-  await page.getByRole('link', { name: /TwinInspect/i }).click()
-  await expect(page.getByRole('heading', { level: 1, name: /inspect any home/i })).toBeVisible({ timeout: 20000 })
-  await expect(page.getByRole('link', { name: 'Back to all demos' })).toBeVisible()
-  await expectNoOverflow(page, 'twin 1280')
-  await page.setViewportSize({ width: 390, height: 844 })
-  await expectNoOverflow(page, 'twin 390')
-  expect(errors, errors.join('\n')).toEqual([])
+  for (const demo of demos) {
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await page.goto('/')
+    await page.getByRole('link', { name: demo.name }).click()
+    await expect(page.getByRole('heading', { level: 1, name: demo.heading })).toBeVisible({ timeout: 20000 })
+    await expect(page.getByRole('link', { name: 'Back to all demos' })).toBeVisible()
+    await expectNoOverflow(page, `${demo.where} 1280`)
+    await page.setViewportSize({ width: 390, height: 844 })
+    await expectNoOverflow(page, `${demo.where} 390`)
+    expect(errors, errors.join('\n')).toEqual([])
+  }
 })
 
 test('old hash routes stay on the portfolio home', async ({ page }) => {
   await page.goto('/#/simulate')
   await expect(page.getByRole('heading', { level: 1, name: /practised in the browser/i })).toBeVisible()
-  await expect(page.getByRole('link', { name: /Concept demo XR SkillLab/i })).toBeVisible()
+  await expect(page.getByRole('link', { name: /Industry training XR SkillLab/i })).toBeVisible()
 })

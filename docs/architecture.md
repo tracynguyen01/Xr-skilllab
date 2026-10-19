@@ -1,6 +1,6 @@
 # Architecture
 
-XR SkillLab is a static portfolio. GitHub Pages serves the files. There is no application server in the request path.
+XR Concept Lab is a static portfolio. The warehouse sample is still branded XR SkillLab on its own page. GitHub Pages serves the files. There is no application server in the request path.
 
 ```text
 Visitor's browser

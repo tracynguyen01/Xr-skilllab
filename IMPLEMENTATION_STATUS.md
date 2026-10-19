@@ -5,6 +5,9 @@ The published site is a static portfolio. The previous React training app has be
 ## Implemented
 
 - Landing page at the site root, in the Fable visual language: Manrope, navy and teal tokens, the same button, card, and header rhythm
+- Portfolio name XR Concept Lab in the header, footer, and document title. Sample pages keep their own names
+- Card thumbnails are 16:10 scene renders (`thumbnail.webp` and `thumbnail.avif`), shared with a layered hero composition
+- Demo cards share a row height, with the action aligned to the bottom of each card
 - Demo list driven by `site/samples.json`
 - XR SkillLab warehouse demo at `samples/xr-skilllab/`
 - TwinInspect fictional home-inspection demo at `samples/twininspect/`

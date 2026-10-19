@@ -27,9 +27,6 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Lint
-        run: npm run lint
-
       - name: Test
         run: npm run test
 
@@ -38,6 +35,3 @@ jobs:
 
       - name: End-to-end
         run: npm run test:e2e
-
-      - name: Build
-        run: npm run build

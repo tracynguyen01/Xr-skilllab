@@ -31,9 +31,6 @@ jobs:
         run: npm ci
 
       - name: Build
-        env:
-          # Public Worker URL. Repository variable, not a secret. Empty leaves the offline coach in place.
-          VITE_COACH_API_URL: ${{ vars.VITE_COACH_API_URL }}
         run: npm run build
 
       - name: Upload Pages artifact

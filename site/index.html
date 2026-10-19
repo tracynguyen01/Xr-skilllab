@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>XR SkillLab</title>
+    <meta
+      name="description"
+      content="A portfolio of browser-based immersive XR and digital-twin concept demos. Independent educational work by Tracy Nguyen."
+    />
+    <meta name="theme-color" content="#0B1220" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class="bar" aria-label="Primary">
+        <a class="wordmark" href="./">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2.5" y="2.5" width="12" height="12" rx="2.5" fill="none" stroke="#42DDC5" stroke-width="2"></rect>
+            <rect x="9.5" y="9.5" width="12" height="12" rx="2.5" fill="#42DDC5"></rect>
+          </svg>
+          <span>XR SkillLab</span>
+        </a>
+        <a class="nav-link" href="#demos">Demos</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <p class="eyebrow">Immersive concept demos</p>
+          <h1 id="hero-title">Real work, practised in the browser.</h1>
+          <p class="lede">
+            A portfolio of browser-based XR and digital-twin concepts. Each one shows how an immersive scene, plus AI you can see the limits of, can turn training or inspection into something a person actually does — and a result someone else can check.
+          </p>
+          <p class="meta">No headset or account. Open a demo and try the decisions yourself.</p>
+          <a class="btn" href="#demos">View the demos</a>
+        </div>
+      </section>
+      <section class="strip" aria-label="What the demos share">
+        <ul>
+          <li>Hands-on, not a slide</li>
+          <li>A result you can explain</li>
+          <li>AI that does not quietly mark the work</li>
+          <li>Runs in the browser</li>
+        </ul>
+      </section>
+      <section class="demos" id="demos" aria-labelledby="demos-title">
+        <p class="eyebrow">The portfolio</p>
+        <h2 id="demos-title">Two ways to try the idea.</h2>
+        <p class="section-lede">One training floor. One fictional house. Same standard: the scene is the exercise, and the score or the report stays accountable.</p>
+        <div id="demo-list" class="demo-grid"></div>
+        <p id="demo-status" class="status" role="status"></p>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="wordmark-line">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2.5" y="2.5" width="12" height="12" rx="2.5" fill="none" stroke="#42DDC5" stroke-width="2"></rect>
+            <rect x="9.5" y="9.5" width="12" height="12" rx="2.5" fill="#42DDC5"></rect>
+          </svg>
+          XR SkillLab
+        </p>
+        <p>
+          An independent educational portfolio by
+          <a href="https://github.com/tracynguyen01">Tracy Nguyen</a>.
+          It is not affiliated with or endorsed by Next XR Group.
+          Scenarios and the TwinInspect property are fictional. They do not replace workplace induction, accredited training, a real inspection, or professional safety advice.
+        </p>
+      </div>
+    </footer>
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

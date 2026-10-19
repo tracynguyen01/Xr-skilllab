@@ -1,0 +1,20 @@
+[
+  {
+    "slug": "xr-skilllab",
+    "title": "XR SkillLab",
+    "tagline": "Warehouse safety training",
+    "tags": ["Live 3D", "2D fallback", "Transparent scoring", "Coaching"],
+    "thumbnail": "samples/xr-skilllab/thumbnail.webp",
+    "href": "samples/xr-skilllab/",
+    "accent": "#42DDC5"
+  },
+  {
+    "slug": "twininspect",
+    "title": "TwinInspect",
+    "tagline": "Remote digital-twin home inspection",
+    "tags": ["Digital twin", "Inspection", "Fictional property", "Report"],
+    "thumbnail": "samples/twininspect/thumbnail.webp",
+    "href": "samples/twininspect/",
+    "accent": "#1F6F5C"
+  }
+]

@@ -69,13 +69,27 @@ test('the opening shot looks down and keeps every marker on screen', async ({ pa
   expectMarkersInside(opening)
 
   await page.keyboard.down('w')
-  await page.waitForTimeout(700)
-  await page.keyboard.up('w')
+  try {
+    await page.waitForFunction((startZ) => {
+      const rig = document.querySelector('[data-rig]') as (HTMLElement & { object3D?: { position: { z: number } } }) | null
+      const z = rig?.object3D?.position.z
+      return typeof z === 'number' && z < startZ - 0.4
+    }, opening.position.z)
+  } finally {
+    await page.keyboard.up('w')
+  }
   const walked = await readFraming(page)
   expect(walked.position.z).toBeLessThan(opening.position.z - 0.4)
 
+  const glidesBefore = await armGlideCounter(page)
   await page.getByRole('button', { name: 'Reset view' }).click()
-  await page.waitForFunction(() => document.querySelector('[data-rig]')?.dataset.gliding === 'true')
+  // pose-glide deletes data-gliding when it finishes. A stalled CI frame can
+  // start and finish that 900ms glide before the next poll, so wait for the
+  // event that stays counted instead of the flag.
+  await page.waitForFunction((before) => {
+    const count = (window as Window & { __xrGlides?: number }).__xrGlides ?? 0
+    return count > before
+  }, glidesBefore)
   await waitForSettledShot(page)
 
   const reset = await readFraming(page)
@@ -107,10 +121,38 @@ async function waitForSettledShot(page: import('@playwright/test').Page) {
     const rig = document.querySelector('[data-rig]')
     const camera = document.querySelector('[data-camera]') as (HTMLElement & { getObject3D?: (name: string) => unknown }) | null
     if (!rig || !camera?.getObject3D?.('camera')) return false
-    return rig.getAttribute('data-gliding') !== 'true' && rig.dataset.gliding !== 'true'
+    // pose-glide removes itself only after the ease finishes. "Not gliding yet"
+    // is also true before the component starts, so the attribute is the signal.
+    return !rig.hasAttribute('pose-glide') && rig.dataset.gliding !== 'true'
   })
-  // Give look-controls a few ticks. It must not pitch the shot back up.
-  await page.waitForTimeout(450)
+  // look-controls is re-enabled on glide-ended. Give it real frames, not wall
+  // clock, so a slow runner still lets it overwrite pitch if that bug returns.
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        let frames = 0
+        function tick() {
+          frames += 1
+          if (frames >= 8) resolve()
+          else requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+      }),
+  )
+}
+
+async function armGlideCounter(page: import('@playwright/test').Page): Promise<number> {
+  return page.evaluate(() => {
+    const record = window as Window & { __xrGlides?: number }
+    record.__xrGlides = record.__xrGlides ?? 0
+    if (record.__xrGlides === 0 && !document.querySelector('a-scene')?.hasAttribute('data-glide-counter')) {
+      document.querySelector('a-scene')?.setAttribute('data-glide-counter', 'on')
+      document.querySelector('a-scene')?.addEventListener('glide-ended', () => {
+        record.__xrGlides = (record.__xrGlides ?? 0) + 1
+      })
+    }
+    return record.__xrGlides
+  })
 }
 
 async function readFraming(page: import('@playwright/test').Page): Promise<Framing> {

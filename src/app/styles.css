@@ -24,7 +24,10 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Instant, not smooth. Playwright restarts scrollIntoView while a smooth
+     scroll is in progress, so a button below the sticky header never becomes
+     stable and the 3D tests time out. This site has no in-page anchors. */
+  scroll-behavior: auto;
 }
 
 body {

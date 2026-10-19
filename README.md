@@ -18,7 +18,10 @@ The repository name is case-sensitive. Do not deploy this as `/xr-skilllab/`.
 
 - A landing page that lists the demos
 - [XR SkillLab](site/samples/xr-skilllab/index.html), a warehouse safety training concept with a live 3D scene, a 2D fallback, scoring, and coaching
+- [Oil & Gas](site/samples/oil-gas/index.html), [Mining](site/samples/mining/index.html) and [Chemical processing](site/samples/chemical-processing/index.html), the same training pattern on fictional industry floors
 - [TwinInspect](site/samples/twininspect/index.html), a remote digital-twin home inspection of a fictional property
+
+The three industry lessons score in `content.js`: 15 points for assessing a hazard and 10 more for the preferred action, out of 100. Decoys do not score. The wording is an illustrative scenario, not a site procedure.
 
 The demos are the Fable pages, kept as delivered. Each one loads its own `support.js`, Google Fonts, and Three.js from a CDN.
 
@@ -40,9 +43,11 @@ Demos are one folder plus one entry in [`site/samples.json`](site/samples.json).
   "title": "Example",
   "tagline": "One line on the card",
   "tags": ["Tag"],
+  "pitch": "One or two sentences on the card.",
   "thumbnail": "samples/example/thumbnail.webp",
   "href": "samples/example/",
-  "accent": "#42DDC5"
+  "accent": "#42DDC5",
+  "group": "training"
 }
 ```
 

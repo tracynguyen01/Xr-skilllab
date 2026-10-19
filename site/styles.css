@@ -272,12 +272,32 @@ h1 {
   text-wrap: pretty;
 }
 
+.demo-group + .demo-group { margin-top: 48px; }
+
+.demo-group h3 {
+  margin-top: 28px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.group-lede {
+  margin-top: 8px;
+  max-width: 40rem;
+  color: var(--muted);
+}
+
 .demo-grid {
-  margin-top: 32px;
+  margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
   align-items: stretch;
+}
+
+.demo-grid.is-single {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: calc((100% - 20px) / 2);
 }
 
 .demo-card {
@@ -418,7 +438,8 @@ h1 {
 
   .hero-visual { max-width: 520px; }
   .demos { padding-top: 56px; }
-  .demo-grid { grid-template-columns: 1fr; }
+  .demo-grid,
+  .demo-grid.is-single { grid-template-columns: 1fr; max-width: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

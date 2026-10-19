@@ -3,18 +3,55 @@
     "slug": "xr-skilllab",
     "title": "XR SkillLab",
     "tagline": "Warehouse safety training",
+    "pitch": "Step into a warehouse, choose a response for each hazard, and read a score built from fixed rules.",
     "tags": ["Live 3D", "2D fallback", "Transparent scoring", "Coaching"],
     "thumbnail": "samples/xr-skilllab/thumbnail.webp",
     "href": "samples/xr-skilllab/",
-    "accent": "#42DDC5"
+    "accent": "#42DDC5",
+    "group": "training"
+  },
+  {
+    "slug": "oil-gas",
+    "title": "Oil & Gas",
+    "tagline": "Onshore gas processing",
+    "pitch": "Walk a fictional gas pad, from a weeping flange to a blocked muster gate, and see the score explained.",
+    "tags": ["Live 3D", "2D fallback", "Transparent scoring", "Coaching"],
+    "thumbnail": "samples/oil-gas/thumbnail.webp",
+    "href": "samples/oil-gas/",
+    "accent": "#F2B544",
+    "group": "training"
+  },
+  {
+    "slug": "mining",
+    "title": "Mining",
+    "tagline": "Open-cut operations",
+    "pitch": "Read a fictional pit: a haul truck, an open conveyor, loose ground and dust at the crusher.",
+    "tags": ["Live 3D", "2D fallback", "Transparent scoring", "Coaching"],
+    "thumbnail": "samples/mining/thumbnail.webp",
+    "href": "samples/mining/",
+    "accent": "#E07A3D",
+    "group": "training"
+  },
+  {
+    "slug": "chemical-processing",
+    "title": "Chemical processing",
+    "tagline": "Batch plant floor",
+    "pitch": "Check a fictional batch plant for mixed drums, a blocked shower, a vapour wisp and a bypassed relief.",
+    "tags": ["Live 3D", "2D fallback", "Transparent scoring", "Coaching"],
+    "thumbnail": "samples/chemical-processing/thumbnail.webp",
+    "href": "samples/chemical-processing/",
+    "accent": "#8B7CFF",
+    "group": "training"
   },
   {
     "slug": "twininspect",
     "title": "TwinInspect",
     "tagline": "Remote digital-twin home inspection",
+    "pitch": "Walk a fictional home, review what the model flagged, and keep the report in the inspector’s hands.",
     "tags": ["Digital twin", "Inspection", "Fictional property", "Report"],
     "thumbnail": "samples/twininspect/thumbnail.webp",
     "href": "samples/twininspect/",
-    "accent": "#1F6F5C"
+    "accent": "#1F6F5C",
+    "group": "inspection"
   }
 ]

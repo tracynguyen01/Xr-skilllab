@@ -10,7 +10,9 @@ The published site is a static portfolio. The previous React training app has be
 - Demo cards share a row height, with the action aligned to the bottom of each card
 - Demo list driven by `site/samples.json`
 - XR SkillLab warehouse demo at `samples/xr-skilllab/`
+- Oil & Gas, Mining, and Chemical processing lessons, same training loop on fictional scenes
 - TwinInspect fictional home-inspection demo at `samples/twininspect/`
+- Landing groups: Industry training and Inspection
 - “Back to all demos” on each sample, fixed so it does not reflow the page
 - Honest footer: Tracy Nguyen, github.com/tracynguyen01, not affiliated with Next XR Group, fictional demo data
 - Playwright smoke test for both cards, navigation, console errors, and overflow at 390 and 1280
@@ -32,7 +34,7 @@ Local commands on 19 October 2026, Node 22. CI repeats the Playwright smoke test
 | Command | What it covers |
 |---|---|
 | `npm run typecheck` | The unused Worker |
-| `npm run test` | Worker schema, limits, and a mocked provider |
+| `npm run test` | Worker schema, limits, a mocked provider, and each new lesson's score |
 | `npm run test:e2e` | Home cards, both sample pages, overflow at 390 and 1280 |
 
 The live site updates when this is merged to `main` and Deploy GitHub Pages succeeds.

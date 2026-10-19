@@ -37,8 +37,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: End-to-end
-        # repeat-each is temporary proof that the 3D checks survive a slow runner.
-        run: npm run build && npx playwright test --repeat-each=3
+        run: npm run test:e2e
 
       - name: Build
         run: npm run build

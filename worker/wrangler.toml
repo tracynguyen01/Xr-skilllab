@@ -1,0 +1,22 @@
+name = "xr-skilllab-coach"
+main = "src/index.ts"
+compatibility_date = "2026-10-19"
+
+# AI_API_KEY is a secret. Set it with:
+#   npx wrangler secret put AI_API_KEY
+# Do not put the key in this file, in git, or in a GitHub Actions variable.
+#
+# AI_BASE_URL, AI_MODEL, and AI_DAILY_CAP are plain variables. Set them in the
+# Cloudflare dashboard or uncomment [vars] when you are ready to spend.
+# While they are unset, POST /coach refuses to call a model.
+#
+# Optional shared limits. Without this binding, the per-IP bucket and the daily
+# cap live in memory inside each isolate. See docs/ai-coach.md.
+# [[kv_namespaces]]
+# binding = "COACH_LIMITS"
+# id = "replace-with-your-kv-namespace-id"
+
+# [vars]
+# AI_BASE_URL = "https://api.openai.com/v1"
+# AI_MODEL = "gpt-4o-mini"
+# AI_DAILY_CAP = "20"

@@ -60,6 +60,7 @@ describe('app routes', () => {
     await user.click(screen.getByRole('button', { name: 'Finish anyway' }))
 
     expect(screen.getByRole('heading', { level: 1, name: 'Score: 25 / 100' })).toBeTruthy()
+    expect(screen.queryByText('AI coaching (beta)')).toBeNull()
     expect(
       screen.getByText('You identified 1 of 4 hazards and chose the preferred action for 1.'),
     ).toBeTruthy()

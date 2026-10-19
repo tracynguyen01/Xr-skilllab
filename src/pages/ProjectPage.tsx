@@ -60,9 +60,12 @@ export function ProjectPage() {
       </ul>
 
       <h2>Roadmap</h2>
-      <p>Marked as future, not as work already done:</p>
+      <p>
+        The optional AI coach is implemented and switched off. This site still shows the offline Scenario Coach. The
+        model cannot change the score. Turning it on is a configuration step, described in the repository, and it needs
+        the owner's own API account.
+      </p>
       <ul>
-        <li>Future: optional AI Worker that rephrases the coach text and cannot change points.</li>
         <li>Future: a second scenario only after this one has been used and tightened.</li>
       </ul>
 

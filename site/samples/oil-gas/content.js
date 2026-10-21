@@ -80,7 +80,7 @@ export const equipment = {
   flare: {
     name: 'Flare stack',
     purpose: 'Burns relief gas at a safe height in this fictional layout.',
-    relevance: 'Context for the pad’s relief path; not every flame is a grade-level leak.',
+    relevance: 'Context for the pad\'s relief path; not every flame is a grade-level leak.',
   },
   shelter: {
     name: 'Control shelter',

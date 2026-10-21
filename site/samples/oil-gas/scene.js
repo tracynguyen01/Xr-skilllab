@@ -78,7 +78,8 @@ function buildScene() {
   const lamp = mesh(new THREE.SphereGeometry(.07, 12, 12), new THREE.MeshStandardMaterial({ color: 0xff5a3c, emissive: 0xff3b2e, emissiveIntensity: 1.4 }), 1.4, 2.32, .2, vessels);
   const alarm = new THREE.PointLight(0xff4d3a, 2, 4, 2); alarm.position.set(1.4, 2.3, .2); vessels.add(alarm);
   anim.push((t) => { const p = (Math.sin(t * 6) + 1) / 2; lamp.material.emissiveIntensity = .3 + p * 2; alarm.intensity = p * 4; drip.position.y = .85 - (t % 1.2) * .55; drip.material.opacity = 1 - (t % 1.2) / 1.2; });
-  register(vessels, 'flange', 'Separator flange', [0, 3.2, 1]);
+  // Neutral label: do not hint that this vessel is a scored finding.
+  register(vessels, 'flange', 'Separator', [0, 3.2, 1]);
 
   // hot work without a permit
   const hot = new THREE.Group(); scene.add(hot); hot.position.set(5.4, 0, -1.4);
@@ -89,7 +90,8 @@ function buildScene() {
   const spark = mesh(new THREE.SphereGeometry(.06, 10, 10), new THREE.MeshBasicMaterial({ color: 0xffe08a }), 0, .7, .1, hot);
   const sparkLight = new THREE.PointLight(0xffb15a, 3, 5, 2); sparkLight.position.set(0, .8, 0); hot.add(sparkLight);
   anim.push((t, reduced) => { spark.position.y = .55 + Math.abs(Math.sin(t * 18)) * .45; spark.position.x = Math.sin(t * 23) * .15; sparkLight.intensity = reduced ? 1.5 : 1 + Math.abs(Math.sin(t * 18)) * 4; });
-  register(hot, 'hotwork', 'Hot work beside the rack', [0, 2.1, 0]);
+  // Label the equipment (pipe rack), not the hazard name.
+  register(hot, 'hotwork', 'Pipe rack', [0, 2.1, 0]);
 
   // pump missing a lock
   const pump = new THREE.Group(); scene.add(pump); pump.position.set(-1.4, 0, 3.6);

@@ -56,6 +56,39 @@ test('Oil & Gas briefing heading stays in view at 390px', async ({ page }) => {
   expect(inView).toBe(true)
 })
 
+test('Oil & Gas hazard and decoy show the same inspected status', async ({ page }) => {
+  test.setTimeout(90000)
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto('/samples/oil-gas/')
+  await page.evaluate(() => sessionStorage.setItem('xr-scene-briefing:oil-gas', '1'))
+  await page.getByRole('button', { name: 'Start the Simulation' }).click()
+  await expect(page.getByRole('heading', { name: 'Gas Pad Challenge' })).toBeVisible({ timeout: 20000 })
+  await page.getByRole('button', { name: /Use 2D Inspector|Begin in 2D/i }).click()
+
+  const list = page.locator('[data-screen-label="2D Inspector"]')
+  await expect(list.getByRole('heading', { name: '2D Inspector' })).toBeVisible({ timeout: 10000 })
+
+  // Hazard candidate (Separator / flange) and decoy (Flare stack) must match after inspect.
+  const objectList = list.getByRole('heading', { name: 'Objects to inspect' }).locator('..').getByRole('list')
+  const sepRow = objectList.getByRole('listitem').filter({ hasText: 'Separator' }).getByRole('button')
+  const flareRow = objectList.getByRole('listitem').filter({ hasText: 'Flare stack' }).getByRole('button')
+  await sepRow.click()
+  await expect(page.locator('[role="dialog"][aria-labelledby="panelTitle"]')).toBeVisible()
+  await page.locator('[role="dialog"][aria-labelledby="panelTitle"]').getByRole('button', { name: 'Close' }).click()
+  await expect(sepRow).toHaveAttribute('aria-label', /inspected/i)
+
+  await flareRow.click()
+  await expect(page.locator('.scene-status').getByRole('button', { name: 'Close' })).toBeVisible()
+  await page.locator('.scene-status').getByRole('button', { name: 'Close' }).click()
+  await expect(flareRow).toHaveAttribute('aria-label', /inspected/i)
+
+  const sepStatus = sepRow.locator('span').last()
+  const flareStatus = flareRow.locator('span').last()
+  await expect(sepStatus).toHaveText('Inspected')
+  await expect(flareStatus).toHaveText('Inspected')
+  expect(await sepStatus.innerText()).toBe(await flareStatus.innerText())
+})
+
 test('Oil & Gas status panel collapses as a drawer at 390px', async ({ page }) => {
   test.setTimeout(90000)
   await page.setViewportSize({ width: 390, height: 844 })

@@ -41,12 +41,14 @@ export const hazards = [
   },
 ]
 
+// Ids only — used so scoring tests can prove decoy keys never earn points.
+// Display names live on `equipment` / `hotspots` (neutral; no "safe" hints).
 export const decoys = {
-  flare: { title: 'Flare stack', context: 'The flare is lit at the tip of the stack.', note: 'In this illustration the flare is the designed relief flame, not a leak at grade.' },
-  wellhead: { title: 'Wellhead', context: 'A fenced wellhead with closed valve handles.', note: 'The tree is drawn closed and clear. Nothing in the scene asks for a response here.' },
-  shelter: { title: 'Control shelter', context: 'A small control shelter with the door and window clear.', note: 'The shelter is unobstructed. It is scenery, not a hazard.' },
-  lockedpump: { title: 'Isolated pump', context: 'A second pump with a lock on the hasp.', note: 'This one is drawn as isolated. Inspecting it does not change the score.' },
-  extinguisher: { title: 'Fire extinguisher', context: 'An extinguisher standing clear of the walkway.', note: 'Mounted where it can be seen, and not blocking a route.' },
+  flare: { title: 'Flare stack', context: 'The flare is lit at the tip of the stack.' },
+  wellhead: { title: 'Wellhead', context: 'A fenced wellhead on the pad.' },
+  shelter: { title: 'Control shelter', context: 'A small control shelter on the pad.' },
+  lockedpump: { title: 'Second pump', context: 'A second pump on the pad skid.' },
+  extinguisher: { title: 'Fire extinguisher', context: 'An extinguisher on the pad.' },
 }
 
 // Neutral equipment cards for the status panel. Labels stay calm on purpose —
@@ -68,7 +70,7 @@ export const equipment = {
     relevance: 'This unit sits beside a second pump on the same pad skid.',
   },
   lockedpump: {
-    name: 'Isolated pump',
+    name: 'Second pump',
     purpose: 'A second pump on the pad skid in this teaching scene.',
     relevance: 'This unit sits beside the transfer pump on the same pad skid.',
   },
@@ -106,7 +108,7 @@ export const hotspots = [
   { id: 'hotwork', l: 68, t: 40, label: 'Pipe rack' },
   { id: 'extinguisher', l: 74, t: 58, label: 'Fire extinguisher' },
   { id: 'pump', l: 40, t: 68, label: 'Transfer pump' },
-  { id: 'lockedpump', l: 58, t: 74, label: 'Isolated pump' },
+  { id: 'lockedpump', l: 58, t: 74, label: 'Second pump' },
   { id: 'wellhead', l: 16, t: 80, label: 'Wellhead' },
   { id: 'shelter', l: 84, t: 78, label: 'Control shelter' },
 ]

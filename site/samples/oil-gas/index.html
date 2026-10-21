@@ -64,7 +64,6 @@ h1,h2,h3,p{margin:0}
     <div aria-hidden="true" style="position:absolute;left:50%;top:-260px;width:1000px;height:680px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(242,181,68,.14),rgba(242,181,68,0));pointer-events:none"></div>
     <div style="position:relative;max-width:1200px;margin:0 auto;padding:72px 20px 56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:48px;align-items:center">
       <div style="display:flex;flex-direction:column;gap:22px">
-        <p style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#F2B544">AI + Immersive Learning</p>
         <h1 id="heroTitle" style="font-size:clamp(38px,5.6vw,66px);font-weight:800;line-height:1.04;letter-spacing:-.03em;text-wrap:pretty">Learn by doing, not just watching.</h1>
         <p style="font-size:18px;color:#B6C4D6;max-width:540px;text-wrap:pretty">Step onto a fictional onshore gas pad, decide what you would do about each problem, and read a score built from fixed rules.</p>
         <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">
@@ -168,11 +167,11 @@ h1,h2,h3,p{margin:0}
             <text x="86" y="70">Scenario content</text><text x="293" y="70">Simulation</text><text x="500" y="70">Assessment engine</text><text x="707" y="70">Results</text><text x="914" y="70">Coaching layer</text>
           </g>
           <g font-family="Manrope, Helvetica, Arial, sans-serif" text-anchor="middle" fill="#B6C4D6" font-size="15">
-            <text x="86" y="96">versioned</text><text x="293" y="96">3D / 2D</text><text x="500" y="96">deterministic rules</text><text x="707" y="96">score + review</text><text x="914" y="96">rule-based, AI-ready</text>
+            <text x="86" y="96">versioned</text><text x="293" y="96">3D / 2D</text><text x="500" y="96">deterministic rules</text><text x="707" y="96">score + review</text><text x="914" y="96">rules-based feedback</text>
           </g>
         </svg>
       </div>
-      <p style="color:#B6C4D6;font-size:17px;max-width:760px;text-wrap:pretty">Scoring is rule-based and transparent: every point comes from a fixed rule you can read, so two learners who make the same decisions get the same score, and every result can be audited. The coaching layer is designed to be AI-ready. AI may one day explain a result in richer language, but it never decides the score.</p>
+      <p style="color:#B6C4D6;font-size:17px;max-width:760px;text-wrap:pretty">Scoring is rule-based and transparent: every point comes from a fixed rule you can read, so two learners who make the same decisions get the same score, and every result can be audited. The coaching layer explains those rules in plain language; it never decides the score.</p>
     </div>
   </section>
 
@@ -266,14 +265,11 @@ h1,h2,h3,p{margin:0}
             <div style="flex:1 1 480px;min-width:0">
               <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:12px">
                 <h2 style="font-size:20px;font-weight:800;letter-spacing:-.01em">2D Inspector</h2>
-                <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
-                  <p style="font-size:14px;color:#B6C4D6">{{ hintLine }}</p>
-                  <!-- Optional process-flow overlay; off by default so the plan stays clear. -->
-                  <button type="button" onClick="{{ toggleFlow }}" aria-pressed="{{ flowPressed }}" style="height:36px;padding:0 12px;border-radius:10px;border:1px solid {{ flowBorder }};background:{{ flowBg }};color:#F5F8FC;font-size:13px;font-weight:700;cursor:pointer" style-hover="border-color:#84BFFF">Process flow</button>
-                </div>
+                <p style="font-size:14px;color:#B6C4D6">{{ hintLine }}</p>
               </div>
               <div style="position:relative;padding:26px;background:#111C2E;border:1px solid #2B3D55;border-radius:16px">
-                <svg viewBox="0 0 480 360" role="img" aria-label="Plan of a fictional onshore gas pad: separators and a weeping flange on the left, pipe rack and hot work across the middle, flare to the north-east, muster gate on the fence, pumps and a control shelter to the south" style="display:block;width:100%;height:auto">
+                <svg viewBox="0 0 480 360" role="img" aria-label="Plan of a fictional onshore gas pad: separators on the left, pipe rack across the middle, flare to the north-east, muster gate on the fence, pumps and a control shelter to the south" style="display:block;width:100%;height:auto">
+      <title>Fictional gas pad plan</title>
       <rect width="480" height="360" fill="#24303a"></rect>
       <rect x="36" y="70" width="408" height="230" rx="10" fill="#3e463c"></rect>
       <rect x="70" y="150" width="340" height="22" fill="#66788a"></rect>
@@ -288,27 +284,6 @@ h1,h2,h3,p{margin:0}
       <rect x="360" y="250" width="52" height="36" fill="#f4f7f8"></rect>
       <rect x="210" y="78" width="46" height="8" fill="#1f8a4c"></rect>
       <text x="240" y="344" fill="#B6C4D6" font-family="Manrope, Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle">Fictional pad · not a site layout</text>
-      <defs>
-        <marker id="flowArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-          <path d="M0,0 L6,3 L0,6 Z" fill="#84BFFF"></path>
-        </marker>
-      </defs>
-      <sc-if value="{{ flowOn }}" hint-placeholder-val="{{ false }}">
-        <!-- Illustrative inlet → separator → pipe rack → flare / pumps. Not a real P&ID. -->
-        <g aria-hidden="true" fill="none" stroke="#84BFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M48 122 H78" marker-end="url(#flowArrow)"></path>
-          <path d="M174 122 H250" marker-end="url(#flowArrow)"></path>
-          <path d="M278 118 L300 90" marker-end="url(#flowArrow)"></path>
-          <path d="M250 140 L200 230" marker-end="url(#flowArrow)"></path>
-        </g>
-        <g aria-hidden="true" fill="#84BFFF" font-family="Manrope, Helvetica, Arial, sans-serif" font-size="10" font-weight="700">
-          <text x="48" y="112">Inlet</text>
-          <text x="90" y="100">Separator</text>
-          <text x="248" y="108">Rack</text>
-          <text x="318" y="56">Flare</text>
-          <text x="178" y="256">Pumps</text>
-        </g>
-      </sc-if>
     </svg>
                 <div style="position:absolute;inset:26px">
                   <sc-for list="{{ hotspots }}" as="h" hint-placeholder-count="14">
@@ -518,7 +493,7 @@ AMBER = '#F2C46D', MUTED = '#B6C4D6';
 const fmtTime = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
 
 class Component extends DCLogic {
-  state = { simOpen: false, phase: 'intro', view: '3d', answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: 0, finishedAt: 0, now: 0, lastActivity: 0, panel: null, picked: -1, instructions: false, webgl: true, narrow: false, reduced: false, focusId: null, displayScore: 0, settled: false, confirmReset: false, flowOn: false };
+  state = { simOpen: false, phase: 'intro', view: '3d', answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: 0, finishedAt: 0, now: 0, lastActivity: 0, panel: null, picked: -1, instructions: false, webgl: true, narrow: false, reduced: false, focusId: null, displayScore: 0, settled: false, confirmReset: false };
   heroRef = React.createRef(); pageStageRef = React.createRef(); fsStageRef = React.createRef(); miniRef = React.createRef(); panelRef = React.createRef(); introRef = React.createRef(); instrRef = React.createRef(); hoverRef = React.createRef(); confirmRef = React.createRef();
 
   componentDidMount() {
@@ -727,11 +702,17 @@ class Component extends DCLogic {
   cancelReset = () => { this.setState({ confirmReset: false }); this.after(() => this.returnFocus()); };
   confirmResetRun = () => { this.setState({ confirmReset: false }); this.resetRun(); };
   resetRun = () => { if (this.simView) this.simView.clearBadges(); const now = Date.now(); clearTimeout(this.hintTimer); const wasResults = this.state.phase === 'results'; this.setState({ answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: now, finishedAt: 0, now, lastActivity: now, panel: null, picked: -1, focusId: null, displayScore: 0, settled: false, phase: 'play', confirmReset: false }); this.after(() => { this.syncSceneUi(); if (wasResults) { if (this.state.view === '3d' && this.state.webgl) this.glideIn(); else this.focus2D(); } }); };
-  toggleFlow = () => { this.setState(s => ({ flowOn: !s.flowOn })); };
   finish = () => { this.setState({ phase: 'results', finishedAt: Date.now(), panel: null, instructions: false, focusId: null, displayScore: 0, settled: false, confirmReset: false }); this.after(() => { this.syncSceneUi(); this.animateGauge(); if (this.simView) { this.simView.focus(null); this.simView.preset('inspection', 1200); } const h = document.querySelector('[data-screen-label="Results"] [data-autofocus]'); if (h) h.focus(); }); };
   openInstructions = e => { this.lastTrigger = e.currentTarget; this.setState({ instructions: true }); this.focusInto(this.instrRef); };
   closeInstructions = () => { this.setState({ instructions: false }); this.after(() => this.returnFocus()); };
-  closePanel = () => { this.setState({ panel: null, picked: -1 }); this.after(() => this.returnFocus()); };
+  closePanel = () => {
+    // Clear the panel first, then return focus only if nothing else opened it.
+    // (Avoids a race where "Back to the scene" + the next list Enter leave the old panel up.)
+    this.setState({ panel: null, picked: -1 });
+    this.after(() => {
+      if (this.state.panel == null) this.returnFocus();
+    });
+  };
   inspect(id, trigger) {
     if (this.state.phase !== 'play') return;
     this.lastTrigger = trigger || document.activeElement;
@@ -845,9 +826,9 @@ class Component extends DCLogic {
     const focusH = lesson().hazards.find(h => h.id === s.focusId);
     const intro3D = webgl && !s.narrow;
     return {
-      openSim: this.openSim, exitSim: this.exitSim, switchView: this.switchView, askReset: this.askReset, cancelReset: this.cancelReset, confirmResetRun: this.confirmResetRun, toggleFlow: this.toggleFlow, finish: this.finish, openInstructions: this.openInstructions, closeInstructions: this.closeInstructions, closePanel: this.closePanel, submit: this.submit, useHint: this.useHint, heroMove: this.heroMove, heroLeave: this.heroLeave,
+      openSim: this.openSim, exitSim: this.exitSim, switchView: this.switchView, askReset: this.askReset, cancelReset: this.cancelReset, confirmResetRun: this.confirmResetRun, finish: this.finish, openInstructions: this.openInstructions, closeInstructions: this.closeInstructions, closePanel: this.closePanel, submit: this.submit, useHint: this.useHint, heroMove: this.heroMove, heroLeave: this.heroLeave,
       heroRef: this.heroRef, pageStageRef: this.pageStageRef, fsStageRef: this.fsStageRef, miniRef: this.miniRef, panelRef: this.panelRef, introRef: this.introRef, instrRef: this.instrRef, hoverRef: this.hoverRef, confirmRef: this.confirmRef,
-      simOpen: s.simOpen, phaseIntro: s.phase === 'intro', phasePlay: s.phase === 'play', phaseResults: s.phase === 'results', confirmReset: s.confirmReset, flowOn: s.flowOn, flowPressed: s.flowOn ? 'true' : 'false', flowBorder: s.flowOn ? '#84BFFF' : 'rgba(182,196,214,.16)', flowBg: s.flowOn ? 'rgba(132,191,255,.16)' : 'rgba(17,28,46,.78)', webglMissing: !webgl, view3d, view2d, canSwitch: webgl, switchLabel: s.view === '3d' ? 'Switch to 2D' : 'Switch to 3D',
+      simOpen: s.simOpen, phaseIntro: s.phase === 'intro', phasePlay: s.phase === 'play', phaseResults: s.phase === 'results', confirmReset: s.confirmReset, webglMissing: !webgl, view3d, view2d, canSwitch: webgl, switchLabel: s.view === '3d' ? 'Switch to 2D' : 'Switch to 3D',
       introPrimaryLabel: intro3D ? 'Begin in 3D' : 'Begin in 2D', introPrimary: () => this.begin(intro3D ? '3d' : '2d'), showIntroSecondary: webgl, introSecondaryLabel: intro3D ? 'Use 2D Inspector' : 'Try 3D', introSecondary: () => this.begin(intro3D ? '2d' : '3d'),
       answeredCount: found, pips, showHint, hintLine: view3d ? 'Look around and select anything that looks unsafe.' : 'Select any numbered object to inspect it. Tab moves between objects.',
       hotspots, instructions: s.instructions,

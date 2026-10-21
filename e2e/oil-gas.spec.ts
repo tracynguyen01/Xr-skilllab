@@ -14,23 +14,29 @@ test('Oil & Gas explainable results, missed list, and confirm reset', async ({ p
   await expect(list.getByRole('heading', { name: '2D Inspector' })).toBeVisible({ timeout: 10000 })
   const objectList = list.getByRole('heading', { name: 'Objects to inspect' }).locator('..').getByRole('list')
 
-  /** Open a hazard from the list, pick the preferred option, Submit — all via keyboard. */
+  /** Open a hazard from the list, pick the preferred option, Submit — keyboard where it matters. */
   async function answerByKeyboard(label: string) {
+    const dialog = page.locator('[role="dialog"][aria-labelledby="panelTitle"]')
+    // Wait until any previous panel is fully gone before opening the next hazard.
+    await expect(dialog).toBeHidden()
+
     const row = objectList.getByRole('listitem').filter({ hasText: label }).getByRole('button')
     await row.focus()
     await page.keyboard.press('Enter')
-    const dialog = page.locator('[role="dialog"][aria-labelledby="panelTitle"]')
     await expect(dialog).toBeVisible()
+    await expect(dialog.getByRole('heading')).toBeVisible()
     // Preferred response is option B (index 1) for every oil-gas hazard.
     await dialog.getByRole('radio').nth(1).focus()
     await page.keyboard.press('Space')
-    await dialog.getByRole('button', { name: 'Submit' }).focus()
+    const submit = dialog.getByRole('button', { name: 'Submit' })
+    await expect(submit).toBeVisible()
+    await submit.focus()
     await page.keyboard.press('Enter')
     await expect(dialog.getByText(/Matches the scenario guidance/i)).toBeVisible()
     // After a choice is stored, options stay disabled (no re-score).
     await expect(dialog.getByRole('radio').nth(0)).toBeDisabled()
-    await dialog.getByRole('button', { name: 'Back to the scene' }).focus()
-    await page.keyboard.press('Enter')
+    // Click closes the panel before focus returns to the list (avoids Enter racing the old panel).
+    await dialog.getByRole('button', { name: 'Back to the scene' }).click()
     await expect(dialog).toBeHidden()
   }
 

@@ -163,6 +163,20 @@ test('the carousel stays put when reduced motion is requested', async ({ page })
   await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Oil & Gas' })).toBeVisible()
 })
 
+test('How it works scrolls to the section', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto('/')
+  const link = page.getByRole('link', { name: 'How it works' })
+  await expect(link).toHaveAttribute('href', '#how-it-works')
+  await link.click()
+  await expect(page).toHaveURL(/#how-it-works$/)
+  const section = page.locator('#how-it-works')
+  await expect(section.getByRole('heading', { level: 2, name: 'How it works' })).toBeVisible()
+  const top = await section.evaluate((el) => el.getBoundingClientRect().top)
+  expect(top).toBeGreaterThanOrEqual(50)
+  expect(top).toBeLessThanOrEqual(100)
+})
+
 test('old hash routes stay on the portfolio home', async ({ page }) => {
   await page.goto('/#/simulate')
   await expect(page.getByRole('heading', { level: 1, name: /better decisions/i })).toBeVisible()

@@ -69,21 +69,24 @@ test('Oil & Gas hazard and decoy show the same inspected status', async ({ page 
   await expect(list.getByRole('heading', { name: '2D Inspector' })).toBeVisible({ timeout: 10000 })
 
   // Hazard candidate (Separator / flange) and decoy (Flare stack) must match after inspect.
-  const sepRow = list.getByRole('listitem').filter({ hasText: 'Separator' }).getByRole('button')
-  const flareRow = list.getByRole('listitem').filter({ hasText: 'Flare stack' }).getByRole('button')
+  const objectList = list.getByRole('heading', { name: 'Objects to inspect' }).locator('..').getByRole('list')
+  const sepRow = objectList.getByRole('listitem').filter({ hasText: 'Separator' }).getByRole('button')
+  const flareRow = objectList.getByRole('listitem').filter({ hasText: 'Flare stack' }).getByRole('button')
   await sepRow.click()
+  await expect(page.locator('[role="dialog"][aria-labelledby="panelTitle"]')).toBeVisible()
   await page.locator('[role="dialog"][aria-labelledby="panelTitle"]').getByRole('button', { name: 'Close' }).click()
-  await flareRow.click()
-  await page.locator('.scene-status').getByRole('button', { name: 'Close' }).click()
-
-  const sepStatus = await sepRow.locator('span').nth(2).innerText()
-  const flareStatus = await flareRow.locator('span').nth(2).innerText()
-  expect(sepStatus).toBe('Inspected')
-  expect(flareStatus).toBe('Inspected')
-  expect(sepStatus).toBe(flareStatus)
-
   await expect(sepRow).toHaveAttribute('aria-label', /inspected/i)
+
+  await flareRow.click()
+  await expect(page.locator('.scene-status').getByRole('button', { name: 'Close' })).toBeVisible()
+  await page.locator('.scene-status').getByRole('button', { name: 'Close' }).click()
   await expect(flareRow).toHaveAttribute('aria-label', /inspected/i)
+
+  const sepStatus = sepRow.locator('span').last()
+  const flareStatus = flareRow.locator('span').last()
+  await expect(sepStatus).toHaveText('Inspected')
+  await expect(flareStatus).toHaveText('Inspected')
+  expect(await sepStatus.innerText()).toBe(await flareStatus.innerText())
 })
 
 test('Oil & Gas status panel collapses as a drawer at 390px', async ({ page }) => {

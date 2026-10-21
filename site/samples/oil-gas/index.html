@@ -16,6 +16,8 @@
 </style>
 <a class="portfolio-back" href="../../">Back to all demos</a>
 <script type="module" src="../../portfolio-menu.js"></script>
+<link rel="stylesheet" href="../../shared/scene-ui.css" />
+<script type="module" src="../../shared/scene-ui.js"></script>
 <x-dc>
 <helmet>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -205,6 +207,8 @@ h1,h2,h3,p{margin:0}
   <div role="region" aria-label="Gas Pad Challenge simulation" data-screen-label="Simulation" style="position:fixed;inset:0;z-index:100;background:#0B1220;animation:simIn .5s cubic-bezier(.2,.7,.2,1)">
     <div ref="{{ fsStageRef }}" style="position:absolute;inset:0"></div>
     <div ref="{{ hoverRef }}" aria-hidden="true" style="position:absolute;display:none;pointer-events:none;transform:translate(14px,16px);padding:6px 10px;border-radius:8px;background:rgba(17,28,46,.88);border:1px solid rgba(132,191,255,.45);font-size:13px;font-weight:600;color:#F5F8FC;white-space:nowrap;z-index:3"></div>
+    <!-- Shared briefing + status panel (site/shared/scene-ui.js). Pointer-events stay off on the host. -->
+    <div data-scene-ui-host style="position:absolute;inset:0;pointer-events:none;z-index:15"></div>
 
     <sc-if value="{{ phaseIntro }}" hint-placeholder-val="{{ true }}">
       <div style="position:absolute;inset:0;background:rgba(11,18,32,.55);display:grid;place-items:center;padding:20px;z-index:5;overflow:auto">
@@ -518,7 +522,73 @@ class Component extends DCLogic {
   }
   componentDidUpdate() { this.syncAll(); }
   setState(u, cb) { super.setState(u, cb); this.after(() => this.syncAll()); }
-  syncAll() { this.syncViews(); document.body.style.overflow = this.state.simOpen ? 'hidden' : ''; }
+  syncAll() { this.syncViews(); document.body.style.overflow = this.state.simOpen ? 'hidden' : ''; this.syncSceneUi(); }
+  // Shared scene UI (briefing dialog + status panel). Defined in site/shared/scene-ui.js.
+  ensureSceneUi() {
+    if (this.sceneUi) return;
+    if (typeof window.createSceneUi !== 'function') {
+      // The module script loads async; try again on the next frames.
+      if (!this._sceneUiWaiting) {
+        this._sceneUiWaiting = true;
+        const wait = () => {
+          if (typeof window.createSceneUi === 'function') {
+            this._sceneUiWaiting = false;
+            this.ensureSceneUi();
+            this.syncSceneUi();
+            if (this.state.simOpen && this.state.phase === 'play') this.sceneUi?.showBriefingIfNeeded();
+            return;
+          }
+          requestAnimationFrame(wait);
+        };
+        requestAnimationFrame(wait);
+      }
+      return;
+    }
+    const host = document.querySelector('[data-screen-label="Simulation"] [data-scene-ui-host]');
+    if (!host) return;
+    this.sceneUi = window.createSceneUi({
+      host,
+      lessonId: 'oil-gas',
+      accent: '#F2B544',
+      siteName: 'A fictional onshore gas pad. Nothing here is a real plant or a site procedure.',
+      objective: 'Find four hazards and choose the best response for each. You can finish when you are ready.',
+      controls: {
+        mouse: 'Drag to look around, scroll to zoom, click an object to inspect it.',
+        touch: 'Drag to look, pinch to zoom, tap an object to inspect it.',
+        keyboard: 'Arrow keys rotate the view. In 2D, Tab between numbered objects and press Enter.',
+      },
+      howToFinish: 'Use Finish Assessment in the top bar. Unanswered hazards are marked Missed. Reset starts a clean attempt.',
+      // After the first-load briefing, put focus in the scene (not on <body>).
+      focusAfterBriefing: () => {
+        if (this.state.view === '3d' && this.state.webgl && this.simView) this.simView.canvas.focus();
+        else this.focus2D();
+      },
+    });
+  }
+  syncSceneUi() {
+    this.ensureSceneUi();
+    if (!this.sceneUi) return;
+    const s = this.state;
+    const playing = s.simOpen && s.phase === 'play';
+    this.sceneUi.setActive(playing);
+    if (!playing) return;
+    const total = lesson().hazards.length;
+    const found = lesson().hazards.filter(h => s.answers[h.id] != null).length;
+    const hz = lesson().hazards.find(h => h.id === s.panel);
+    const dc = lesson().decoys[s.panel];
+    const selected = hz ? hz.title : dc ? dc.title : 'None selected';
+    const actions = [];
+    if (hz && s.answers[hz.id] == null) actions.push('Choose a response, then Submit');
+    else if (hz || dc) actions.push('Close the panel to return to the scene');
+    else actions.push(s.view === '3d' && s.webgl ? 'Click or tap an object to inspect it' : 'Select a numbered object in the 2D list');
+    actions.push('Open ? for the briefing again');
+    actions.push('Finish Assessment when you are ready');
+    this.sceneUi.updateStatus({
+      progressText: `${found} of ${total} reviewed`,
+      selected,
+      actions,
+    });
+  }
   after(fn) { requestAnimationFrame(() => requestAnimationFrame(fn)); }
   focusInto(ref) { this.after(() => { const el = ref && ref.current; if (!el) return; (el.querySelector('[data-autofocus]') || el).focus(); }); }
   focus2D() { this.after(() => { const b = document.querySelector('[data-screen-label="2D Inspector"] button'); if (b) b.focus(); }); }
@@ -543,12 +613,23 @@ class Component extends DCLogic {
 
   // actions
   openSim = e => { this.lastLaunch = e && e.currentTarget; const s = this.state; this.setState({ simOpen: true }); this.after(() => { if (this.simView && s.phase === 'intro') this.simView.setPreset('hero'); if (s.phase === 'intro') this.focusInto(this.introRef); else if (s.phase === 'play' && s.view === '3d' && this.simView) this.simView.canvas.focus(); else if (s.phase === 'play') this.focus2D(); }); };
-  exitSim = () => { this.setState({ simOpen: false, panel: null, instructions: false }); this.after(() => { if (this.lastLaunch && this.lastLaunch.isConnected) this.lastLaunch.focus(); }); };
-  begin(view) { const now = Date.now(); this.setState({ phase: 'play', view, startedAt: now, now, lastActivity: now, finishedAt: 0, hintZone: null }); if (view === '3d') this.after(() => this.glideIn()); else this.focus2D(); }
+  exitSim = () => { this.setState({ simOpen: false, panel: null, instructions: false }); this.after(() => { this.syncSceneUi(); if (this.lastLaunch && this.lastLaunch.isConnected) this.lastLaunch.focus(); }); };
+  begin(view) {
+    const now = Date.now();
+    this.setState({ phase: 'play', view, startedAt: now, now, lastActivity: now, finishedAt: 0, hintZone: null });
+    this.after(() => {
+      this.ensureSceneUi();
+      this.syncSceneUi();
+      // First play in this tab: show the skippable briefing.
+      this.sceneUi?.showBriefingIfNeeded();
+      if (view === '3d') this.glideIn();
+      else this.focus2D();
+    });
+  }
   switchView = () => { if (!this.state.webgl) return; const to = this.state.view === '3d' ? '2d' : '3d'; this.setState({ view: to, panel: null }); if (to === '3d') this.after(() => { if (this.simView) this.simView.preset('inspection', 900).then(() => this.simView.canvas.focus()); }); else this.focus2D(); };
-  resetRun = () => { if (this.simView) this.simView.clearBadges(); const now = Date.now(); clearTimeout(this.hintTimer); const wasResults = this.state.phase === 'results'; this.setState({ answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: now, finishedAt: 0, now, lastActivity: now, panel: null, picked: -1, focusId: null, displayScore: 0, settled: false, phase: 'play' }); if (wasResults) { if (this.state.view === '3d' && this.state.webgl) this.after(() => this.glideIn()); else this.focus2D(); } };
+  resetRun = () => { if (this.simView) this.simView.clearBadges(); const now = Date.now(); clearTimeout(this.hintTimer); const wasResults = this.state.phase === 'results'; this.setState({ answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: now, finishedAt: 0, now, lastActivity: now, panel: null, picked: -1, focusId: null, displayScore: 0, settled: false, phase: 'play' }); this.after(() => { this.syncSceneUi(); if (wasResults) { if (this.state.view === '3d' && this.state.webgl) this.glideIn(); else this.focus2D(); } }); };
   tryAgain = () => { this.resetRun(); };
-  finish = () => { this.setState({ phase: 'results', finishedAt: Date.now(), panel: null, instructions: false, focusId: null, displayScore: 0, settled: false }); this.after(() => { this.animateGauge(); if (this.simView) { this.simView.focus(null); this.simView.preset('inspection', 1200); } const h = document.querySelector('[data-screen-label="Results"] [data-autofocus]'); if (h) h.focus(); }); };
+  finish = () => { this.setState({ phase: 'results', finishedAt: Date.now(), panel: null, instructions: false, focusId: null, displayScore: 0, settled: false }); this.after(() => { this.syncSceneUi(); this.animateGauge(); if (this.simView) { this.simView.focus(null); this.simView.preset('inspection', 1200); } const h = document.querySelector('[data-screen-label="Results"] [data-autofocus]'); if (h) h.focus(); }); };
   openInstructions = e => { this.lastTrigger = e.currentTarget; this.setState({ instructions: true }); this.focusInto(this.instrRef); };
   closeInstructions = () => { this.setState({ instructions: false }); this.after(() => this.returnFocus()); };
   closePanel = () => { this.setState({ panel: null, picked: -1 }); this.after(() => this.returnFocus()); };

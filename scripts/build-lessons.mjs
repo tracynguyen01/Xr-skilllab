@@ -1,5 +1,21 @@
+/**
+ * Frozen. Do not run this as part of a build.
+ *
+ * It copies site/samples/xr-skilllab/index.html over the oil and gas, mining,
+ * and chemical processing lessons. Those pages were edited by hand after the
+ * generator first wrote them, so a normal run would wipe the scenes, the copy,
+ * and the Fields menu. The script exits before it reads or writes anything
+ * unless you pass --force-regenerate.
+ */
 import fs from 'node:fs'
 import path from 'node:path'
+
+if (!process.argv.includes('--force-regenerate')) {
+  console.error(
+    'scripts/build-lessons.mjs is frozen and did not change any files. The industry lessons were edited by hand. Pass --force-regenerate only when you mean to overwrite site/samples/oil-gas, mining, and chemical-processing.',
+  )
+  process.exit(1)
+}
 
 const root = path.resolve(import.meta.dirname, '..')
 const source = fs.readFileSync(path.join(root, 'site/samples/xr-skilllab/index.html'), 'utf8')
@@ -107,10 +123,10 @@ function build(lesson) {
   html = html.replace('<meta charset="utf-8">', `<meta charset="utf-8">\n<title>${lesson.name} · XR Concept Lab</title>`)
   html = html.replace('<script src="./support.js"></script>', '<script src="./support.js"></script>\n<script type="module" src="./content.js"></script>')
   html = html.replace('./warehouse.js', './scene.js')
-  html = html.replace('<span>XR SkillLab</span>', `<span>${lesson.name}</span>`)
-  html = html.replace('>XR SkillLab <span', `>${lesson.name} <span`)
+  html = html.replace('<span>Warehouse Safety</span>', `<span>${lesson.name}</span>`)
+  html = html.replace('>Warehouse Safety <span', `>${lesson.name} <span`)
   html = html.replace(
-    'XR SkillLab is an independent educational prototype. Training scenarios are illustrative and do not replace workplace induction, accredited training or professional safety advice.',
+    'Warehouse Safety is an independent educational prototype. Training scenarios are illustrative and do not replace workplace induction, accredited training or professional safety advice.',
     lesson.footer,
   )
   html = html.replace(
@@ -189,7 +205,7 @@ function build(lesson) {
     window.addEventListener('lesson-ready', boot);
     boot();`,
   )
-  if (html.includes('const HAZARDS') || html.includes('XR SkillLab') || html.includes('warehouse.js')) {
+  if (html.includes('const HAZARDS') || html.includes('Warehouse Safety') || html.includes('warehouse.js')) {
     throw new Error(`leftover template text in ${lesson.slug}`)
   }
   const out = path.join(root, 'site/samples', lesson.slug, 'index.html')

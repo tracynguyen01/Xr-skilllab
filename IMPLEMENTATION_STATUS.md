@@ -9,14 +9,14 @@ The published site is a static portfolio. The previous React training app has be
 - One featured lesson at a time. The showcase rotates through `site/samples.json`, with arrows, labelled tabs, swipe, and keyboard arrows. It pauses on hover or focus, and it does not auto-advance when reduced motion is requested
 - A Menu button on the landing page and on each lesson. Fields lists every lesson, grouped into Industry training and Inspection
 - Thumbnails are 16:10 scene renders (`thumbnail.webp` and `thumbnail.avif`), shared with a layered hero composition
-- XR SkillLab warehouse demo at `samples/xr-skilllab/`
+- Warehouse Safety lesson at `samples/xr-skilllab/`. The project name remains XR SkillLab
 - Oil & Gas, Mining, and Chemical processing lessons, same training loop on fictional scenes
 - TwinInspect fictional home-inspection demo at `samples/twininspect/`
 - “Back to all demos” on each sample, fixed so it does not reflow the page
 - Honest footer: Tracy Nguyen, github.com/tracynguyen01, not affiliated with Next XR Group, fictional demo data
 - Playwright smoke test for the carousel, the Fields menu, console errors, and overflow at 390 and 1280
 - GitHub Actions still builds `dist/` and deploys GitHub Pages
-- `worker/` remains in the repository and still typechecks. The pages do not call it
+- `worker/` remains in the repository and still typechecks. It is retired and not deployed. The pages do not call it
 
 ## Not part of the current pages
 

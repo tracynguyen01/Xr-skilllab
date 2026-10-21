@@ -32,7 +32,7 @@ async function blurAndLeave(page: Page) {
 }
 
 const lessons = [
-  { title: 'XR SkillLab', heading: /learn by doing/i },
+  { title: 'Warehouse Safety', heading: /learn by doing/i },
   { title: 'Oil & Gas', heading: /learn by doing/i },
   { title: 'Mining', heading: /learn by doing/i },
   { title: 'Chemical processing', heading: /learn by doing/i },
@@ -52,13 +52,13 @@ test('carousel advances and the fields menu reaches every lesson', async ({ page
 
   const carousel = page.getByRole('region', { name: /try a lesson/i })
   const active = carousel.locator('.slide.is-active')
-  await expect(active.getByRole('heading', { level: 3, name: 'XR SkillLab' })).toBeVisible()
+  await expect(active.getByRole('heading', { level: 3, name: 'Warehouse Safety' })).toBeVisible()
   await expect(active.getByRole('link', { name: /Open the demo/ })).toHaveAttribute('href', /xr-skilllab/)
 
   await carousel.getByRole('button', { name: 'Next lesson' }).click()
   await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Oil & Gas' })).toBeVisible()
   await carousel.getByRole('button', { name: 'Previous lesson' }).click()
-  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'XR SkillLab' })).toBeVisible()
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Warehouse Safety' })).toBeVisible()
 
   await carousel.getByRole('tab', { name: 'Mining' }).click()
   await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Mining' })).toBeVisible()
@@ -79,9 +79,9 @@ test('carousel advances and the fields menu reaches every lesson', async ({ page
   await page.mouse.move(box.x + box.width * 0.2, box.y + box.height * 0.4, { steps: 12 })
   await page.mouse.up()
   await expect(page).toHaveURL(/\/$/)
-  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'XR SkillLab' })).toBeVisible()
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Warehouse Safety' })).toBeVisible()
 
-  await carousel.getByRole('tab', { name: 'XR SkillLab' }).click()
+  await carousel.getByRole('tab', { name: 'Warehouse Safety' }).click()
   await blurAndLeave(page)
   await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Oil & Gas' })).toBeVisible({ timeout: 8000 })
   await carousel.hover()
@@ -131,7 +131,7 @@ test('carousel advances and the fields menu reaches every lesson', async ({ page
   await page.setViewportSize({ width: 1280, height: 900 })
   await menu.click()
   await fields.click()
-  await page.locator('#fields-submenu').getByRole('link', { name: 'XR SkillLab' }).click()
+  await page.locator('#fields-submenu').getByRole('link', { name: 'Warehouse Safety' }).click()
   await expect(page.getByRole('heading', { level: 1, name: /learn by doing/i })).toBeVisible({ timeout: 20000 })
   await expect(page.getByRole('link', { name: 'Back to all demos' })).toBeVisible()
 
@@ -155,10 +155,10 @@ test('the carousel stays put when reduced motion is requested', async ({ page })
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/')
   const carousel = page.getByRole('region', { name: /try a lesson/i })
-  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'XR SkillLab' })).toBeVisible()
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Warehouse Safety' })).toBeVisible()
   await blurAndLeave(page)
   await page.waitForTimeout(6500)
-  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'XR SkillLab' })).toBeVisible()
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Warehouse Safety' })).toBeVisible()
   await carousel.getByRole('button', { name: 'Next lesson' }).click()
   await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Oil & Gas' })).toBeVisible()
 })
@@ -168,5 +168,5 @@ test('old hash routes stay on the portfolio home', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1, name: /practised in the browser/i })).toBeVisible()
   await page.getByRole('button', { name: 'Menu' }).click()
   await page.getByRole('button', { name: 'Fields' }).click()
-  await expect(page.locator('#fields-submenu').getByRole('link', { name: /XR SkillLab/ })).toBeVisible()
+  await expect(page.locator('#fields-submenu').getByRole('link', { name: /Warehouse Safety/ })).toBeVisible()
 })

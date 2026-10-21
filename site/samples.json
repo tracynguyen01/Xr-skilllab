@@ -1,7 +1,7 @@
 [
   {
     "slug": "xr-skilllab",
-    "title": "XR SkillLab",
+    "title": "Warehouse Safety",
     "tagline": "Warehouse safety training",
     "pitch": "Step into a warehouse, choose a response for each hazard, and read a score built from fixed rules.",
     "tags": ["Live 3D", "2D fallback", "Transparent scoring", "Coaching"],

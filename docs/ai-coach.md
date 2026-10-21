@@ -1,5 +1,7 @@
 # Turn on the AI coach
 
+**Retired.** This Worker is not deployed, and no workflow publishes it. The notes below are historical. See [worker/RETIRED.md](../worker/RETIRED.md).
+
 The published pages do not call this Worker. The site is a static portfolio of concept demos. The Worker remains in `worker/` for the earlier warehouse coach, and it is not part of the current pages.
 
 The Worker is deployed. Its URL is:

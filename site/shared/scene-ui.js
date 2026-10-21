@@ -2,6 +2,8 @@
  * Shared scene UI for lesson simulations.
  * - Skippable briefing in a native <dialog>
  * - Compact status panel (collapses to a drawer on small screens)
+ * - Object Info card (name / purpose / relevance) with Close
+ * Reset confirmation and results coaching stay on the lesson page (index.html).
  * No npm dependencies. Oil & Gas is the first lesson that uses this.
  */
 

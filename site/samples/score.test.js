@@ -36,4 +36,20 @@ describe.each(lessons)('%s scoring', (name, lesson) => {
     const decoyAnswers = { ...right, flare: 0, water: 1, sds: 2 }
     expect(lesson.score(decoyAnswers)).toBe(100)
   })
+
+  it('ignores equipment ids so inspecting context never changes the score', () => {
+    if (!lesson.equipment) return
+    const right = {}
+    for (const hazard of lesson.hazards) {
+      right[hazard.id] = hazard.options.findIndex((option) => option.ok)
+    }
+    // Extra keys for every equipment id (including decoys). Do not overwrite real answers.
+    const withEquipment = { ...right }
+    for (const id of Object.keys(lesson.equipment)) {
+      if (withEquipment[id] == null) withEquipment[id] = 0
+    }
+    expect(Object.keys(withEquipment).length).toBeGreaterThan(Object.keys(right).length)
+    expect(lesson.score(withEquipment)).toBe(lesson.score(right))
+    expect(lesson.score(withEquipment)).toBe(100)
+  })
 })

@@ -49,11 +49,61 @@ export const decoys = {
   extinguisher: { title: 'Fire extinguisher', context: 'An extinguisher standing clear of the walkway.', note: 'Mounted where it can be seen, and not blocking a route.' },
 }
 
+// Neutral equipment cards for the status panel. Labels stay calm on purpose —
+// they must not reveal which objects are scored hazards.
+export const equipment = {
+  flange: {
+    name: 'Separator',
+    purpose: 'Separates gas and liquids on this fictional pad before they move on.',
+    relevance: 'Vessel flanges and nearby detectors are worth a careful look on your scan.',
+  },
+  hotwork: {
+    name: 'Pipe rack',
+    purpose: 'Carries process pipework across the pad in this illustration.',
+    relevance: 'Check what is happening beside the rack before you decide how to respond.',
+  },
+  pump: {
+    name: 'Transfer pump',
+    purpose: 'Moves product between vessels in this teaching scene.',
+    relevance: 'Compare isolation clues on the pumps before you choose a response.',
+  },
+  lockedpump: {
+    name: 'Isolated pump',
+    purpose: 'A neighbouring pump drawn with a lock fitted on the hasp.',
+    relevance: 'Useful contrast when you inspect transfer equipment nearby.',
+  },
+  muster: {
+    name: 'Muster gate',
+    purpose: 'A signed exit through the pad fence in this illustration.',
+    relevance: 'Escape routes matter when something on the pad looks wrong.',
+  },
+  flare: {
+    name: 'Flare stack',
+    purpose: 'Burns relief gas at a safe height in this fictional layout.',
+    relevance: 'Context for the pad’s relief path; not every flame is a grade-level leak.',
+  },
+  shelter: {
+    name: 'Control shelter',
+    purpose: 'A small shelter for local controls in this illustration.',
+    relevance: 'Helps you read the pad layout while you search. Inspecting it does not change the score.',
+  },
+  wellhead: {
+    name: 'Wellhead',
+    purpose: 'A fenced well tree drawn with closed valve handles.',
+    relevance: 'Part of the pad story; inspecting it does not change the score.',
+  },
+  extinguisher: {
+    name: 'Fire extinguisher',
+    purpose: 'Portable extinguisher placed clear of the walkway.',
+    relevance: 'Safety equipment context on the pad; it is not a scored finding.',
+  },
+}
+
 export const hotspots = [
   { id: 'muster', l: 56, t: 10, label: 'Muster gate' },
   { id: 'flare', l: 82, t: 18, label: 'Flare stack' },
-  { id: 'flange', l: 24, t: 34, label: 'Separator flange' },
-  { id: 'hotwork', l: 68, t: 40, label: 'Hot work by the rack' },
+  { id: 'flange', l: 24, t: 34, label: 'Separator' },
+  { id: 'hotwork', l: 68, t: 40, label: 'Pipe rack' },
   { id: 'extinguisher', l: 74, t: 58, label: 'Fire extinguisher' },
   { id: 'pump', l: 40, t: 68, label: 'Transfer pump' },
   { id: 'lockedpump', l: 58, t: 74, label: 'Isolated pump' },
@@ -82,6 +132,6 @@ export function tip(ids) {
 }
 
 if (typeof window !== 'undefined') {
-  window.LESSON = { hazards, decoys, hotspots, accent: '#F2B544', score, tip }
+  window.LESSON = { hazards, decoys, equipment, hotspots, accent: '#F2B544', score, tip }
   window.dispatchEvent(new Event('lesson-ready'))
 }

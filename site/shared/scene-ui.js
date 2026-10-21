@@ -107,6 +107,25 @@ export function createSceneUi(options) {
           <dd><ul class="scene-actions" data-field="actions"></ul></dd>
         </div>
       </dl>
+      <!-- Object inspection card (name / purpose / relevance). Neutral "Info" label. -->
+      <div data-field="inspect" hidden>
+        <p class="eyebrow" style="margin:4px 0 8px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;color:var(--scene-accent)">Info</p>
+        <dl>
+          <div>
+            <dt>Name</dt>
+            <dd data-field="inspect-name"></dd>
+          </div>
+          <div>
+            <dt>Purpose</dt>
+            <dd data-field="inspect-purpose" class="muted"></dd>
+          </div>
+          <div>
+            <dt>Relevance</dt>
+            <dd data-field="inspect-relevance" class="muted"></dd>
+          </div>
+        </dl>
+        <button type="button" class="scene-btn scene-btn-secondary" data-action="close-inspect" style="min-height:40px;width:100%;margin-top:6px;font-size:14px">Close</button>
+      </div>
     </div>
   `
 
@@ -120,8 +139,15 @@ export function createSceneUi(options) {
   const progressEl = status.querySelector('[data-field="progress"]')
   const selectedEl = status.querySelector('[data-field="selected"]')
   const actionsEl = status.querySelector('[data-field="actions"]')
+  const inspectEl = status.querySelector('[data-field="inspect"]')
+  const inspectNameEl = status.querySelector('[data-field="inspect-name"]')
+  const inspectPurposeEl = status.querySelector('[data-field="inspect-purpose"]')
+  const inspectRelevanceEl = status.querySelector('[data-field="inspect-relevance"]')
+  const closeInspectBtn = status.querySelector('[data-action="close-inspect"]')
   const toggleBtn = status.querySelector('[data-action="toggle"]')
   const helpBtn = status.querySelector('[data-action="help"]')
+  /** @type {null | (() => void)} */
+  let onCloseInspection = null
 
   objectiveEl.textContent = objective
 
@@ -212,6 +238,10 @@ export function createSceneUi(options) {
   toggleBtn.addEventListener('click', () => {
     setCollapsed(status.dataset.collapsed !== 'true')
   })
+  closeInspectBtn.addEventListener('click', () => {
+    // Close clears the selection only — progress (answers / inspected) stays.
+    onCloseInspection?.()
+  })
 
   // Native Esc fires "cancel" then closes. Restore focus on the next frame.
   dialog.addEventListener('cancel', () => {
@@ -245,7 +275,14 @@ export function createSceneUi(options) {
   }
 
   /**
-   * @param {{ progressText: string, selected: string, actions: string[], objective?: string }} state
+   * @param {{
+   *   progressText: string,
+   *   selected: string,
+   *   actions: string[],
+   *   objective?: string,
+   *   inspection?: null | { name: string, purpose: string, relevance: string },
+   *   onCloseInspection?: null | (() => void),
+   * }} state
    */
   function updateStatus(state) {
     if (state.objective) objectiveEl.textContent = state.objective
@@ -258,6 +295,27 @@ export function createSceneUi(options) {
       li.textContent = line
       actionsEl.append(li)
     }
+
+    const inspection = state.inspection
+    onCloseInspection = typeof state.onCloseInspection === 'function' ? state.onCloseInspection : null
+    if (inspection) {
+      const wasHidden = inspectEl.hidden
+      inspectEl.hidden = false
+      inspectNameEl.textContent = inspection.name
+      inspectPurposeEl.textContent = inspection.purpose
+      inspectRelevanceEl.textContent = inspection.relevance
+      // First time this card appears, open the drawer on narrow screens.
+      if (wasHidden && status.dataset.collapsed === 'true') setCollapsed(false)
+    } else {
+      inspectEl.hidden = true
+      inspectNameEl.textContent = ''
+      inspectPurposeEl.textContent = ''
+      inspectRelevanceEl.textContent = ''
+    }
+  }
+
+  function focusInspectionClose() {
+    if (!inspectEl.hidden) closeInspectBtn.focus({ preventScroll: true })
   }
 
   function destroy() {
@@ -273,6 +331,7 @@ export function createSceneUi(options) {
     openBriefing,
     closeBriefing,
     updateStatus,
+    focusInspectionClose,
     destroy,
     /** @returns {boolean} */
     get briefingOpen() {

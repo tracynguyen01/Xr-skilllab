@@ -27,6 +27,35 @@ test('Oil & Gas briefing dialog and status panel mount in play', async ({ page }
   await expect(page.getByRole('button', { name: 'Finish Assessment' })).toBeVisible()
 })
 
+test('Oil & Gas briefing heading stays in view at 390px', async ({ page }) => {
+  test.setTimeout(90000)
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/samples/oil-gas/')
+  await page.getByRole('button', { name: 'Start the Simulation' }).click()
+  await expect(page.getByRole('heading', { name: 'Gas Pad Challenge' })).toBeVisible({ timeout: 20000 })
+  await page.getByRole('button', { name: /Begin in/i }).click()
+
+  const briefing = page.locator('dialog.scene-briefing')
+  await expect(briefing).toBeVisible({ timeout: 10000 })
+  const heading = briefing.getByRole('heading', { name: 'Before you start' })
+  await expect(heading).toBeVisible()
+
+  const inView = await page.evaluate(() => {
+    const dialog = document.querySelector('dialog.scene-briefing')
+    const h2 = dialog?.querySelector('h2')
+    if (!dialog || !h2) return false
+    const dialogBox = dialog.getBoundingClientRect()
+    const headingBox = h2.getBoundingClientRect()
+    return (
+      headingBox.top >= dialogBox.top &&
+      headingBox.bottom <= dialogBox.bottom &&
+      headingBox.left >= dialogBox.left &&
+      headingBox.right <= dialogBox.right
+    )
+  })
+  expect(inView).toBe(true)
+})
+
 test('Oil & Gas status panel collapses as a drawer at 390px', async ({ page }) => {
   test.setTimeout(90000)
   await page.setViewportSize({ width: 390, height: 844 })

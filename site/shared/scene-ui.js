@@ -196,7 +196,9 @@ export function createSceneUi(options) {
     if (inner) inner.scrollTop = 0
     dialog.querySelector('.eyebrow')?.scrollIntoView({ block: 'start', inline: 'nearest' })
     const start = dialog.querySelector('[data-action="start"]')
-    start?.focus()
+    // preventScroll: focusing Start must not scroll the heading out of view.
+    start?.focus({ preventScroll: true })
+    if (inner) inner.scrollTop = 0
   }
 
   function finishBriefing() {

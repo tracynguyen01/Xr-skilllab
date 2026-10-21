@@ -558,6 +558,11 @@ class Component extends DCLogic {
         keyboard: 'Arrow keys rotate the view. In 2D, Tab between numbered objects and press Enter.',
       },
       howToFinish: 'Use Finish Assessment in the top bar. Unanswered hazards are marked Missed. Reset starts a clean attempt.',
+      // After the first-load briefing, put focus in the scene (not on <body>).
+      focusAfterBriefing: () => {
+        if (this.state.view === '3d' && this.state.webgl && this.simView) this.simView.canvas.focus();
+        else this.focus2D();
+      },
     });
   }
   syncSceneUi() {
@@ -567,6 +572,7 @@ class Component extends DCLogic {
     const playing = s.simOpen && s.phase === 'play';
     this.sceneUi.setActive(playing);
     if (!playing) return;
+    const total = lesson().hazards.length;
     const found = lesson().hazards.filter(h => s.answers[h.id] != null).length;
     const hz = lesson().hazards.find(h => h.id === s.panel);
     const dc = lesson().decoys[s.panel];
@@ -578,7 +584,7 @@ class Component extends DCLogic {
     actions.push('Open ? for the briefing again');
     actions.push('Finish Assessment when you are ready');
     this.sceneUi.updateStatus({
-      progressText: `${found} of 4 reviewed`,
+      progressText: `${found} of ${total} reviewed`,
       selected,
       actions,
     });

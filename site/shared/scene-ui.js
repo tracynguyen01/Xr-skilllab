@@ -16,6 +16,7 @@ const STORAGE_PREFIX = 'xr-scene-briefing:'
  * @param {string} options.objective
  * @param {{ mouse: string, touch: string, keyboard: string }} options.controls
  * @param {string} options.howToFinish
+ * @param {() => void} [options.focusAfterBriefing] - Focus the scene when the first-load briefing closes
  */
 export function createSceneUi(options) {
   const {
@@ -26,6 +27,7 @@ export function createSceneUi(options) {
     objective,
     controls,
     howToFinish,
+    focusAfterBriefing,
   } = options
 
   if (!host) throw new Error('createSceneUi needs a host element')
@@ -43,6 +45,7 @@ export function createSceneUi(options) {
   const dialog = document.createElement('dialog')
   dialog.className = 'scene-briefing'
   dialog.setAttribute('aria-labelledby', 'scene-briefing-title')
+  dialog.style.setProperty('--scene-accent', accent)
   dialog.innerHTML = `
     <div class="scene-briefing-inner">
       <p class="eyebrow">Briefing</p>
@@ -153,19 +156,45 @@ export function createSceneUi(options) {
   syncNarrow()
   narrow.addEventListener('change', syncNarrow)
 
+  function focusIsUseful(el) {
+    if (!(el instanceof HTMLElement)) return false
+    if (el === document.body || el === document.documentElement) return false
+    if (!document.contains(el)) return false
+    if (el.closest('.scene-briefing')) return false
+    // Hidden intro controls (display:none) must not keep focus after Start/Skip.
+    if (el.offsetParent === null && el.getClientRects().length === 0) return false
+    return true
+  }
+
+  function restoreFocus() {
+    const target = lastFocus
+    lastFocus = null
+    // Re-opened from "?" → put focus back on that control.
+    if (target === helpBtn || (target && status.contains(target))) {
+      helpBtn.focus()
+      return
+    }
+    if (focusIsUseful(target)) {
+      target.focus()
+      return
+    }
+    // First-load briefing (no opener): hand focus to the 3D canvas or 2D list.
+    focusAfterBriefing?.()
+  }
+
   function closeBriefing() {
     if (!dialog.open) return
     dialog.close()
-    const target = lastFocus
-    lastFocus = null
-    if (target && typeof target.focus === 'function' && document.contains(target)) {
-      target.focus()
-    }
+    restoreFocus()
   }
 
   function openBriefing() {
     lastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
     if (!dialog.open) dialog.showModal()
+    // On small screens the dialog can open scrolled mid-way; pin to the heading.
+    const inner = dialog.querySelector('.scene-briefing-inner')
+    if (inner) inner.scrollTop = 0
+    dialog.querySelector('#scene-briefing-title')?.scrollIntoView({ block: 'start', inline: 'nearest' })
     const start = dialog.querySelector('[data-action="start"]')
     start?.focus()
   }
@@ -182,16 +211,9 @@ export function createSceneUi(options) {
     setCollapsed(status.dataset.collapsed !== 'true')
   })
 
-  // Native Esc fires "cancel" then closes. Put focus back where it was.
+  // Native Esc fires "cancel" then closes. Restore focus on the next frame.
   dialog.addEventListener('cancel', () => {
-    // Let the dialog close; restore focus on the next frame.
-    requestAnimationFrame(() => {
-      const target = lastFocus
-      lastFocus = null
-      if (target && typeof target.focus === 'function' && document.contains(target)) {
-        target.focus()
-      }
-    })
+    requestAnimationFrame(() => restoreFocus())
   })
 
   // The lesson page also listens for Escape (to exit the sim). Stop that while we are open.

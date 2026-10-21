@@ -16,13 +16,13 @@ The published site is a static portfolio. The previous React training app has be
 - Honest footer: Tracy Nguyen, github.com/tracynguyen01, not affiliated with Next XR Group, fictional demo data
 - Playwright smoke test for the carousel, the Fields menu, console errors, and overflow at 390 and 1280
 - GitHub Actions still builds `dist/` and deploys GitHub Pages
-- `worker/` remains in the repository and still typechecks. It is retired and not deployed. The pages do not call it
+- Coaching in the lessons is rule-based. The AI coach is retired and not deployed. Cloudflare has deleted the Worker, and its old address returns 404. `worker/` remains in the repository and still typechecks. The pages do not call it
 
 ## Not part of the current pages
 
 - The React routes, A-Frame warehouse, hash router, and Vite build
 - `VITE_COACH_API_URL`
-- The optional AI coach on the results page
+- An AI coach on the results page. That coach is retired and not deployed
 
 Old addresses such as `/#/simulate` open the new home page, because the site no longer has a client router.
 
@@ -41,5 +41,4 @@ The live site updates when this is merged to `main` and Deploy GitHub Pages succ
 ## Deferred
 
 - A third demo, added with the steps in the README
-- Turning the unused Worker back on for a demo
 - A repository licence chosen by the owner

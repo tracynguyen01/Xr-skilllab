@@ -17,7 +17,7 @@ The repository name is case-sensitive. Do not deploy this as `/xr-skilllab/`.
 ## What is on the site
 
 - A landing page with one featured lesson at a time, and a Fields menu for every lesson
-- [Warehouse Safety](site/samples/xr-skilllab/index.html), a warehouse safety training concept with a live 3D scene, a 2D fallback, scoring, and coaching. Its URL stays `/samples/xr-skilllab/`
+- [Warehouse Safety](site/samples/xr-skilllab/index.html), a warehouse safety training concept with a 3D scene, a 2D fallback, scoring, and rule-based coaching. Its URL stays `/samples/xr-skilllab/`
 - [Oil & Gas](site/samples/oil-gas/index.html), [Mining](site/samples/mining/index.html) and [Chemical processing](site/samples/chemical-processing/index.html), the same training pattern on fictional industry floors
 - [TwinInspect](site/samples/twininspect/index.html), a remote digital-twin home inspection of a fictional property
 
@@ -25,7 +25,7 @@ The three industry lessons score in `content.js`: 15 points for assessing a haza
 
 The demos are the Fable pages, kept as delivered. Each one loads its own `support.js`, Google Fonts, and Three.js from a CDN.
 
-`worker/` is a retired Cloudflare coach from an earlier version of the warehouse demo. **It is not deployed, and the pages do not call it.** See [worker/RETIRED.md](worker/RETIRED.md).
+The AI coach is retired and not deployed. Cloudflare has deleted that Worker, and `https://xr-skilllab-coach.tracynguyen01.workers.dev/coach` returns 404. No workflow publishes it, and the pages do not call it. Coaching in the lessons is rule-based. The old source is still in `worker/` for reference. See [worker/RETIRED.md](worker/RETIRED.md) and [docs/ai-coach.md](docs/ai-coach.md).
 
 ## Add a demo
 
@@ -88,5 +88,5 @@ Asset URLs in the demos are relative, so they work under `/Xr-skilllab/` on the 
 - Illustrative concepts only. They do not replace induction, a real inspection, or professional advice.
 - The TwinInspect house and its findings are fictional.
 - No accounts, no analytics, and no contact form.
-- The AI coach Worker is not used by these pages.
+- The AI coach is retired and not deployed. The lessons use rule-based coaching.
 - A licence file has not been added.

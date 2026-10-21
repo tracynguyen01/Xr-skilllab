@@ -36,7 +36,7 @@ const lessons = [
   { title: 'Oil & Gas', heading: /learn by doing/i },
   { title: 'Mining', heading: /learn by doing/i },
   { title: 'Chemical processing', heading: /learn by doing/i },
-  { title: 'TwinInspect', heading: /inspect any home/i },
+  { title: /TwinInspect/, heading: /inspect any home/i },
 ]
 
 test('carousel advances and the fields menu reaches every lesson', async ({ page }) => {
@@ -68,7 +68,7 @@ test('carousel advances and the fields menu reaches every lesson', async ({ page
 
   await carousel.locator('.slide.is-active .slide-link').focus()
   await page.keyboard.press('ArrowRight')
-  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'TwinInspect' })).toBeVisible()
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: /TwinInspect/ })).toBeVisible()
 
   const stage = carousel.locator('.carousel-stage')
   await stage.scrollIntoViewIfNeeded()
@@ -123,7 +123,12 @@ test('carousel advances and the fields menu reaches every lesson', async ({ page
   await menu.click()
   await fields.click()
   await expect(fields).toHaveAttribute('aria-expanded', 'true')
-  await expect(page.locator('#fields-submenu').getByRole('link', { name: 'TwinInspect' })).toBeVisible()
+  await expect(page.locator('#fields-submenu').getByRole('link', { name: /TwinInspect/ })).toBeVisible()
+  for (const lesson of lessons) {
+    const link = page.locator('#fields-submenu').getByRole('link', { name: lesson.title })
+    await expect(link.locator('.field-tagline')).toBeVisible()
+    await expect(link.locator('.field-tagline')).not.toHaveText('')
+  }
   await expectNoOverflow(page, 'home menu 390')
   await page.keyboard.press('Escape')
   await page.keyboard.press('Escape')
@@ -147,6 +152,36 @@ test('carousel advances and the fields menu reaches every lesson', async ({ page
     await page.setViewportSize({ width: 1280, height: 900 })
     expect(errors, errors.join('\n')).toEqual([])
   }
+})
+
+test('keyboard focus inside the carousel pauses rotation', async ({ page }) => {
+  test.setTimeout(60000)
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto('/')
+  const carousel = page.getByRole('region', { name: /try a lesson/i })
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Warehouse Safety' })).toBeVisible()
+  await carousel.getByRole('tab', { name: 'Warehouse Safety' }).focus()
+  await page.waitForTimeout(6500)
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Warehouse Safety' })).toBeVisible()
+})
+
+test('the menu opens and closes with Enter and Escape', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto('/')
+  const menu = page.getByRole('button', { name: 'Menu' })
+  await menu.focus()
+  await page.keyboard.press('Enter')
+  await expect(menu).toHaveAttribute('aria-expanded', 'true')
+  // Escape closes the panel and puts focus back on Menu.
+  await page.keyboard.press('Escape')
+  await expect(menu).toHaveAttribute('aria-expanded', 'false')
+  await expect(menu).toBeFocused()
+  // Enter toggles the same button open, then closed again.
+  await page.keyboard.press('Enter')
+  await expect(menu).toHaveAttribute('aria-expanded', 'true')
+  await menu.focus()
+  await page.keyboard.press('Enter')
+  await expect(menu).toHaveAttribute('aria-expanded', 'false')
 })
 
 test('the carousel stays put when reduced motion is requested', async ({ page }) => {

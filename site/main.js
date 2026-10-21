@@ -237,6 +237,7 @@ function mountCarousel(samples) {
     hovering = false
     sync()
   })
+  // Pause auto-advance while a keyboard user is inside the carousel.
   carousel.addEventListener('focusin', () => {
     focused = true
     sync()

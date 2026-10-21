@@ -46,7 +46,7 @@
   {
     "slug": "twininspect",
     "title": "TwinInspect — House Inspection",
-    "tagline": "Remote digital-twin home inspection",
+    "tagline": "Digital-twin concept for home inspection",
     "pitch": "Walk a fictional home, review what the model flagged, and keep the report in the inspector’s hands.",
     "tags": ["Digital-twin concept", "Inspection", "Fictional property", "Report"],
     "thumbnail": "samples/twininspect/thumbnail.webp",

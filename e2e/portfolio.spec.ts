@@ -44,7 +44,7 @@ test('carousel advances and the fields menu reaches every lesson', async ({ page
   const errors = watchConsole(page)
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/')
-  await expect(page.getByRole('heading', { level: 1, name: /practised in the browser/i })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: /better decisions/i })).toBeVisible()
   await expect(page).toHaveTitle('XR Concept Lab')
   await expect(page.getByRole('banner').getByRole('link', { name: 'XR Concept Lab' })).toBeVisible()
   await expect(page.locator('footer')).toContainText('XR Concept Lab')
@@ -165,7 +165,7 @@ test('the carousel stays put when reduced motion is requested', async ({ page })
 
 test('old hash routes stay on the portfolio home', async ({ page }) => {
   await page.goto('/#/simulate')
-  await expect(page.getByRole('heading', { level: 1, name: /practised in the browser/i })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: /better decisions/i })).toBeVisible()
   await page.getByRole('button', { name: 'Menu' }).click()
   await page.getByRole('button', { name: 'Fields' }).click()
   await expect(page.locator('#fields-submenu').getByRole('link', { name: /Warehouse Safety/ })).toBeVisible()

@@ -191,10 +191,10 @@ export function createSceneUi(options) {
   function openBriefing() {
     lastFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
     if (!dialog.open) dialog.showModal()
-    // On small screens the dialog can open scrolled mid-way; pin to the heading.
+    // On small screens the dialog can open scrolled mid-way; pin to the top label.
     const inner = dialog.querySelector('.scene-briefing-inner')
     if (inner) inner.scrollTop = 0
-    dialog.querySelector('#scene-briefing-title')?.scrollIntoView({ block: 'start', inline: 'nearest' })
+    dialog.querySelector('.eyebrow')?.scrollIntoView({ block: 'start', inline: 'nearest' })
     const start = dialog.querySelector('[data-action="start"]')
     start?.focus()
   }

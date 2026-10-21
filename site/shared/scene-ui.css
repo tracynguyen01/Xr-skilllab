@@ -64,18 +64,22 @@
 }
 
 .scene-briefing-inner {
-  padding: 28px 28px 24px;
+  /* Extra top padding so the BRIEFING label is not clipped when the dialog opens scrolled. */
+  padding: 36px 28px 24px;
   overflow: auto;
   max-height: min(85vh, 640px);
+  scroll-padding-top: 20px;
 }
 
 .scene-briefing .eyebrow {
   margin: 0;
+  padding-top: 2px;
   font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   font-weight: 700;
   color: var(--scene-accent);
+  scroll-margin-top: 12px;
 }
 
 .scene-briefing h2 {
@@ -163,7 +167,6 @@
   top: 72px;
   left: 14px;
   width: min(280px, calc(100% - 28px));
-  max-height: min(52vh, 380px);
   display: flex;
   flex-direction: column;
   border-radius: 14px;
@@ -173,10 +176,6 @@
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
   overflow: hidden;
-}
-
-.scene-status[data-collapsed="true"] {
-  max-height: none;
 }
 
 .scene-status-bar {
@@ -228,8 +227,8 @@
   padding: 12px 14px 14px;
   display: grid;
   gap: 10px;
-  overflow: auto;
-  overscroll-behavior: contain;
+  /* Desktop: grow with content (no clipped last line). Mobile adds overflow below. */
+  overflow: visible;
 }
 
 .scene-status[data-collapsed="true"] .scene-status-body {
@@ -278,7 +277,23 @@
   font-weight: 500;
 }
 
-/* Narrow screens: bottom drawer that stays clear of the top task bar. */
+/* Tablet and below: cap height and scroll the body so the drawer cannot cover the scene. */
+@media (max-width: 860px) {
+  .scene-status {
+    max-height: min(52vh, 380px);
+  }
+
+  .scene-status[data-collapsed="true"] {
+    max-height: none;
+  }
+
+  .scene-status-body {
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Phone: bottom drawer that stays clear of the top task bar. */
 @media (max-width: 430px) {
   .scene-status {
     top: auto;

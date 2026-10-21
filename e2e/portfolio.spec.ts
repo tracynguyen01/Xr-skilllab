@@ -23,16 +23,24 @@ function watchConsole(page: Page) {
   return errors
 }
 
-const demos = [
-  { name: /Industry training XR SkillLab/i, heading: /learn by doing/i, where: 'skilllab' },
-  { name: /Industry training Oil & Gas/i, heading: /learn by doing/i, where: 'oil-gas' },
-  { name: /Industry training Mining/i, heading: /learn by doing/i, where: 'mining' },
-  { name: /Industry training Chemical processing/i, heading: /learn by doing/i, where: 'chemical' },
-  { name: /Inspection TwinInspect/i, heading: /inspect any home/i, where: 'twin' },
+async function blurAndLeave(page: Page) {
+  await page.mouse.move(8, 8)
+  await page.evaluate(() => {
+    const el = document.activeElement
+    if (el instanceof HTMLElement) el.blur()
+  })
+}
+
+const lessons = [
+  { title: 'XR SkillLab', heading: /learn by doing/i },
+  { title: 'Oil & Gas', heading: /learn by doing/i },
+  { title: 'Mining', heading: /learn by doing/i },
+  { title: 'Chemical processing', heading: /learn by doing/i },
+  { title: 'TwinInspect', heading: /inspect any home/i },
 ]
 
-test('home lists every demo and each sample opens cleanly', async ({ page }) => {
-  test.setTimeout(120000)
+test('carousel advances and the fields menu reaches every lesson', async ({ page }) => {
+  test.setTimeout(180000)
   const errors = watchConsole(page)
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/')
@@ -40,34 +48,125 @@ test('home lists every demo and each sample opens cleanly', async ({ page }) => 
   await expect(page).toHaveTitle('XR Concept Lab')
   await expect(page.getByRole('banner').getByRole('link', { name: 'XR Concept Lab' })).toBeVisible()
   await expect(page.locator('footer')).toContainText('XR Concept Lab')
-  await expect(page.getByRole('heading', { level: 2, name: /five ways to try the idea/i })).toBeVisible()
-  for (const demo of demos) {
-    await expect(page.getByRole('link', { name: demo.name })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 2, name: /try a lesson/i })).toBeVisible()
+
+  const carousel = page.getByRole('region', { name: /try a lesson/i })
+  const active = carousel.locator('.slide.is-active')
+  await expect(active.getByRole('heading', { level: 3, name: 'XR SkillLab' })).toBeVisible()
+  await expect(active.getByRole('link', { name: /Open the demo/ })).toHaveAttribute('href', /xr-skilllab/)
+
+  await carousel.getByRole('button', { name: 'Next lesson' }).click()
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Oil & Gas' })).toBeVisible()
+  await carousel.getByRole('button', { name: 'Previous lesson' }).click()
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'XR SkillLab' })).toBeVisible()
+
+  await carousel.getByRole('tab', { name: 'Mining' }).click()
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Mining' })).toBeVisible()
+  await carousel.getByRole('tab', { name: 'Mining' }).focus()
+  await page.keyboard.press('ArrowRight')
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Chemical processing' })).toBeVisible()
+
+  await carousel.locator('.slide.is-active .slide-link').focus()
+  await page.keyboard.press('ArrowRight')
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'TwinInspect' })).toBeVisible()
+
+  const stage = carousel.locator('.carousel-stage')
+  await stage.scrollIntoViewIfNeeded()
+  const box = await stage.boundingBox()
+  if (!box) throw new Error('carousel stage has no box')
+  await page.mouse.move(box.x + box.width * 0.8, box.y + box.height * 0.4)
+  await page.mouse.down()
+  await page.mouse.move(box.x + box.width * 0.2, box.y + box.height * 0.4, { steps: 12 })
+  await page.mouse.up()
+  await expect(page).toHaveURL(/\/$/)
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'XR SkillLab' })).toBeVisible()
+
+  await carousel.getByRole('tab', { name: 'XR SkillLab' }).click()
+  await blurAndLeave(page)
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Oil & Gas' })).toBeVisible({ timeout: 8000 })
+  await carousel.hover()
+  await page.waitForTimeout(6500)
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Oil & Gas' })).toBeVisible()
+
+  await page.mouse.move(8, 8)
+  const menu = page.getByRole('button', { name: 'Menu' })
+  await expect(menu).toHaveAttribute('aria-expanded', 'false')
+  await menu.click()
+  await expect(menu).toHaveAttribute('aria-expanded', 'true')
+  const fields = page.getByRole('button', { name: 'Fields' })
+  await fields.hover()
+  await expect(fields).toHaveAttribute('aria-expanded', 'true')
+  await expect(page.locator('#fields-submenu a')).toHaveCount(5)
+  const hrefs: string[] = []
+  for (const lesson of lessons) {
+    const link = page.locator('#fields-submenu').getByRole('link', { name: lesson.title })
+    await expect(link).toBeVisible()
+    const href = await link.evaluate((anchor) => (anchor as HTMLAnchorElement).href)
+    expect(href, lesson.title).toBeTruthy()
+    hrefs.push(href)
+    const response = await page.request.get(href)
+    expect(response.ok(), href).toBeTruthy()
   }
-  await expect(page.getByRole('link', { name: 'Tracy Nguyen' })).toHaveAttribute('href', 'https://github.com/tracynguyen01')
+  await expectNoOverflow(page, 'home menu 1280')
+  await page.keyboard.press('Escape')
+  await expect(fields).toHaveAttribute('aria-expanded', 'false')
+  await expect(menu).toHaveAttribute('aria-expanded', 'true')
+  await page.keyboard.press('Escape')
+  await expect(menu).toHaveAttribute('aria-expanded', 'false')
+  await menu.click()
+  await page.locator('.lede').click()
+  await expect(menu).toHaveAttribute('aria-expanded', 'false')
   await expectNoOverflow(page, 'home 1280')
 
   await page.setViewportSize({ width: 390, height: 844 })
-  for (const demo of demos) {
-    await expect(page.getByRole('link', { name: demo.name })).toBeVisible()
-  }
   await expectNoOverflow(page, 'home 390')
+  await menu.click()
+  await fields.click()
+  await expect(fields).toHaveAttribute('aria-expanded', 'true')
+  await expect(page.locator('#fields-submenu').getByRole('link', { name: 'TwinInspect' })).toBeVisible()
+  await expectNoOverflow(page, 'home menu 390')
+  await page.keyboard.press('Escape')
+  await page.keyboard.press('Escape')
 
-  for (const demo of demos) {
-    await page.setViewportSize({ width: 1280, height: 900 })
-    await page.goto('/')
-    await page.getByRole('link', { name: demo.name }).click()
-    await expect(page.getByRole('heading', { level: 1, name: demo.heading })).toBeVisible({ timeout: 20000 })
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await menu.click()
+  await fields.click()
+  await page.locator('#fields-submenu').getByRole('link', { name: 'XR SkillLab' }).click()
+  await expect(page.getByRole('heading', { level: 1, name: /learn by doing/i })).toBeVisible({ timeout: 20000 })
+  await expect(page.getByRole('link', { name: 'Back to all demos' })).toBeVisible()
+
+  for (const [index, lesson] of lessons.entries()) {
+    await page.goto(hrefs[index])
+    await expect(page.getByRole('heading', { level: 1, name: lesson.heading })).toBeVisible({ timeout: 20000 })
     await expect(page.getByRole('link', { name: 'Back to all demos' })).toBeVisible()
-    await expectNoOverflow(page, `${demo.where} 1280`)
+    await expect(page.getByRole('button', { name: 'Menu' })).toBeVisible({ timeout: 20000 })
+    await expectNoOverflow(page, `${lesson.title} 1280`)
     await page.setViewportSize({ width: 390, height: 844 })
-    await expectNoOverflow(page, `${demo.where} 390`)
+    await expect(page.getByRole('button', { name: 'Menu' })).toBeVisible()
+    await expectNoOverflow(page, `${lesson.title} 390`)
+    await page.setViewportSize({ width: 1280, height: 900 })
     expect(errors, errors.join('\n')).toEqual([])
   }
+})
+
+test('the carousel stays put when reduced motion is requested', async ({ page }) => {
+  test.setTimeout(60000)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto('/')
+  const carousel = page.getByRole('region', { name: /try a lesson/i })
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'XR SkillLab' })).toBeVisible()
+  await blurAndLeave(page)
+  await page.waitForTimeout(6500)
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'XR SkillLab' })).toBeVisible()
+  await carousel.getByRole('button', { name: 'Next lesson' }).click()
+  await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Oil & Gas' })).toBeVisible()
 })
 
 test('old hash routes stay on the portfolio home', async ({ page }) => {
   await page.goto('/#/simulate')
   await expect(page.getByRole('heading', { level: 1, name: /practised in the browser/i })).toBeVisible()
-  await expect(page.getByRole('link', { name: /Industry training XR SkillLab/i })).toBeVisible()
+  await page.getByRole('button', { name: 'Menu' }).click()
+  await page.getByRole('button', { name: 'Fields' }).click()
+  await expect(page.locator('#fields-submenu').getByRole('link', { name: /XR SkillLab/ })).toBeVisible()
 })

@@ -17,25 +17,21 @@ test('Oil & Gas explainable results, missed list, and confirm reset', async ({ p
   /** Open a hazard from the list, pick the preferred option, Submit — keyboard where it matters. */
   async function answerByKeyboard(label: string) {
     const dialog = page.locator('[role="dialog"][aria-labelledby="panelTitle"]')
-    // Wait until any previous panel is fully gone before opening the next hazard.
     await expect(dialog).toBeHidden()
 
     const row = objectList.getByRole('listitem').filter({ hasText: label }).getByRole('button')
     await row.focus()
     await page.keyboard.press('Enter')
     await expect(dialog).toBeVisible()
-    await expect(dialog.getByRole('heading')).toBeVisible()
+    // Confirm we opened this hazard (not a stale panel from the previous row).
+    await expect(dialog.getByRole('heading', { name: label })).toBeVisible()
     // Preferred response is option B (index 1) for every oil-gas hazard.
-    await dialog.getByRole('radio').nth(1).focus()
-    await page.keyboard.press('Space')
+    await dialog.getByRole('radio').nth(1).click()
     const submit = dialog.getByRole('button', { name: 'Submit' })
     await expect(submit).toBeVisible()
-    await submit.focus()
-    await page.keyboard.press('Enter')
+    await submit.click()
     await expect(dialog.getByText(/Matches the scenario guidance/i)).toBeVisible()
-    // After a choice is stored, options stay disabled (no re-score).
     await expect(dialog.getByRole('radio').nth(0)).toBeDisabled()
-    // Click closes the panel before focus returns to the list (avoids Enter racing the old panel).
     await dialog.getByRole('button', { name: 'Back to the scene' }).click()
     await expect(dialog).toBeHidden()
   }

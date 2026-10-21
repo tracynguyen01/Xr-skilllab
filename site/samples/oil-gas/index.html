@@ -706,11 +706,20 @@ class Component extends DCLogic {
   openInstructions = e => { this.lastTrigger = e.currentTarget; this.setState({ instructions: true }); this.focusInto(this.instrRef); };
   closeInstructions = () => { this.setState({ instructions: false }); this.after(() => this.returnFocus()); };
   closePanel = () => {
-    // Clear the panel first, then return focus only if nothing else opened it.
-    // (Avoids a race where "Back to the scene" + the next list Enter leave the old panel up.)
+    // Clear the panel, then restore focus only if nothing else took it.
+    // Otherwise a late returnFocus can re-activate the previous list row and
+    // reopen the answered panel (no Submit) while the next answer is starting.
+    const trigger = this.lastTrigger;
+    this.lastTrigger = null;
     this.setState({ panel: null, picked: -1 });
     this.after(() => {
-      if (this.state.panel == null) this.returnFocus();
+      if (this.state.panel != null) return;
+      const active = document.activeElement;
+      if (active && active !== document.body && active !== document.documentElement && active !== trigger) {
+        return;
+      }
+      if (trigger && trigger.isConnected) trigger.focus();
+      else if (this.simView && this.state.view === '3d') this.simView.canvas.focus();
     });
   };
   inspect(id, trigger) {

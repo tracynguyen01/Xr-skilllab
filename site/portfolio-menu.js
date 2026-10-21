@@ -107,6 +107,7 @@ export function mountFieldsMenu(host, samples) {
       const link = document.createElement('a')
       link.className = 'field-link'
       link.href = lessonUrl(sample.href)
+      // Title plus a one-line description (tagline) for every lesson.
       const title = document.createElement('span')
       title.className = 'field-title'
       title.textContent = sample.title
@@ -268,7 +269,17 @@ function ensureMenuCss() {
 }
 
 function bootSampleMenu() {
+  // Sample pages replace the Fable shell before the header is ready.
+  // Wait for that, mount the menu once, then stop watching.
   let started = false
+  let poll = 0
+  let observer = null
+
+  const stopWaiting = () => {
+    observer?.disconnect()
+    window.clearInterval(poll)
+  }
+
   const tryMount = () => {
     if (started) return true
     if (document.querySelector('x-dc')) return false
@@ -285,17 +296,17 @@ function bootSampleMenu() {
     })
     return true
   }
+
   if (tryMount()) return
-  const observer = new MutationObserver(() => {
-    if (tryMount()) observer.disconnect()
+
+  observer = new MutationObserver(() => {
+    if (tryMount()) stopWaiting()
   })
   observer.observe(document.documentElement, { childList: true, subtree: true })
-  const poll = window.setInterval(() => {
-    if (tryMount()) {
-      observer.disconnect()
-      window.clearInterval(poll)
-    }
+  poll = window.setInterval(() => {
+    if (tryMount()) stopWaiting()
   }, 200)
+  // Give up after 15 seconds so a stuck page does not keep polling.
   window.setTimeout(() => window.clearInterval(poll), 15000)
 }
 

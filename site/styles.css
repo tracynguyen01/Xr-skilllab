@@ -236,6 +236,36 @@ h1 {
 .btn:hover { background: var(--teal-hot); color: var(--ink); text-decoration: none; }
 .btn:active { transform: scale(0.98); }
 
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: #17263b;
+  color: var(--text);
+}
+
+@media (max-width: 430px) {
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-actions .btn {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
 .strip {
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
@@ -261,6 +291,7 @@ h1 {
   max-width: 1200px;
   margin: 0 auto;
   padding: 56px 20px 72px;
+  scroll-margin-top: 78px;
 }
 
 .showcase h2 {

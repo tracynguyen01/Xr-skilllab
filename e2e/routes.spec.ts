@@ -45,7 +45,7 @@ async function gotoRoute(page: Page, route: string) {
 
 async function settle(page: Page, route: string) {
   if (route === '/') {
-    await expect(page.getByRole('heading', { level: 1, name: /practised in the browser/i })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: /better decisions/i })).toBeVisible()
     return
   }
   // Sample pages replace the Fable shell before the Fields menu mounts.
@@ -100,7 +100,7 @@ test.describe('route baseline', () => {
       await expect(back).toBeVisible()
       await back.click()
       await expect(page).toHaveURL(/:4175\/$/)
-      await expect(page.getByRole('heading', { level: 1, name: /practised in the browser/i })).toBeVisible()
+      await expect(page.getByRole('heading', { level: 1, name: /better decisions/i })).toBeVisible()
     })
   }
 

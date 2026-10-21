@@ -206,7 +206,7 @@ h1,h2,h3,p{margin:0}
 <sc-if value="{{ simOpen }}" hint-placeholder-val="{{ false }}">
   <div role="region" aria-label="Gas Pad Challenge simulation" data-screen-label="Simulation" style="position:fixed;inset:0;z-index:100;background:#0B1220;animation:simIn .5s cubic-bezier(.2,.7,.2,1)">
     <div ref="{{ fsStageRef }}" style="position:absolute;inset:0"></div>
-    <div ref="{{ hoverRef }}" aria-hidden="true" style="position:absolute;display:none;pointer-events:none;transform:translate(14px,16px);padding:6px 10px;border-radius:8px;background:rgba(17,28,46,.88);border:1px solid rgba(132,191,255,.45);font-size:13px;font-weight:600;color:#F5F8FC;white-space:nowrap;z-index:3"></div>
+    <div ref="{{ hoverRef }}" aria-hidden="true" style="position:absolute;display:none;pointer-events:none;padding:6px 10px;border-radius:8px;background:rgba(17,28,46,.88);border:1px solid rgba(132,191,255,.45);font-size:13px;font-weight:600;color:#F5F8FC;white-space:nowrap;max-width:min(280px,calc(100% - 16px));overflow:hidden;text-overflow:ellipsis;z-index:3"></div>
     <!-- Shared briefing + status panel (site/shared/scene-ui.js). Pointer-events stay off on the host. -->
     <div data-scene-ui-host style="position:absolute;inset:0;pointer-events:none;z-index:15"></div>
 
@@ -323,7 +323,8 @@ h1,h2,h3,p{margin:0}
         <h2 id="panelTitle" data-autofocus="" tabindex="-1" style="font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:6px 0 10px;outline:none">{{ panelTitle }}</h2>
         <p style="color:#B6C4D6;font-size:16px">{{ panelContext }}</p>
         <sc-if value="{{ panelIsHazard }}" hint-placeholder-val="{{ true }}">
-          <p id="panelQ" style="font-weight:700;margin:22px 0 12px">What's the best response in this situation?</p>
+          <p id="panelQ" style="font-weight:700;margin:22px 0 6px">What's the best response in this situation?</p>
+          <p style="color:#B6C4D6;font-size:14px;margin:0 0 12px">Choose a response, then Submit.</p>
           <div role="radiogroup" aria-labelledby="panelQ" style="display:flex;flex-direction:column;gap:10px">
             <sc-for list="{{ panelOptions }}" as="o" hint-placeholder-count="3">
               <button type="button" role="radio" aria-checked="{{ o.checked }}" disabled="{{ o.disabled }}" onClick="{{ o.select }}" style="display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;padding:14px;border-radius:12px;border:1px solid {{ o.border }};background:{{ o.bg }};color:#F5F8FC;font-size:16px;line-height:1.5;cursor:pointer;min-height:44px;transition:border-color .2s,background .2s" style-hover="border-color:#84BFFF">
@@ -502,7 +503,28 @@ class Component extends DCLogic {
     this.heroView.controls.auto = .06; this.heroView.canvas.tabIndex = -1;
     this.simView.setPreset('hero');
     this.simView.onInspect = id => this.inspect(id, this.simView.canvas);
-    this.simView.onHover = h => { const el = this.hoverRef.current; if (!el) return; if (!h) { el.style.display = 'none'; return; } el.style.display = 'block'; el.style.left = h.x + 'px'; el.style.top = h.y + 'px'; el.textContent = 'Inspect · ' + h.label; };
+    this.simView.onHover = h => {
+      const el = this.hoverRef.current;
+      if (!el) return;
+      if (!h) { el.style.display = 'none'; return; }
+      el.style.display = 'block';
+      el.textContent = 'Inspect · ' + h.label;
+      // Clamp inside the stage so the label is not cut off at the right or bottom edge.
+      const parent = el.offsetParent || el.parentElement;
+      const pad = 8;
+      let left = h.x + 14;
+      let top = h.y + 16;
+      const pw = parent ? parent.clientWidth : window.innerWidth;
+      const ph = parent ? parent.clientHeight : window.innerHeight;
+      const ew = el.offsetWidth;
+      const eh = el.offsetHeight;
+      if (left + ew > pw - pad) left = Math.max(pad, pw - ew - pad);
+      if (top + eh > ph - pad) top = Math.max(pad, h.y - eh - 8);
+      if (left < pad) left = pad;
+      if (top < pad) top = pad;
+      el.style.left = left + 'px';
+      el.style.top = top + 'px';
+    };
     this.io = new IntersectionObserver(es => { es.forEach(e => { if (e.target === this.heroRef.current) this.heroVis = e.isIntersecting; if (e.target === this.pageStageRef.current) this.pageVis = e.isIntersecting; }); this.syncViews(); }, { threshold: .05 });
     if (this.heroRef.current) { this.heroView.mount(this.heroRef.current); this.io.observe(this.heroRef.current); }
     if (this.pageStageRef.current) this.io.observe(this.pageStageRef.current);
@@ -574,12 +596,11 @@ class Component extends DCLogic {
     if (!playing) return;
     const total = lesson().hazards.length;
     const found = lesson().hazards.filter(h => s.answers[h.id] != null).length;
-    const hz = lesson().hazards.find(h => h.id === s.panel);
     const eq = s.panel && lesson().equipment ? lesson().equipment[s.panel] : null;
     const selected = eq ? eq.name : 'None selected';
+    // Same first action for every selection — response guidance lives in the hazard panel only.
     const actions = [];
-    if (hz && s.answers[hz.id] == null) actions.push('Choose a response, then Submit');
-    else if (eq) actions.push('Close to return to the scene (progress is kept)');
+    if (eq) actions.push('Review this object');
     else actions.push(s.view === '3d' && s.webgl ? 'Click or tap an object to inspect it' : 'Select a numbered object in the 2D list');
     actions.push('Open ? for the briefing again');
     actions.push('Finish Assessment when you are ready');
@@ -696,17 +717,17 @@ class Component extends DCLogic {
     const answered = hz ? a[hz.id] : null; const panelAnswered = hz && answered != null;
     const panelOptions = hz ? hz.options.map((o, i) => { const chosen = panelAnswered ? answered === i : s.picked === i; return { letter: LETTERS[i], text: o.text, checked: chosen ? 'true' : 'false', disabled: !!panelAnswered, border: chosen ? (panelAnswered ? (o.ok ? lesson().accent : AMBER) : '#84BFFF') : '#2B3D55', bg: chosen ? 'rgba(132,191,255,.1)' : 'rgba(11,18,32,.5)', select: () => { if (!panelAnswered) this.setState({ picked: i }); } }; }) : [];
     const chosenOpt = panelAnswered ? hz.options[answered] : null;
-    // hotspots — labels stay neutral (equipment name); status "Info" for context objects.
+    // hotspots — labels stay neutral; every inspected object uses the same "Inspected" status.
     const hotspots = lesson().hotspots.map((h, i) => {
       const isH = lesson().hazards.some(x => x.id === h.id);
       const v = isH ? a[h.id] : null;
       const ok = v != null && lesson().hazards.find(x => x.id === h.id).options[v].ok;
       const insp = s.inspected.includes(h.id);
       const label = (lesson().equipment && lesson().equipment[h.id]?.name) || h.label;
-      const status = v != null ? (ok ? 'Correct' : 'Review') : insp ? (isH ? 'Inspected' : 'Info') : '';
+      const status = v != null ? (ok ? 'Correct' : 'Review') : insp ? 'Inspected' : '';
       return {
         ...h, label, n: i + 1, left: h.l + '%', top: h.t + '%',
-        aria: `${i + 1}. ${label}${v != null ? (ok ? ', assessed: matches guidance' : ', assessed: review') : insp ? (isH ? ', inspected' : ', info') : ''}`,
+        aria: `${i + 1}. ${label}${v != null ? (ok ? ', assessed: matches guidance' : ', assessed: review') : insp ? ', inspected' : ''}`,
         ring: v != null ? (ok ? lesson().accent : AMBER) : insp ? MUTED : '#84BFFF',
         answered: v != null, badge: ok ? '✓' : '✕', badgeBg: ok ? lesson().accent : AMBER,
         status, statusColor: v != null ? (ok ? lesson().accent : AMBER) : MUTED,

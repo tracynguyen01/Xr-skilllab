@@ -56,6 +56,36 @@ test('Oil & Gas briefing heading stays in view at 390px', async ({ page }) => {
   expect(inView).toBe(true)
 })
 
+test('Oil & Gas hazard and decoy show the same inspected status', async ({ page }) => {
+  test.setTimeout(90000)
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto('/samples/oil-gas/')
+  await page.evaluate(() => sessionStorage.setItem('xr-scene-briefing:oil-gas', '1'))
+  await page.getByRole('button', { name: 'Start the Simulation' }).click()
+  await expect(page.getByRole('heading', { name: 'Gas Pad Challenge' })).toBeVisible({ timeout: 20000 })
+  await page.getByRole('button', { name: /Use 2D Inspector|Begin in 2D/i }).click()
+
+  const list = page.locator('[data-screen-label="2D Inspector"]')
+  await expect(list.getByRole('heading', { name: '2D Inspector' })).toBeVisible({ timeout: 10000 })
+
+  // Hazard candidate (Separator / flange) and decoy (Flare stack) must match after inspect.
+  const sepRow = list.getByRole('listitem').filter({ hasText: 'Separator' }).getByRole('button')
+  const flareRow = list.getByRole('listitem').filter({ hasText: 'Flare stack' }).getByRole('button')
+  await sepRow.click()
+  await page.locator('[role="dialog"][aria-labelledby="panelTitle"]').getByRole('button', { name: 'Close' }).click()
+  await flareRow.click()
+  await page.locator('.scene-status').getByRole('button', { name: 'Close' }).click()
+
+  const sepStatus = await sepRow.locator('span').nth(2).innerText()
+  const flareStatus = await flareRow.locator('span').nth(2).innerText()
+  expect(sepStatus).toBe('Inspected')
+  expect(flareStatus).toBe('Inspected')
+  expect(sepStatus).toBe(flareStatus)
+
+  await expect(sepRow).toHaveAttribute('aria-label', /inspected/i)
+  await expect(flareRow).toHaveAttribute('aria-label', /inspected/i)
+})
+
 test('Oil & Gas status panel collapses as a drawer at 390px', async ({ page }) => {
   test.setTimeout(90000)
   await page.setViewportSize({ width: 390, height: 844 })

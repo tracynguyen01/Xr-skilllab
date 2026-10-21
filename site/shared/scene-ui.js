@@ -89,6 +89,25 @@ export function createSceneUi(options) {
       </div>
     </div>
     <div class="scene-status-body" id="scene-status-body">
+      <!-- Inspection card first so it is visible in the phone drawer without scrolling past Actions. -->
+      <div data-field="inspect" hidden>
+        <p class="eyebrow" style="margin:0 0 8px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;color:var(--scene-accent)">Info</p>
+        <dl>
+          <div>
+            <dt>Name</dt>
+            <dd data-field="inspect-name"></dd>
+          </div>
+          <div>
+            <dt>Purpose</dt>
+            <dd data-field="inspect-purpose" class="muted"></dd>
+          </div>
+          <div>
+            <dt>Relevance</dt>
+            <dd data-field="inspect-relevance" class="muted"></dd>
+          </div>
+        </dl>
+        <button type="button" class="scene-btn scene-btn-secondary" data-action="close-inspect" style="min-height:40px;width:100%;margin-top:6px;font-size:14px">Close</button>
+      </div>
       <dl>
         <div>
           <dt>Objective</dt>
@@ -107,25 +126,6 @@ export function createSceneUi(options) {
           <dd><ul class="scene-actions" data-field="actions"></ul></dd>
         </div>
       </dl>
-      <!-- Object inspection card (name / purpose / relevance). Neutral "Info" label. -->
-      <div data-field="inspect" hidden>
-        <p class="eyebrow" style="margin:4px 0 8px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;color:var(--scene-accent)">Info</p>
-        <dl>
-          <div>
-            <dt>Name</dt>
-            <dd data-field="inspect-name"></dd>
-          </div>
-          <div>
-            <dt>Purpose</dt>
-            <dd data-field="inspect-purpose" class="muted"></dd>
-          </div>
-          <div>
-            <dt>Relevance</dt>
-            <dd data-field="inspect-relevance" class="muted"></dd>
-          </div>
-        </dl>
-        <button type="button" class="scene-btn scene-btn-secondary" data-action="close-inspect" style="min-height:40px;width:100%;margin-top:6px;font-size:14px">Close</button>
-      </div>
     </div>
   `
 
@@ -304,8 +304,13 @@ export function createSceneUi(options) {
       inspectNameEl.textContent = inspection.name
       inspectPurposeEl.textContent = inspection.purpose
       inspectRelevanceEl.textContent = inspection.relevance
-      // First time this card appears, open the drawer on narrow screens.
+      // First time this card appears, open the drawer and pin the card into view.
       if (wasHidden && status.dataset.collapsed === 'true') setCollapsed(false)
+      if (wasHidden) {
+        requestAnimationFrame(() => {
+          inspectEl.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+        })
+      }
     } else {
       inspectEl.hidden = true
       inspectNameEl.textContent = ''

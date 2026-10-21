@@ -55,47 +55,47 @@ export const equipment = {
   flange: {
     name: 'Separator',
     purpose: 'Separates gas and liquids on this fictional pad before they move on.',
-    relevance: 'Vessel flanges and nearby detectors are worth a careful look on your scan.',
+    relevance: 'Flanges and detectors sit on the separator vessels in this scene.',
   },
   hotwork: {
     name: 'Pipe rack',
     purpose: 'Carries process pipework across the pad in this illustration.',
-    relevance: 'Check what is happening beside the rack before you decide how to respond.',
+    relevance: 'Open pipe runs cross the pad on this elevated steel rack.',
   },
   pump: {
     name: 'Transfer pump',
     purpose: 'Moves product between vessels in this teaching scene.',
-    relevance: 'Compare isolation clues on the pumps before you choose a response.',
+    relevance: 'This unit sits beside a second pump on the same pad skid.',
   },
   lockedpump: {
     name: 'Isolated pump',
     purpose: 'A neighbouring pump drawn with a lock fitted on the hasp.',
-    relevance: 'Useful contrast when you inspect transfer equipment nearby.',
+    relevance: 'This unit sits beside the transfer pump on the same pad skid.',
   },
   muster: {
     name: 'Muster gate',
     purpose: 'A signed exit through the pad fence in this illustration.',
-    relevance: 'Escape routes matter when something on the pad looks wrong.',
+    relevance: 'The gate opens through the fence line at the edge of the pad.',
   },
   flare: {
     name: 'Flare stack',
     purpose: 'Burns relief gas at a safe height in this fictional layout.',
-    relevance: 'Context for the pad\'s relief path; not every flame is a grade-level leak.',
+    relevance: 'The stack stands at the edge of the pad as the elevated relief path.',
   },
   shelter: {
     name: 'Control shelter',
     purpose: 'A small shelter for local controls in this illustration.',
-    relevance: 'Helps you read the pad layout while you search. Inspecting it does not change the score.',
+    relevance: 'The shelter marks a local control point on the pad layout.',
   },
   wellhead: {
     name: 'Wellhead',
     purpose: 'A fenced well tree drawn with closed valve handles.',
-    relevance: 'Part of the pad story; inspecting it does not change the score.',
+    relevance: 'The tree sits inside a small fence on one corner of the pad.',
   },
   extinguisher: {
     name: 'Fire extinguisher',
     purpose: 'Portable extinguisher placed clear of the walkway.',
-    relevance: 'Safety equipment context on the pad; it is not a scored finding.',
+    relevance: 'The extinguisher stands beside the walkway near the shelter.',
   },
 }
 

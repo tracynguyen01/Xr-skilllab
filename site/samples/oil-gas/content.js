@@ -60,7 +60,7 @@ export const equipment = {
   hotwork: {
     name: 'Pipe rack',
     purpose: 'Carries process pipework across the pad in this illustration.',
-    relevance: 'Open pipe runs cross the pad on this elevated steel rack.',
+    relevance: 'Pipe runs cross the pad on this steel rack.',
   },
   pump: {
     name: 'Transfer pump',
@@ -69,7 +69,7 @@ export const equipment = {
   },
   lockedpump: {
     name: 'Isolated pump',
-    purpose: 'A neighbouring pump drawn with a lock fitted on the hasp.',
+    purpose: 'A second pump on the pad skid in this teaching scene.',
     relevance: 'This unit sits beside the transfer pump on the same pad skid.',
   },
   muster: {
@@ -79,8 +79,8 @@ export const equipment = {
   },
   flare: {
     name: 'Flare stack',
-    purpose: 'Burns relief gas at a safe height in this fictional layout.',
-    relevance: 'The stack stands at the edge of the pad as the elevated relief path.',
+    purpose: 'Burns relief gas in this fictional layout.',
+    relevance: 'The stack stands at the edge of the pad as the relief path.',
   },
   shelter: {
     name: 'Control shelter',
@@ -89,12 +89,12 @@ export const equipment = {
   },
   wellhead: {
     name: 'Wellhead',
-    purpose: 'A fenced well tree drawn with closed valve handles.',
+    purpose: 'A fenced well tree on this fictional pad.',
     relevance: 'The tree sits inside a small fence on one corner of the pad.',
   },
   extinguisher: {
     name: 'Fire extinguisher',
-    purpose: 'Portable extinguisher placed clear of the walkway.',
+    purpose: 'A portable extinguisher kept on the pad in this illustration.',
     relevance: 'The extinguisher stands beside the walkway near the shelter.',
   },
 }

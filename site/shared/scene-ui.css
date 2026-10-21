@@ -1,0 +1,263 @@
+/* Shared scene chrome: briefing dialog + compact status panel.
+   Lesson pages opt in. Colours follow the Fable navy/teal tokens. */
+
+.scene-ui-root {
+  --scene-bg: #111c2e;
+  --scene-ink: #0b1220;
+  --scene-text: #f5f8fc;
+  --scene-muted: #b6c4d6;
+  --scene-border: #2b3d55;
+  --scene-focus: #84bfff;
+  --scene-accent: #f2b544;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  font-family: Manrope, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  color: var(--scene-text);
+}
+
+.scene-ui-root[hidden] { display: none !important; }
+
+.scene-ui-root button {
+  font-family: inherit;
+}
+
+.scene-ui-root :focus-visible {
+  outline: 2px solid var(--scene-focus);
+  outline-offset: 3px;
+}
+
+/* —— Briefing (native dialog) —— */
+
+.scene-briefing {
+  width: min(520px, calc(100vw - 32px));
+  max-height: min(85vh, 640px);
+  margin: auto;
+  padding: 0;
+  border: 1px solid rgba(182, 196, 214, 0.2);
+  border-radius: 16px;
+  background: rgba(17, 28, 46, 0.94);
+  color: var(--scene-text);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+}
+
+.scene-briefing::backdrop {
+  background: rgba(11, 18, 32, 0.62);
+}
+
+.scene-briefing-inner {
+  padding: 28px 28px 24px;
+  overflow: auto;
+  max-height: min(85vh, 640px);
+}
+
+.scene-briefing .eyebrow {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--scene-accent);
+}
+
+.scene-briefing h2 {
+  margin: 8px 0 12px;
+  font-size: clamp(24px, 4vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.scene-briefing h3 {
+  margin: 18px 0 6px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.scene-briefing p,
+.scene-briefing li {
+  margin: 0;
+  color: var(--scene-muted);
+  font-size: 15px;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.scene-briefing ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+
+.scene-briefing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.scene-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: 12px;
+  border: 0;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.scene-btn-primary {
+  background: var(--scene-accent);
+  color: var(--scene-ink);
+}
+
+.scene-btn-primary:hover { filter: brightness(1.08); }
+
+.scene-btn-secondary {
+  background: transparent;
+  color: var(--scene-text);
+  border: 1px solid var(--scene-border);
+}
+
+.scene-btn-secondary:hover { border-color: var(--scene-focus); }
+
+/* —— Status panel —— */
+
+.scene-status {
+  pointer-events: auto;
+  position: absolute;
+  top: 72px;
+  left: 14px;
+  width: min(280px, calc(100% - 28px));
+  border-radius: 14px;
+  border: 1px solid rgba(182, 196, 214, 0.18);
+  background: rgba(17, 28, 46, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.scene-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 8px 0 14px;
+  border-bottom: 1px solid rgba(182, 196, 214, 0.12);
+}
+
+.scene-status-bar strong {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.scene-status-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.scene-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 0;
+  background: transparent;
+  color: var(--scene-muted);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.scene-icon-btn:hover {
+  background: #17263b;
+  color: var(--scene-text);
+}
+
+.scene-status-body {
+  padding: 12px 14px 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.scene-status[data-collapsed="true"] .scene-status-body {
+  display: none;
+}
+
+.scene-status[data-collapsed="true"] .scene-status-bar {
+  border-bottom: 0;
+}
+
+.scene-status dl {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.scene-status dt {
+  margin: 0 0 2px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--scene-accent);
+}
+
+.scene-status dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--scene-text);
+  text-wrap: pretty;
+}
+
+.scene-status .muted {
+  color: var(--scene-muted);
+  font-weight: 500;
+}
+
+.scene-actions {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  color: var(--scene-muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Narrow screens: bottom drawer that stays clear of the top task bar. */
+@media (max-width: 430px) {
+  .scene-status {
+    top: auto;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    max-height: min(42vh, 320px);
+  }
+
+  .scene-status[data-collapsed="true"] {
+    max-height: none;
+  }
+
+  .scene-status-body {
+    overflow: auto;
+    max-height: calc(min(42vh, 320px) - 48px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-briefing,
+  .scene-status { transition: none; }
+}

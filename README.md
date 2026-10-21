@@ -2,7 +2,7 @@
 
 An independent educational portfolio of browser-based immersive concept demos. The home page introduces the idea. Each demo is a self-contained page.
 
-The site header and footer use the portfolio name, XR Concept Lab. The warehouse demo keeps its own name, XR SkillLab, on its page.
+The site header and footer use the portfolio name, XR Concept Lab. XR SkillLab is the name of the project. The warehouse lesson is shown as Warehouse Safety.
 
 This is not a Next XR Group product, not an accredited course, and not a certified inspection.
 
@@ -17,7 +17,7 @@ The repository name is case-sensitive. Do not deploy this as `/xr-skilllab/`.
 ## What is on the site
 
 - A landing page with one featured lesson at a time, and a Fields menu for every lesson
-- [XR SkillLab](site/samples/xr-skilllab/index.html), a warehouse safety training concept with a live 3D scene, a 2D fallback, scoring, and coaching
+- [Warehouse Safety](site/samples/xr-skilllab/index.html), a warehouse safety training concept with a live 3D scene, a 2D fallback, scoring, and coaching. Its URL stays `/samples/xr-skilllab/`
 - [Oil & Gas](site/samples/oil-gas/index.html), [Mining](site/samples/mining/index.html) and [Chemical processing](site/samples/chemical-processing/index.html), the same training pattern on fictional industry floors
 - [TwinInspect](site/samples/twininspect/index.html), a remote digital-twin home inspection of a fictional property
 
@@ -25,7 +25,7 @@ The three industry lessons score in `content.js`: 15 points for assessing a haza
 
 The demos are the Fable pages, kept as delivered. Each one loads its own `support.js`, Google Fonts, and Three.js from a CDN.
 
-`worker/` is an optional Cloudflare coach from an earlier version of the warehouse demo. **The current pages do not call it.** There is no `VITE_COACH_API_URL`. See [docs/ai-coach.md](docs/ai-coach.md) only if that Worker is brought back.
+`worker/` is a retired Cloudflare coach from an earlier version of the warehouse demo. **It is not deployed, and the pages do not call it.** See [worker/RETIRED.md](worker/RETIRED.md).
 
 ## Add a demo
 

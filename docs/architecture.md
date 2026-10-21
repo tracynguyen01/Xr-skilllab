@@ -1,6 +1,6 @@
 # Architecture
 
-XR Concept Lab is a static portfolio. The warehouse sample is still branded XR SkillLab on its own page. GitHub Pages serves the files. There is no application server in the request path.
+XR Concept Lab is a static portfolio. XR SkillLab is the project name. The warehouse lesson is shown as Warehouse Safety, at `/samples/xr-skilllab/`. GitHub Pages serves the files. There is no application server in the request path.
 
 ```text
 Visitor's browser
@@ -25,7 +25,7 @@ Visitor's browser
 
 Each demo is a Fable page. `support.js` is its runtime and loads React from unpkg. Scripts beside the page use relative URLs (`./support.js`, `./warehouse.js`, `./home.js`), so a folder can move without rewriting paths. The CDN URLs are absolute and public.
 
-`worker/` is a Cloudflare Worker for an earlier coach. It is not imported by the pages, and the deploy workflow does not publish it. The score and the report inside each demo stay inside that page.
+`worker/` is a retired Cloudflare Worker for an earlier coach. It is not imported by the pages, and no workflow deploys it. See `worker/RETIRED.md`. The score and the report inside each demo stay inside that page.
 
 ## Adding a demo
 

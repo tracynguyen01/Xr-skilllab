@@ -16,7 +16,7 @@ The repository name is case-sensitive. Do not deploy this as `/xr-skilllab/`.
 
 ## What is on the site
 
-- A landing page that lists the demos
+- A landing page with one featured lesson at a time, and a Fields menu for every lesson
 - [XR SkillLab](site/samples/xr-skilllab/index.html), a warehouse safety training concept with a live 3D scene, a 2D fallback, scoring, and coaching
 - [Oil & Gas](site/samples/oil-gas/index.html), [Mining](site/samples/mining/index.html) and [Chemical processing](site/samples/chemical-processing/index.html), the same training pattern on fictional industry floors
 - [TwinInspect](site/samples/twininspect/index.html), a remote digital-twin home inspection of a fictional property
@@ -33,8 +33,8 @@ Demos are one folder plus one entry in [`site/samples.json`](site/samples.json).
 
 1. Create `site/samples/<slug>/`.
 2. Put the page at `index.html` so the URL is `/samples/<slug>/`. Keep `support.js` and the other scripts beside it, with relative paths such as `./support.js`.
-3. Add `thumbnail.webp` and `thumbnail.avif`. Both are a 16:10 render of the scene itself: no browser chrome, no page screenshot, no scrollbar. The card uses the AVIF when the thumbnail path ends in `.webp`, and falls back to the WebP.
-4. If the page is a Fable `.dc.html` export, rename it to `index.html` and add the small “Back to all demos” link already used on the other samples. Point it at `../../`.
+3. Add `thumbnail.webp` and `thumbnail.avif`. Both are a 16:10 render of the scene itself: no browser chrome, no page screenshot, no scrollbar. The landing showcase uses the AVIF when the thumbnail path ends in `.webp`, and falls back to the WebP.
+4. If the page is a Fable `.dc.html` export, rename it to `index.html` and add the small “Back to all demos” link already used on the other samples. Point it at `../../`. Add `<script type="module" src="../../portfolio-menu.js"></script>` beside that link so the Fields menu can switch lessons.
 5. Add one object to `site/samples.json`:
 
 ```json

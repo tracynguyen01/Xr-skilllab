@@ -7,7 +7,7 @@ Visitor's browser
 ┌──────────────────────────────────────────────┐
 │ site/index.html                              │
 │   reads site/samples.json                    │
-│   one card per demo                          │
+│   one featured lesson, plus a Fields menu    │
 │ samples/xr-skilllab/                         │
 │   index.html + support.js + warehouse.js     │
 │ samples/oil-gas/  mining/  chemical-processing/ │
@@ -29,7 +29,7 @@ Each demo is a Fable page. `support.js` is its runtime and loads React from unpk
 
 ## Adding a demo
 
-Add `site/samples/<slug>/` and one object in `site/samples.json`. The landing page renders whatever that list contains. See the README.
+Add `site/samples/<slug>/` and one object in `site/samples.json`. The landing carousel and the Fields menu both render whatever that list contains. See the README.
 
 ## What is intentionally absent
 

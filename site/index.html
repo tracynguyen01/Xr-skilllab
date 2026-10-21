@@ -15,6 +15,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="menu.css" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -27,7 +28,10 @@
           </svg>
           <span>XR Concept Lab</span>
         </a>
-        <a class="nav-link" href="#demos">Demos</a>
+        <div class="bar-end">
+          <a class="nav-link" href="#demos">Lessons</a>
+          <div class="portfolio-menu" data-portfolio-menu-host></div>
+        </div>
       </nav>
     </header>
     <main id="main">
@@ -67,11 +71,11 @@
           <li>Runs in the browser</li>
         </ul>
       </section>
-      <section class="demos" id="demos" aria-labelledby="demos-title">
+      <section class="showcase" id="demos">
         <p class="eyebrow">The portfolio</p>
-        <h2 id="demos-title">Five ways to try the idea.</h2>
-        <p class="section-lede">Industry training and one fictional inspection. The scene is the exercise, and the score or the report stays accountable.</p>
-        <div id="demo-groups"></div>
+        <h2 id="demos-title">Try a lesson.</h2>
+        <p class="section-lede">One scene at a time. Industry training and one fictional inspection. The score or the report stays accountable.</p>
+        <div id="lesson-carousel"></div>
         <p id="demo-status" class="status" role="status"></p>
       </section>
     </main>

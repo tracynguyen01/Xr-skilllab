@@ -2,12 +2,17 @@ import { describe, expect, it } from 'vitest'
 import * as oil from './oil-gas/content.js'
 import * as mining from './mining/content.js'
 import * as chemical from './chemical-processing/content.js'
+import * as warehouse from './xr-skilllab/content.js'
 
 const lessons = [
   ['oil-gas', oil],
   ['mining', mining],
   ['chemical-processing', chemical],
+  ['warehouse', warehouse],
 ]
+
+// Warehouse before-extraction baselines (Task 8A): empty 0, all-correct 100,
+// all-wrong 60, mixed (2 right + 2 wrong) 80. Shared cases below must match.
 
 describe.each(lessons)('%s scoring', (name, lesson) => {
   it('has four hazards and does not score decoys', () => {
@@ -51,5 +56,27 @@ describe.each(lessons)('%s scoring', (name, lesson) => {
     expect(Object.keys(withEquipment).length).toBeGreaterThan(Object.keys(right).length)
     expect(lesson.score(withEquipment)).toBe(lesson.score(right))
     expect(lesson.score(withEquipment)).toBe(100)
+  })
+})
+
+describe('warehouse scoring baselines (pre-extraction)', () => {
+  it('matches the recorded answer-set scores', () => {
+    const right = {}
+    const wrong = {}
+    for (const hazard of warehouse.hazards) {
+      right[hazard.id] = hazard.options.findIndex((option) => option.ok)
+      wrong[hazard.id] = hazard.options.findIndex((option) => !option.ok)
+    }
+    // Mixed: first two correct, last two wrong → 4×15 + 2×10 = 80
+    const mixed = {
+      exit: right.exit,
+      spill: right.spill,
+      rack: wrong.rack,
+      forklift: wrong.forklift,
+    }
+    expect(warehouse.score({})).toBe(0)
+    expect(warehouse.score(right)).toBe(100)
+    expect(warehouse.score(wrong)).toBe(60)
+    expect(warehouse.score(mixed)).toBe(80)
   })
 })

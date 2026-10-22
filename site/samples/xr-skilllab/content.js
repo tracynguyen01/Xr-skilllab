@@ -44,17 +44,92 @@ export const hazards = [
   },
 ]
 
+// Ids only for scoring tests — display names live on `equipment` / `hotspots`.
 export const decoys = {
-  extinguisher: { title: 'Fire extinguisher', context: 'A wall-mounted extinguisher beside the workbench area.', note: 'Mounted, tagged and unobstructed.' },
-  firstaid: { title: 'First-aid station', context: 'A first-aid cabinet on the right-hand wall.', note: 'Clearly signed and accessible.' },
-  goodrack: { title: 'Rack bay 02', context: 'A fully loaded bay in the back racking row.', note: 'Load is square, within the beam and labelled.' },
-  bay01: { title: 'Rack bay 01', context: 'A loaded bay in the back racking row.', note: 'Load is stable and sits within the beam.' },
-  bay03: { title: 'Rack bay 03', context: 'A partly loaded bay in the back racking row.', note: 'Load is stable and sits within the beam.' },
-  bay04: { title: 'Rack bay 04', context: 'A loaded bay in the right-hand racking row.', note: 'Load is stable and sits within the beam.' },
-  bay06: { title: 'Rack bay 06', context: 'A partly loaded bay in the right-hand racking row.', note: 'Load is stable and sits within the beam.' },
-  pallets: { title: 'Floor-stacked pallets', context: 'Pallets staged near the loading dock.', note: 'Stable, inside the storage area and clear of the walkway.' },
-  dock: { title: 'Loading dock', context: 'The roller door on the back wall.', note: 'Door closed, frame marked and dock plate clear.' },
-  workbench: { title: 'Workbench', context: 'A workbench against the left-hand wall.', note: 'Tools stowed and the surface is clear.' },
+  extinguisher: { title: 'Fire extinguisher', context: 'A wall-mounted extinguisher beside the workbench area.' },
+  firstaid: { title: 'First-aid station', context: 'A first-aid cabinet on the right-hand wall.' },
+  goodrack: { title: 'Rack bay 02', context: 'A fully loaded bay in the back racking row.' },
+  bay01: { title: 'Rack bay 01', context: 'A loaded bay in the back racking row.' },
+  bay03: { title: 'Rack bay 03', context: 'A partly loaded bay in the back racking row.' },
+  bay04: { title: 'Rack bay 04', context: 'A loaded bay in the right-hand racking row.' },
+  bay06: { title: 'Rack bay 06', context: 'A partly loaded bay in the right-hand racking row.' },
+  pallets: { title: 'Floor-stacked pallets', context: 'Pallets staged near the loading dock.' },
+  dock: { title: 'Loading dock', context: 'The roller door on the back wall.' },
+  workbench: { title: 'Workbench', context: 'A workbench against the left-hand wall.' },
+}
+
+// Neutral Info-card copy — no cues about whether an object is a scored hazard.
+export const equipment = {
+  exit: {
+    name: 'Emergency exit',
+    purpose: 'A marked door on the warehouse wall in this illustration.',
+    relevance: 'Cartons sit in front of the door frame in this scene.',
+  },
+  spill: {
+    name: 'Pedestrian walkway',
+    purpose: 'A painted walkway across the warehouse floor in this teaching scene.',
+    relevance: 'A glossy patch sits on the edge of the walkway in this illustration.',
+  },
+  rack: {
+    name: 'Rack bay 05',
+    purpose: 'A storage bay on the right-hand racking row in this illustration.',
+    relevance: 'Cartons on an upper level lean past the beam in this scene.',
+  },
+  forklift: {
+    name: 'Forklift',
+    purpose: 'A forklift used to move loads in this fictional warehouse.',
+    relevance: 'The forklift is drawn reversing across the walkway in this scene.',
+  },
+  extinguisher: {
+    name: 'Fire extinguisher',
+    purpose: 'A portable extinguisher kept on the warehouse wall in this illustration.',
+    relevance: 'It sits beside the workbench area on the left wall.',
+  },
+  firstaid: {
+    name: 'First-aid station',
+    purpose: 'A wall cabinet for first-aid supplies in this teaching scene.',
+    relevance: 'The cabinet is mounted on the right-hand wall in this layout.',
+  },
+  goodrack: {
+    name: 'Rack bay 02',
+    purpose: 'A storage bay in the back racking row in this illustration.',
+    relevance: 'This bay sits between bay 01 and bay 03 on the back wall.',
+  },
+  bay01: {
+    name: 'Rack bay 01',
+    purpose: 'A storage bay in the back racking row in this illustration.',
+    relevance: 'This bay sits at the left end of the back racking row.',
+  },
+  bay03: {
+    name: 'Rack bay 03',
+    purpose: 'A storage bay in the back racking row in this illustration.',
+    relevance: 'This bay sits at the right end of the back racking row.',
+  },
+  bay04: {
+    name: 'Rack bay 04',
+    purpose: 'A storage bay on the right-hand racking row in this illustration.',
+    relevance: 'This bay sits above bay 05 on the right wall.',
+  },
+  bay06: {
+    name: 'Rack bay 06',
+    purpose: 'A storage bay on the right-hand racking row in this illustration.',
+    relevance: 'This bay sits below bay 05 on the right wall.',
+  },
+  pallets: {
+    name: 'Floor-stacked pallets',
+    purpose: 'Pallets staged near the loading dock in this teaching scene.',
+    relevance: 'The stack sits on the floor inside the storage area drawn here.',
+  },
+  dock: {
+    name: 'Loading dock',
+    purpose: 'A roller door on the back wall in this fictional warehouse.',
+    relevance: 'The door marks the dock edge of the building layout.',
+  },
+  workbench: {
+    name: 'Workbench',
+    purpose: 'A workbench against the left-hand wall in this illustration.',
+    relevance: 'The bench sits near the extinguisher on the left wall.',
+  },
 }
 
 export const hotspots = [
@@ -69,7 +144,7 @@ export const hotspots = [
   { id: 'bay06', l: 93.75, t: 50, label: 'Rack bay 06' },
   { id: 'extinguisher', l: 2, t: 52.8, label: 'Fire extinguisher' },
   { id: 'forklift', l: 40.8, t: 65.5, label: 'Forklift' },
-  { id: 'spill', l: 70.8, t: 70.5, label: 'Walkway, east section' },
+  { id: 'spill', l: 70.8, t: 70.5, label: 'Pedestrian walkway' },
   { id: 'firstaid', l: 98, t: 72, label: 'First-aid station' },
   { id: 'workbench', l: 3.5, t: 80.5, label: 'Workbench' },
 ]
@@ -95,6 +170,6 @@ export function tip(ids) {
 }
 
 if (typeof window !== 'undefined') {
-  window.LESSON = { hazards, decoys, hotspots, accent: '#42DDC5', score, tip }
+  window.LESSON = { hazards, decoys, equipment, hotspots, accent: '#42DDC5', score, tip }
   window.dispatchEvent(new Event('lesson-ready'))
 }

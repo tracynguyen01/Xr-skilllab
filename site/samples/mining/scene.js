@@ -5,11 +5,13 @@ const PRESETS = {
   hero: { t: [0.4, 1.8, 1.6], theta: 0.95, phi: 1.18, r: 18 },
   establishing: { t: [0, 3, 0], theta: 1.1, phi: 1.02, r: 36 },
   inspection: { t: [1, 1.8, 1], theta: 0.45, phi: 1.2, r: 16 },
-  blindspot: { t: [1.5, 1.6, 2.2], theta: 0.9, phi: 1.15, r: 10 },
+  // Pull back and aim at the rear corner so the light vehicle stays in frame (truck does not fill the view).
+  blindspot: { t: [-0.4, 1.3, 1.1], theta: 2.35, phi: 1.22, r: 13 },
   guarding: { t: [6.2, 1.6, -2], theta: -1.1, phi: 1.2, r: 8 },
   ground: { t: [-7, 2.2, -3], theta: 0.5, phi: 1.15, r: 10 },
   dust: { t: [6.5, 2, 4.5], theta: -0.4, phi: 1.15, r: 9 },
-  guarded: { t: [6.2, 1.4, 1.2], theta: -1.2, phi: 1.25, r: 7 },
+  // Face the south conveyor from the north-west so the crusher (further +z) is not in the foreground.
+  guarded: { t: [6.4, 1.5, 1.4], theta: 0.55, phi: 1.22, r: 11 },
   water: { t: [-4, 1.4, 5], theta: 0.2, phi: 1.25, r: 8 },
   berm: { t: [-1, 1.2, -1], theta: 0.2, phi: 1.3, r: 8 },
   refuge: { t: [-8.5, 1.4, 4], theta: 1.1, phi: 1.25, r: 7 },
@@ -33,6 +35,8 @@ function buildScene() {
     blue: std({ color: 0x3d7ea6, roughness: .45, metalness: .15 }),
     white: std({ color: 0xf3f1ea, roughness: .5 }),
     green: std({ color: 0x3e8f57, roughness: .6 }),
+    // Hi-vis lime so the light vehicle reads apart from the blue water cart.
+    lime: std({ color: 0xb8e03a, roughness: .45, metalness: .1 }),
     dust: new THREE.MeshStandardMaterial({ color: 0xd9c7a6, transparent: true, opacity: .45, roughness: 1, depthWrite: false }),
   };
 
@@ -80,10 +84,14 @@ function buildScene() {
     const w = cyl(.72, .72, .55, M.dark, x, .72, z, truck); w.rotation.z = Math.PI / 2;
     cyl(.35, .35, .56, M.steel, x, .72, z, truck).rotation.z = Math.PI / 2;
   });
+  // Light vehicle in the blind spot: lime body, cab/windows, roof light bar.
   const lv = new THREE.Group(); truck.add(lv); lv.position.set(-2.15, 0, -1.35);
-  box(1.15, .45, 2.1, M.white, 0, .55, 0, lv);
-  box(.9, .4, .8, M.white, 0, .95, -.2, lv);
-  [[-.5, -.7], [.5, -.7], [-.5, .7], [.5, .7]].forEach(([x, z]) => {
+  box(1.2, .4, 2.15, M.lime, 0, .52, 0, lv);
+  box(1.0, .55, .95, M.lime, 0, 1.0, -.15, lv);
+  box(.85, .35, .08, M.dark, 0, 1.05, .32, lv);
+  box(.55, .28, .5, M.white, .2, 1.15, -.2, lv);
+  box(.7, .08, .18, M.orange, 0, 1.35, -.15, lv);
+  [[-.52, -.75], [.52, -.75], [-.52, .75], [.52, .75]].forEach(([x, z]) => {
     const w = cyl(.22, .22, .18, M.dark, x, .22, z, lv); w.rotation.z = Math.PI / 2;
   });
   register(truck, 'blindspot', 'Haul truck', [0, 3.6, 1]);

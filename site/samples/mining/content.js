@@ -45,11 +45,12 @@ export const hazards = [
 ]
 
 // Ids only for scoring tests — display names live on `equipment` / `hotspots`.
+// Decoy `context` is unused in the UI (Info cards use `equipment`); kept for the shared content shape.
 export const decoys = {
   guarded: { title: 'Conveyor (south run)', context: 'A short conveyor run on the south side of the pit layout.' },
-  water: { title: 'Water cart', context: 'A water cart parked clear of the haul road.' },
+  water: { title: 'Water cart', context: 'A water cart in the pit.' },
   berm: { title: 'Road berm', context: 'A continuous berm along the haul road.' },
-  refuge: { title: 'Refuge chamber', context: 'A marked refuge set back from the road.' },
+  refuge: { title: 'Refuge chamber', context: 'A refuge chamber in the pit.' },
 }
 
 // Neutral Info-card copy — location only; no cues about whether an object is a scored hazard.
@@ -92,7 +93,7 @@ export const equipment = {
   refuge: {
     name: 'Refuge chamber',
     purpose: 'A marked refuge chamber in this fictional pit.',
-    relevance: 'The chamber sits south-west of the haul road, set back from traffic.',
+    relevance: 'The chamber sits south-west of the haul road.',
   },
 }
 

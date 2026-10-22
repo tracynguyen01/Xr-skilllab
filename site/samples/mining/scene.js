@@ -10,8 +10,8 @@ const PRESETS = {
   guarding: { t: [6.2, 1.6, -2], theta: -1.1, phi: 1.2, r: 8 },
   ground: { t: [-7, 2.2, -3], theta: 0.5, phi: 1.15, r: 10 },
   dust: { t: [6.5, 2, 4.5], theta: -0.4, phi: 1.15, r: 9 },
-  // Face the south conveyor from the north-west so the crusher (further +z) is not in the foreground.
-  guarded: { t: [6.4, 1.5, 1.4], theta: 0.55, phi: 1.22, r: 11 },
+  // South conveyor clear in frame; crusher sits behind (NW of subject — a SE/NE near angle put the hopper in the foreground).
+  guarded: { t: [6.4, 1.5, 1.4], theta: -2.5, phi: 1.18, r: 9 },
   water: { t: [-4, 1.4, 5], theta: 0.2, phi: 1.25, r: 8 },
   berm: { t: [-1, 1.2, -1], theta: 0.2, phi: 1.3, r: 8 },
   refuge: { t: [-8.5, 1.4, 4], theta: 1.1, phi: 1.25, r: 7 },

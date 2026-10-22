@@ -5,11 +5,13 @@ const PRESETS = {
   hero: { t: [0.4, 1.8, 1.6], theta: 0.95, phi: 1.18, r: 18 },
   establishing: { t: [0, 3, 0], theta: 1.1, phi: 1.02, r: 36 },
   inspection: { t: [1, 1.8, 1], theta: 0.45, phi: 1.2, r: 16 },
-  blindspot: { t: [1.5, 1.6, 2.2], theta: 0.9, phi: 1.15, r: 10 },
+  // Pull back and aim at the rear corner so the light vehicle stays in frame (truck does not fill the view).
+  blindspot: { t: [-0.4, 1.3, 1.1], theta: 2.35, phi: 1.22, r: 13 },
   guarding: { t: [6.2, 1.6, -2], theta: -1.1, phi: 1.2, r: 8 },
   ground: { t: [-7, 2.2, -3], theta: 0.5, phi: 1.15, r: 10 },
   dust: { t: [6.5, 2, 4.5], theta: -0.4, phi: 1.15, r: 9 },
-  guarded: { t: [6.2, 1.4, 1.2], theta: -1.2, phi: 1.25, r: 7 },
+  // South conveyor clear in frame; crusher sits behind (NW of subject — a SE/NE near angle put the hopper in the foreground).
+  guarded: { t: [6.4, 1.5, 1.4], theta: -2.5, phi: 1.18, r: 9 },
   water: { t: [-4, 1.4, 5], theta: 0.2, phi: 1.25, r: 8 },
   berm: { t: [-1, 1.2, -1], theta: 0.2, phi: 1.3, r: 8 },
   refuge: { t: [-8.5, 1.4, 4], theta: 1.1, phi: 1.25, r: 7 },
@@ -33,6 +35,8 @@ function buildScene() {
     blue: std({ color: 0x3d7ea6, roughness: .45, metalness: .15 }),
     white: std({ color: 0xf3f1ea, roughness: .5 }),
     green: std({ color: 0x3e8f57, roughness: .6 }),
+    // Hi-vis lime so the light vehicle reads apart from the blue water cart.
+    lime: std({ color: 0xb8e03a, roughness: .45, metalness: .1 }),
     dust: new THREE.MeshStandardMaterial({ color: 0xd9c7a6, transparent: true, opacity: .45, roughness: 1, depthWrite: false }),
   };
 
@@ -54,53 +58,83 @@ function buildScene() {
   });
   register(wall, 'ground', 'Highwall toe', [0, 5.4, 0]);
 
-  // haul road and berm
+  // Haul road, berm, and a flat route decal so the aisle reads as a road.
   const road = mesh(new THREE.PlaneGeometry(7, 22), M.road, 0, .03, 2); road.rotation.x = -Math.PI / 2;
+  const route = mesh(new THREE.PlaneGeometry(2.2, 18), std({ color: 0x6a5f54, roughness: .95 }), 0, .04, 2.2);
+  route.rotation.x = -Math.PI / 2;
   const berm = new THREE.Group(); scene.add(berm); berm.position.set(-3.6, 0, 1);
   for (let z = -6; z <= 6; z += 1.4) box(1.1, .7, 1.1, M.wall, 0, .35, z, berm);
   register(berm, 'berm', 'Road berm', [0, 1.4, 0]);
 
-  // haul truck + light vehicle in the blind spot
+  // Haul truck: tray, cab, large wheels (+ light vehicle child in the blind spot).
   const truck = new THREE.Group(); scene.add(truck); truck.position.set(1.2, 0, 2.4);
-  box(2.4, 1.5, 3.2, M.yellow, 0, 1.7, .4, truck);
-  box(2.5, .35, 3.4, M.dark, 0, .95, .2, truck);
-  box(2.2, 1.3, 1.5, M.yellow, 0, 1.5, 2.3, truck);
-  box(1.5, .7, .08, M.dark, 0, 1.7, 3.02, truck);
-  box(.9, .45, .7, M.white, .35, 2.15, 2.15, truck);
-  [[-1.05, -1.1], [1.05, -1.1], [-1.05, 1.6], [1.05, 1.6]].forEach(([x, z]) => {
-    const w = cyl(.55, .55, .4, M.dark, x, .55, z, truck); w.rotation.z = Math.PI / 2;
+  // Chassis
+  box(2.6, .35, 4.2, M.dark, 0, .7, .2, truck);
+  // Dump tray (open-top bed)
+  box(2.5, .12, 2.8, M.yellow, 0, 1.55, -.35, truck);
+  box(2.5, .9, .12, M.yellow, 0, 1.95, -1.7, truck);
+  box(.12, .9, 2.8, M.yellow, -1.19, 1.95, -.35, truck);
+  box(.12, .9, 2.8, M.yellow, 1.19, 1.95, -.35, truck);
+  // Cab at the front
+  box(2.2, 1.35, 1.35, M.yellow, 0, 1.55, 2.15, truck);
+  box(1.5, .55, .08, M.dark, 0, 1.65, 2.82, truck);
+  box(.95, .5, .65, M.white, .3, 2.15, 2.05, truck);
+  // Large haul wheels
+  ;[[-1.25, -1.35], [1.25, -1.35], [-1.25, .55], [1.25, .55], [-1.25, 2.0], [1.25, 2.0]].forEach(([x, z]) => {
+    const w = cyl(.72, .72, .55, M.dark, x, .72, z, truck); w.rotation.z = Math.PI / 2;
+    cyl(.35, .35, .56, M.steel, x, .72, z, truck).rotation.z = Math.PI / 2;
   });
+  // Light vehicle in the blind spot: lime body, cab/windows, roof light bar.
   const lv = new THREE.Group(); truck.add(lv); lv.position.set(-2.15, 0, -1.35);
-  box(1.15, .45, 2.1, M.white, 0, .55, 0, lv);
-  box(.9, .4, .8, M.white, 0, .95, -.2, lv);
-  [[-.5, -.7], [.5, -.7], [-.5, .7], [.5, .7]].forEach(([x, z]) => {
+  box(1.2, .4, 2.15, M.lime, 0, .52, 0, lv);
+  box(1.0, .55, .95, M.lime, 0, 1.0, -.15, lv);
+  box(.85, .35, .08, M.dark, 0, 1.05, .32, lv);
+  box(.55, .28, .5, M.white, .2, 1.15, -.2, lv);
+  box(.7, .08, .18, M.orange, 0, 1.35, -.15, lv);
+  [[-.52, -.75], [.52, -.75], [-.52, .75], [.52, .75]].forEach(([x, z]) => {
     const w = cyl(.22, .22, .18, M.dark, x, .22, z, lv); w.rotation.z = Math.PI / 2;
   });
   register(truck, 'blindspot', 'Haul truck', [0, 3.6, 1]);
 
-  // conveyor: unguarded run and a guarded run
+  // North conveyor: frame, rollers, belt (ids/positions unchanged).
   const conv = new THREE.Group(); scene.add(conv); conv.position.set(6.4, 0, -2.2);
   box(.16, 1.6, .16, M.steel, -2.2, .8, 0, conv);
   box(.16, 1.6, .16, M.steel, 2.2, .8, 0, conv);
-  box(4.8, .12, .7, M.dark, 0, 1.55, 0, conv);
-  box(4.6, .08, .45, M.orange, 0, 1.66, 0, conv);
-  cyl(.18, .18, .7, M.dark, -2.1, 1.55, 0, conv).rotation.x = Math.PI / 2;
-  cyl(.18, .18, .7, M.dark, 2.1, 1.55, 0, conv).rotation.x = Math.PI / 2;
-  register(conv, 'guarding', 'Conveyor, open side', [0, 2.4, 0]);
+  box(.12, .12, .7, M.steel, -2.2, 1.55, 0, conv);
+  box(.12, .12, .7, M.steel, 2.2, 1.55, 0, conv);
+  // Idlers / rollers under the belt
+  for (let x = -1.8; x <= 1.8; x += .9) {
+    cyl(.14, .14, .65, M.dark, x, 1.48, 0, conv).rotation.x = Math.PI / 2;
+  }
+  box(4.8, .1, .7, M.dark, 0, 1.62, 0, conv);
+  box(4.6, .06, .5, M.orange, 0, 1.7, 0, conv);
+  register(conv, 'guarding', 'Conveyor (north run)', [0, 2.4, 0]);
 
+  // South conveyor: same frame/belt idea with side panels (neutral label).
   const guarded = new THREE.Group(); scene.add(guarded); guarded.position.set(6.4, 0, 1.4);
   box(.16, 1.5, .16, M.steel, -1.6, .75, 0, guarded);
   box(.16, 1.5, .16, M.steel, 1.6, .75, 0, guarded);
-  box(3.6, .1, .6, M.dark, 0, 1.45, 0, guarded);
-  box(3.4, .7, .06, M.steel, 0, 1.15, .38, guarded);
-  box(3.4, .7, .06, M.steel, 0, 1.15, -.38, guarded);
-  register(guarded, 'guarded', 'Guarded conveyor', [0, 2.2, 0]);
+  for (let x = -1.2; x <= 1.2; x += .8) {
+    cyl(.12, .12, .55, M.dark, x, 1.38, 0, guarded).rotation.x = Math.PI / 2;
+  }
+  box(3.6, .1, .6, M.dark, 0, 1.5, 0, guarded);
+  box(3.4, .05, .42, M.orange, 0, 1.58, 0, guarded);
+  box(3.4, .7, .06, M.steel, 0, 1.2, .38, guarded);
+  box(3.4, .7, .06, M.steel, 0, 1.2, -.38, guarded);
+  register(guarded, 'guarded', 'Conveyor (south run)', [0, 2.2, 0]);
 
-  // crusher dust
+  // Crusher: hopper over a crusher body, then the dust plume.
   const crusher = new THREE.Group(); scene.add(crusher); crusher.position.set(7.2, 0, 5.2);
-  box(2.4, 2.8, 2.2, M.dark, 0, 1.4, 0, crusher);
-  box(1.2, .4, 1.6, M.orange, 0, 3, 0, crusher);
-  cyl(.35, .5, 1.1, M.steel, -1.5, 2.2, 0, crusher).rotation.z = Math.PI / 2;
+  // Body / jaws
+  box(2.6, 1.6, 2.4, M.dark, 0, .85, 0, crusher);
+  box(2.2, .5, 2.0, M.steel, 0, 1.85, 0, crusher);
+  // Hopper (wider top, sits above the body)
+  box(2.8, .15, 2.6, M.orange, 0, 2.35, 0, crusher);
+  box(2.5, .9, .12, M.orange, 0, 2.85, 1.2, crusher);
+  box(2.5, .9, .12, M.orange, 0, 2.85, -1.2, crusher);
+  box(.12, .9, 2.4, M.orange, -1.3, 2.85, 0, crusher);
+  box(.12, .9, 2.4, M.orange, 1.3, 2.85, 0, crusher);
+  cyl(.35, .5, 1.1, M.steel, -1.7, 2.0, 0, crusher).rotation.z = Math.PI / 2;
   const cloud = mesh(new THREE.SphereGeometry(.7, 16, 12), M.dust, -2.3, 2.1, .2, crusher); cloud.castShadow = false;
   const cloud2 = mesh(new THREE.SphereGeometry(.45, 12, 10), M.dust, -2.8, 2.5, -.2, crusher); cloud2.castShadow = false;
   anim.push((t, reduced) => { const k = reduced ? 0 : Math.sin(t * 1.4) * .15; cloud.position.y = 2.1 + k; cloud2.position.x = -2.8 - Math.abs(k); });

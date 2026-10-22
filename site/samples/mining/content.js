@@ -1,3 +1,6 @@
+// Mining lesson data and scoring.
+// Same shape as oil-gas/content.js so unit tests can share one pattern.
+
 export const hazards = [
   {
     id: 'blindspot',
@@ -41,24 +44,71 @@ export const hazards = [
   },
 ]
 
+// Ids only for scoring tests — display names live on `equipment` / `hotspots`.
+// Decoy `context` is unused in the UI (Info cards use `equipment`); kept for the shared content shape.
 export const decoys = {
-  guarded: { title: 'Guarded conveyor', context: 'A short conveyor run with side guards fitted.', note: 'This run is drawn as guarded. It is the contrast to the open run, not a second hazard.' },
-  water: { title: 'Water cart', context: 'A water cart parked clear of the haul road.', note: 'Parked off the road and not in a blind spot. Inspecting it does not change the score.' },
-  berm: { title: 'Road berm', context: 'A continuous berm along the haul road.', note: 'The berm is in place in this illustration. It is not the loose ground on the highwall.' },
-  refuge: { title: 'Refuge chamber', context: 'A marked refuge set back from the road.', note: 'The door is clear. The scene is not asking for a response here.' },
+  guarded: { title: 'Conveyor (south run)', context: 'A short conveyor run on the south side of the pit layout.' },
+  water: { title: 'Water cart', context: 'A water cart in the pit.' },
+  berm: { title: 'Road berm', context: 'A continuous berm along the haul road.' },
+  refuge: { title: 'Refuge chamber', context: 'A refuge chamber in the pit.' },
+}
+
+// Neutral Info-card copy — location only; no cues about whether an object is a scored hazard.
+export const equipment = {
+  blindspot: {
+    name: 'Haul truck',
+    purpose: 'A haul truck used to move rock in this fictional open-cut.',
+    relevance: 'The truck sits on the haul road in the centre of the pit.',
+  },
+  guarding: {
+    name: 'Conveyor (north run)',
+    purpose: 'A conveyor run that carries material across this teaching scene.',
+    relevance: 'This run sits on the north side of the east wall layout.',
+  },
+  ground: {
+    name: 'Highwall toe',
+    purpose: 'The foot of the highwall face in this illustration.',
+    relevance: 'The toe sits on the west side of the pit near the berm.',
+  },
+  dust: {
+    name: 'Crusher transfer',
+    purpose: 'A crusher transfer point in this fictional pit.',
+    relevance: 'The transfer sits at the south-east corner of the layout.',
+  },
+  guarded: {
+    name: 'Conveyor (south run)',
+    purpose: 'A conveyor run that carries material across this teaching scene.',
+    relevance: 'This run sits on the south side of the east wall layout.',
+  },
+  water: {
+    name: 'Water cart',
+    purpose: 'A water cart used on haul roads in this illustration.',
+    relevance: 'The cart is parked south of the haul road near the refuge.',
+  },
+  berm: {
+    name: 'Road berm',
+    purpose: 'An earth berm drawn along the haul road in this scene.',
+    relevance: 'The berm runs beside the haul road on the west side of the pit.',
+  },
+  refuge: {
+    name: 'Refuge chamber',
+    purpose: 'A marked refuge chamber in this fictional pit.',
+    relevance: 'The chamber sits south-west of the haul road.',
+  },
 }
 
 export const hotspots = [
   { id: 'ground', l: 22, t: 22, label: 'Highwall toe' },
   { id: 'berm', l: 36, t: 40, label: 'Road berm' },
-  { id: 'guarding', l: 74, t: 30, label: 'Open conveyor' },
-  { id: 'guarded', l: 74, t: 48, label: 'Guarded conveyor' },
+  { id: 'guarding', l: 74, t: 30, label: 'Conveyor (north run)' },
+  { id: 'guarded', l: 74, t: 48, label: 'Conveyor (south run)' },
   { id: 'blindspot', l: 46, t: 58, label: 'Haul truck' },
   { id: 'refuge', l: 16, t: 72, label: 'Refuge chamber' },
   { id: 'water', l: 30, t: 78, label: 'Water cart' },
   { id: 'dust', l: 78, t: 74, label: 'Crusher transfer' },
 ]
 
+// 15 for finding a hazard, 10 for the preferred response (max 100).
 export function score(answers) {
   let found = 0
   let correct = 0
@@ -80,6 +130,6 @@ export function tip(ids) {
 }
 
 if (typeof window !== 'undefined') {
-  window.LESSON = { hazards, decoys, hotspots, accent: '#E07A3D', score, tip }
+  window.LESSON = { hazards, decoys, equipment, hotspots, accent: '#E07A3D', score, tip }
   window.dispatchEvent(new Event('lesson-ready'))
 }

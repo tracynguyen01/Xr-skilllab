@@ -63,22 +63,22 @@ export const equipment = {
   exit: {
     name: 'Emergency exit',
     purpose: 'A marked door on the warehouse wall in this illustration.',
-    relevance: 'Cartons sit in front of the door frame in this scene.',
+    relevance: 'The exit door sits on the back wall near bay 03.',
   },
   spill: {
     name: 'Pedestrian walkway',
     purpose: 'A painted walkway across the warehouse floor in this teaching scene.',
-    relevance: 'A glossy patch sits on the edge of the walkway in this illustration.',
+    relevance: 'The walkway runs along the east side of the floor.',
   },
   rack: {
     name: 'Rack bay 05',
     purpose: 'A storage bay on the right-hand racking row in this illustration.',
-    relevance: 'Cartons on an upper level lean past the beam in this scene.',
+    relevance: 'This bay sits between bay 04 and bay 06 on the right wall.',
   },
   forklift: {
     name: 'Forklift',
     purpose: 'A forklift used to move loads in this fictional warehouse.',
-    relevance: 'The forklift is drawn reversing across the walkway in this scene.',
+    relevance: 'The forklift works the aisle beside the walkway.',
   },
   extinguisher: {
     name: 'Fire extinguisher',

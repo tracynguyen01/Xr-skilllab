@@ -14,14 +14,21 @@ test('Warehouse explainable results, missed list, and confirm reset', async ({ p
   await expect(list.getByRole('heading', { name: '2D Inspector' })).toBeVisible({ timeout: 10000 })
   const objectList = list.getByRole('heading', { name: 'Objects to inspect' }).locator('..').getByRole('list')
 
+  // Wait until the play HUD is live so focus2D's delayed autofocus cannot steal Enter.
+  await expect(page.locator('.scene-status').getByText('0 of 4 reviewed')).toBeVisible({ timeout: 10000 })
+
   /** Open a hazard from the list, pick the preferred option, Submit — keyboard where it matters. */
   async function answerByKeyboard(label: string) {
     const dialog = page.locator('[role="dialog"][aria-labelledby="panelTitle"]')
     await expect(dialog).toBeHidden()
 
+    // Close an Info card from a prior decoy inspect so it cannot sit over the list.
+    const closeInfo = page.locator('.scene-status [data-action="close-inspect"]')
+    if (await closeInfo.isVisible()) await closeInfo.click()
+
     const row = objectList.getByRole('listitem').filter({ hasText: label }).getByRole('button')
-    await row.focus()
-    await page.keyboard.press('Enter')
+    // press() focuses the row then sends Enter — avoids a race with the canvas autofocus.
+    await row.press('Enter')
     await expect(dialog).toBeVisible()
     await expect(dialog.getByRole('heading', { name: label })).toBeVisible()
     // Preferred response is option B (index 1) for every warehouse hazard.

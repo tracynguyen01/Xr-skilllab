@@ -83,7 +83,7 @@ function buildTextures() {
   { const c = cv(256, 256), g = c.getContext('2d'); const gr = g.createRadialGradient(128, 128, 10, 128, 128, 128); gr.addColorStop(0, 'rgba(0,0,0,.5)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, 256, 256); T.blob = tex(c, null, false); }
   { const c = cv(128, 128), g = c.getContext('2d'); g.strokeStyle = 'rgba(255,255,255,.95)'; g.lineWidth = 8; g.beginPath(); g.arc(64, 64, 52, 0, 7); g.stroke(); g.fillStyle = 'rgba(255,255,255,.35)'; g.beginPath(); g.arc(64, 64, 46, 0, 7); g.fill(); T.disc = tex(c); }
   { const c = cv(128, 128), g = c.getContext('2d'); g.strokeStyle = '#2F6FED'; g.lineWidth = 7; g.beginPath(); g.arc(64, 64, 50, 0, 7); g.stroke(); g.fillStyle = 'rgba(47,111,237,.25)'; g.beginPath(); g.arc(64, 64, 46, 0, 7); g.fill(); g.fillStyle = '#2F6FED'; g.beginPath(); g.arc(64, 64, 14, 0, 7); g.fill(); T.flag = tex(c); }
-  T.flagLabel = tex(textCanvas('AI flag — review', { bg: 'rgba(47,111,237,.95)', font: 'bold 34px Manrope, Helvetica, Arial' }));
+  T.flagLabel = tex(textCanvas('Flag — review', { bg: 'rgba(47,111,237,.95)', font: 'bold 34px Manrope, Helvetica, Arial' }));
   T.labelCache = {};
   T.label = (text, dot) => T.labelCache[text + dot] || (T.labelCache[text + dot] = tex(textCanvas(text, { dot })));
   T.pill = (text, color) => T.labelCache['p' + text + color] || (T.labelCache['p' + text + color] = tex(textCanvas(text, { bg: color, font: 'bold 40px Manrope, Helvetica, Arial', fg: '#fff', pad: 26 })));

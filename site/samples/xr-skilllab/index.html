@@ -16,6 +16,8 @@
 </style>
 <a class="portfolio-back" href="../../">Back to all demos</a>
 <script type="module" src="../../portfolio-menu.js"></script>
+<link rel="stylesheet" href="../../shared/scene-ui.css" />
+<script type="module" src="../../shared/scene-ui.js"></script>
 <x-dc>
 <helmet>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -204,6 +206,8 @@ h1,h2,h3,p{margin:0}
   <div role="region" aria-label="Warehouse Safety Challenge simulation" data-screen-label="Simulation" style="position:fixed;inset:0;z-index:100;background:#0B1220;animation:simIn .5s cubic-bezier(.2,.7,.2,1)">
     <div ref="{{ fsStageRef }}" style="position:absolute;inset:0"></div>
     <div ref="{{ hoverRef }}" aria-hidden="true" style="position:absolute;display:none;pointer-events:none;transform:translate(14px,16px);padding:6px 10px;border-radius:8px;background:rgba(17,28,46,.88);border:1px solid rgba(132,191,255,.45);font-size:13px;font-weight:600;color:#F5F8FC;white-space:nowrap;z-index:3"></div>
+    <!-- Shared briefing + status panel (site/shared/scene-ui.js). Pointer-events stay off on the host. -->
+    <div data-scene-ui-host style="position:absolute;inset:0;pointer-events:none;z-index:15"></div>
 
     <sc-if value="{{ phaseIntro }}" hint-placeholder-val="{{ true }}">
       <div style="position:absolute;inset:0;background:rgba(11,18,32,.55);display:grid;place-items:center;padding:20px;z-index:5;overflow:auto">
@@ -217,7 +221,7 @@ h1,h2,h3,p{margin:0}
           <sc-if value="{{ webglMissing }}" hint-placeholder-val="{{ false }}">
             <p role="status" style="margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(242,196,109,.12);border:1px solid rgba(242,196,109,.4);font-size:15px">3D isn't available on this device. You can complete the full exercise in 2D.</p>
           </sc-if>
-          <p style="font-size:14px;color:#B6C4D6;margin-top:14px">Illustrative learning exercise, not formal certification.</p>
+          <p style="font-size:14px;color:#B6C4D6;margin-top:14px">Illustrative scenario, not a site procedure. Not a certification, and not a claim of regulatory compliance.</p>
           <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:24px">
             <button type="button" onClick="{{ introPrimary }}" style="display:inline-flex;align-items:center;height:50px;padding:0 24px;border-radius:12px;border:0;background:#42DDC5;color:#0B1220;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s" style-hover="background:#6CE7D3">{{ introPrimaryLabel }}</button>
             <sc-if value="{{ showIntroSecondary }}" hint-placeholder-val="{{ true }}">
@@ -241,7 +245,7 @@ h1,h2,h3,p{margin:0}
           <sc-if value="{{ canSwitch }}" hint-placeholder-val="{{ true }}">
             <button type="button" onClick="{{ switchView }}" style="height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(182,196,214,.16);background:rgba(17,28,46,.78);backdrop-filter:blur(16px);color:#F5F8FC;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap" style-hover="border-color:#84BFFF">{{ switchLabel }}</button>
           </sc-if>
-          <button type="button" onClick="{{ resetRun }}" style="height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(182,196,214,.16);background:rgba(17,28,46,.78);backdrop-filter:blur(16px);color:#F5F8FC;font-size:14px;font-weight:600;cursor:pointer" style-hover="border-color:#84BFFF">Reset</button>
+          <button type="button" onClick="{{ askReset }}" style="height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(182,196,214,.16);background:rgba(17,28,46,.78);backdrop-filter:blur(16px);color:#F5F8FC;font-size:14px;font-weight:600;cursor:pointer" style-hover="border-color:#84BFFF">Reset</button>
           <button type="button" onClick="{{ finish }}" style="height:44px;padding:0 16px;border-radius:12px;border:0;background:#42DDC5;color:#0B1220;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap" style-hover="background:#6CE7D3">Finish Assessment</button>
           <button type="button" onClick="{{ exitSim }}" aria-label="Exit simulation" style="width:44px;height:44px;border-radius:12px;border:1px solid rgba(182,196,214,.16);background:rgba(17,28,46,.78);backdrop-filter:blur(16px);color:#F5F8FC;font-size:20px;cursor:pointer" style-hover="border-color:#84BFFF">×</button>
         </div>
@@ -303,7 +307,7 @@ h1,h2,h3,p{margin:0}
               <h3 style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#B6C4D6;font-weight:700;margin-bottom:10px">Objects to inspect</h3>
               <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px">
                 <sc-for list="{{ hotspots }}" as="h" hint-placeholder-count="14">
-                  <li><button type="button" onClick="{{ h.open }}" style="width:100%;display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 10px;border-radius:10px;border:1px solid transparent;background:transparent;color:#F5F8FC;font-size:15px;text-align:left;cursor:pointer" style-hover="background:#17263B;border-color:#2B3D55">
+                  <li><button type="button" onClick="{{ h.open }}" aria-label="{{ h.aria }}" style="width:100%;display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 10px;border-radius:10px;border:1px solid transparent;background:transparent;color:#F5F8FC;font-size:15px;text-align:left;cursor:pointer" style-hover="background:#17263B;border-color:#2B3D55">
                     <span aria-hidden="true" style="flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid {{ h.ring }};font-size:12px;font-weight:800;display:grid;place-items:center">{{ h.n }}</span>
                     <span style="flex:1">{{ h.label }}</span>
                     <span style="font-size:13px;color:{{ h.statusColor }};font-weight:700">{{ h.status }}</span>
@@ -325,7 +329,8 @@ h1,h2,h3,p{margin:0}
         <h2 id="panelTitle" data-autofocus="" tabindex="-1" style="font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:6px 0 10px;outline:none">{{ panelTitle }}</h2>
         <p style="color:#B6C4D6;font-size:16px">{{ panelContext }}</p>
         <sc-if value="{{ panelIsHazard }}" hint-placeholder-val="{{ true }}">
-          <p id="panelQ" style="font-weight:700;margin:22px 0 12px">What's the best response in this situation?</p>
+          <p id="panelQ" style="font-weight:700;margin:22px 0 6px">What's the best response in this situation?</p>
+          <p style="color:#B6C4D6;font-size:14px;margin:0 0 12px">Choose a response, then Submit.</p>
           <div role="radiogroup" aria-labelledby="panelQ" style="display:flex;flex-direction:column;gap:10px">
             <sc-for list="{{ panelOptions }}" as="o" hint-placeholder-count="3">
               <button type="button" role="radio" aria-checked="{{ o.checked }}" disabled="{{ o.disabled }}" onClick="{{ o.select }}" style="display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;padding:14px;border-radius:12px;border:1px solid {{ o.border }};background:{{ o.bg }};color:#F5F8FC;font-size:16px;line-height:1.5;cursor:pointer;min-height:44px;transition:border-color .2s,background .2s" style-hover="border-color:#84BFFF">
@@ -366,8 +371,8 @@ h1,h2,h3,p{margin:0}
             <li>Find the four hazards and choose the best response for each. Each hazard can be answered once per attempt.</li>
             <li><strong>3D:</strong> drag to look around, scroll or pinch to zoom, arrow keys rotate. Click or tap anything to inspect it.</li>
             <li><strong>2D:</strong> Tab between numbered objects and press Enter to inspect. Everything is keyboard operable.</li>
-            <li>Inspecting a safe object costs nothing. Hints don't change your score. Time is recorded for information only.</li>
-            <li>Finish Assessment whenever you're ready. Unanswered hazards are marked Missed.</li>
+            <li>Inspecting other objects costs nothing. Hints don't change your score. Time is recorded for information only.</li>
+            <li>Finish Assessment whenever you're ready. Unanswered hazards are marked Not found.</li>
           </ul>
           <button type="button" onClick="{{ closeInstructions }}" style="margin-top:22px;height:48px;padding:0 22px;border-radius:12px;border:0;background:#42DDC5;color:#0B1220;font-size:16px;font-weight:700;cursor:pointer" style-hover="background:#6CE7D3">Got it</button>
         </div>
@@ -403,7 +408,7 @@ h1,h2,h3,p{margin:0}
             </div>
             <div style="display:flex;flex-direction:column;gap:14px">
               <p style="font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;text-wrap:pretty">{{ foundLine }}</p>
-              <p style="color:#B6C4D6;text-wrap:pretty">Each hazard is worth 25 points: 15 for finding and assessing it, 10 more for choosing the best response. Time, hints and decoy inspections never change the score.</p>
+              <p style="color:#B6C4D6;text-wrap:pretty">Each hazard is worth 25 points: 15 for finding and assessing it, 10 more for choosing the best response. Time, hints and decoy inspections never change the score. The result is illustrative. It is not a certification and it does not show regulatory compliance.</p>
               <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px">
                 <div style="flex:1 1 120px;padding:12px 14px;border-radius:12px;background:#0B1220;border:1px solid #2B3D55"><p style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#B6C4D6;font-weight:700">Time taken</p><p style="font-size:20px;font-weight:800;font-variant-numeric:tabular-nums">{{ timeStr }}</p></div>
                 <div style="flex:1 1 120px;padding:12px 14px;border-radius:12px;background:#0B1220;border:1px solid #2B3D55"><p style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#B6C4D6;font-weight:700">Hints used</p><p style="font-size:20px;font-weight:800;font-variant-numeric:tabular-nums">{{ hints }}</p></div>
@@ -423,7 +428,11 @@ h1,h2,h3,p{margin:0}
                   </div>
                   <p style="font-size:15px"><span style="color:#B6C4D6">Your answer: </span>{{ c.chosen }}</p>
                   <p style="font-size:15px"><span style="color:#B6C4D6">Best answer: </span>{{ c.best }}</p>
+                  <p style="font-size:15px;font-weight:700;font-variant-numeric:tabular-nums">{{ c.pointsLine }}</p>
                   <p style="font-size:15px;color:#B6C4D6;border-top:1px solid #2B3D55;padding-top:10px">{{ c.explanation }}</p>
+                  <sc-if value="{{ c.showNext }}" hint-placeholder-val="{{ false }}">
+                    <p style="font-size:15px"><span style="color:#42DDC5;font-weight:700">Next practice step: </span><span style="color:#B6C4D6">{{ c.nextStep }}</span></p>
+                  </sc-if>
                   <span style="font-size:13px;font-weight:700;color:#42DDC5">{{ c.cta }}</span>
                 </button>
               </sc-for>
@@ -440,7 +449,7 @@ h1,h2,h3,p{margin:0}
           </div>
 
           <section aria-labelledby="coachTitle" style="margin-top:40px;background:#111C2E;border:1px solid rgba(66,221,197,.35);border-radius:16px;padding:28px;box-shadow:0 0 60px rgba(66,221,197,.08)">
-            <p style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#42DDC5;margin-bottom:8px">Scenario Coach — instant feedback</p>
+            <p style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#42DDC5;margin-bottom:8px">Scenario Coach — rules-based guided feedback</p>
             <h3 id="coachTitle" style="font-size:22px;font-weight:800;letter-spacing:-.01em;text-wrap:pretty">{{ coachSummary }}</h3>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px;margin-top:22px">
               <div>
@@ -460,8 +469,22 @@ h1,h2,h3,p{margin:0}
           </section>
 
           <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px">
-            <button type="button" onClick="{{ tryAgain }}" style="height:50px;padding:0 24px;border-radius:12px;border:0;background:#42DDC5;color:#0B1220;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s" style-hover="background:#6CE7D3">Try Again</button>
+            <button type="button" onClick="{{ askReset }}" style="height:50px;padding:0 24px;border-radius:12px;border:0;background:#42DDC5;color:#0B1220;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s" style-hover="background:#6CE7D3">Try Again</button>
             <a href="#how" onClick="{{ exitSim }}" style="display:inline-flex;align-items:center;height:50px;padding:0 22px;border-radius:12px;border:1px solid #2B3D55;background:rgba(17,28,46,.6);color:#F5F8FC;font-size:16px;font-weight:600" style-hover="border-color:#84BFFF;color:#F5F8FC;text-decoration:none">How It Works</a>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- Confirm before discarding the current attempt / results summary. -->
+    <sc-if value="{{ confirmReset }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;background:rgba(11,18,32,.6);display:grid;place-items:center;padding:20px;z-index:40;overflow:auto">
+        <div ref="{{ confirmRef }}" role="dialog" aria-modal="true" aria-labelledby="confirmResetTitle" style="width:100%;max-width:420px;padding:28px;background:rgba(17,28,46,.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(182,196,214,.16);border-radius:16px;box-shadow:0 30px 70px rgba(0,0,0,.5);animation:fadeUp .3s ease">
+          <h2 id="confirmResetTitle" data-autofocus="" tabindex="-1" style="font-size:22px;font-weight:800;letter-spacing:-.01em;outline:none">Reset this attempt?</h2>
+          <p style="margin-top:12px;color:#B6C4D6;font-size:16px;text-wrap:pretty">Your current summary stays on screen until you confirm. Resetting clears answers and starts a clean run.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:22px">
+            <button type="button" onClick="{{ confirmResetRun }}" style="height:48px;padding:0 20px;border-radius:12px;border:0;background:#42DDC5;color:#0B1220;font-size:16px;font-weight:700;cursor:pointer" style-hover="background:#6CE7D3">Reset attempt</button>
+            <button type="button" onClick="{{ cancelReset }}" style="height:48px;padding:0 20px;border-radius:12px;border:1px solid #2B3D55;background:rgba(17,28,46,.6);color:#F5F8FC;font-size:16px;font-weight:600;cursor:pointer" style-hover="border-color:#84BFFF">Keep summary</button>
           </div>
         </div>
       </div>
@@ -477,8 +500,8 @@ const TEAL = '#42DDC5', AMBER = '#F2C46D', MUTED = '#B6C4D6';
 const fmtTime = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
 
 class Component extends DCLogic {
-  state = { simOpen: false, phase: 'intro', view: '3d', answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: 0, finishedAt: 0, now: 0, lastActivity: 0, panel: null, picked: -1, instructions: false, webgl: true, narrow: false, reduced: false, focusId: null, displayScore: 0, settled: false };
-  heroRef = React.createRef(); pageStageRef = React.createRef(); fsStageRef = React.createRef(); miniRef = React.createRef(); panelRef = React.createRef(); introRef = React.createRef(); instrRef = React.createRef(); hoverRef = React.createRef();
+  state = { simOpen: false, phase: 'intro', view: '3d', answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: 0, finishedAt: 0, now: 0, lastActivity: 0, panel: null, picked: -1, instructions: false, webgl: true, narrow: false, reduced: false, focusId: null, displayScore: 0, settled: false, confirmReset: false };
+  heroRef = React.createRef(); pageStageRef = React.createRef(); fsStageRef = React.createRef(); miniRef = React.createRef(); panelRef = React.createRef(); introRef = React.createRef(); instrRef = React.createRef(); hoverRef = React.createRef(); confirmRef = React.createRef();
 
   componentDidMount() {
     this.mqN = matchMedia('(max-width: 760px)'); this.mqR = matchMedia('(prefers-reduced-motion: reduce)');
@@ -525,15 +548,91 @@ class Component extends DCLogic {
   }
   componentDidUpdate() { this.syncAll(); }
   setState(u, cb) { super.setState(u, cb); this.after(() => this.syncAll()); }
-  syncAll() { this.syncViews(); document.body.style.overflow = this.state.simOpen ? 'hidden' : ''; }
+  syncAll() { this.syncViews(); document.body.style.overflow = this.state.simOpen ? 'hidden' : ''; this.syncSceneUi(); }
+
+  // Shared scene UI (briefing dialog + status panel). Defined in site/shared/scene-ui.js.
+  ensureSceneUi() {
+    if (this.sceneUi) return;
+    if (typeof window.createSceneUi !== 'function') {
+      if (!this._sceneUiWaiting) {
+        this._sceneUiWaiting = true;
+        const wait = () => {
+          if (typeof window.createSceneUi === 'function') {
+            this._sceneUiWaiting = false;
+            this.ensureSceneUi();
+            this.syncSceneUi();
+            if (this.state.simOpen && this.state.phase === 'play') this.sceneUi?.showBriefingIfNeeded();
+            return;
+          }
+          requestAnimationFrame(wait);
+        };
+        requestAnimationFrame(wait);
+      }
+      return;
+    }
+    const host = document.querySelector('[data-screen-label="Simulation"] [data-scene-ui-host]');
+    if (!host) return;
+    this.sceneUi = window.createSceneUi({
+      host,
+      lessonId: 'xr-skilllab',
+      accent: '#42DDC5',
+      siteName: 'A fictional warehouse floor for practice only. Nothing here is a real site, a site procedure, or a certified assessment.',
+      objective: 'Find four hazards in the scene and choose the best response for each. Inspecting other objects is free and does not change your score. Finish when you are ready — you do not need to find every hazard first.',
+      controls: {
+        mouse: 'Drag to look around, scroll to zoom, click any object to inspect it.',
+        touch: 'Drag to look, pinch to zoom, tap any object to inspect it.',
+        keyboard: 'Arrow keys rotate the 3D view. In 2D, Tab between numbered objects and press Enter to inspect.',
+      },
+      howToFinish: 'Press Finish Assessment in the top bar whenever you are ready. Unanswered hazards are marked Not found. Reset asks for confirmation before clearing your attempt. Open ? any time to reread this briefing.',
+      focusAfterBriefing: () => {
+        if (this.state.view === '3d' && this.state.webgl && this.simView) this.simView.canvas.focus();
+        else this.focus2D();
+      },
+    });
+  }
+  syncSceneUi() {
+    this.ensureSceneUi();
+    if (!this.sceneUi) return;
+    const s = this.state;
+    const playing = s.simOpen && s.phase === 'play';
+    this.sceneUi.setActive(playing);
+    if (!playing) return;
+    const total = lesson().hazards.length;
+    const found = lesson().hazards.filter(h => s.answers[h.id] != null).length;
+    const eq = s.panel && lesson().equipment ? lesson().equipment[s.panel] : null;
+    const selected = eq ? eq.name : 'None selected';
+    const actions = [];
+    if (eq) actions.push('Review this object');
+    else actions.push(s.view === '3d' && s.webgl ? 'Click or tap an object to inspect it' : 'Select a numbered object in the 2D list');
+    actions.push('Open ? for the briefing again');
+    actions.push('Finish Assessment when you are ready');
+    this.sceneUi.updateStatus({
+      progressText: `${found} of ${total} reviewed`,
+      selected,
+      actions,
+      inspection: eq ? { name: eq.name, purpose: eq.purpose, relevance: eq.relevance } : null,
+      onCloseInspection: eq ? () => this.closePanel() : null,
+    });
+  }
   after(fn) { requestAnimationFrame(() => requestAnimationFrame(fn)); }
   focusInto(ref) { this.after(() => { const el = ref && ref.current; if (!el) return; (el.querySelector('[data-autofocus]') || el).focus(); }); }
   focus2D() { this.after(() => { const b = document.querySelector('[data-screen-label="2D Inspector"] button'); if (b) b.focus(); }); }
   returnFocus() { const t = this.lastTrigger; this.lastTrigger = null; if (t && t.isConnected) t.focus(); else if (this.simView && this.state.view === '3d') this.simView.canvas.focus(); }
-  activeDialog() { const s = this.state; if (!s.simOpen) return null; if (s.instructions) return this.instrRef.current; if (s.panel) return this.panelRef.current; if (s.phase === 'intro') return this.introRef.current; return null; }
+  activeDialog() {
+    const s = this.state;
+    if (!s.simOpen) return null;
+    if (s.confirmReset) return this.confirmRef.current;
+    if (s.instructions) return this.instrRef.current;
+    if (s.panel && lesson().hazards.some(h => h.id === s.panel)) return this.panelRef.current;
+    if (s.phase === 'intro') return this.introRef.current;
+    return null;
+  }
   trapKey(e) {
+    const s = this.state;
+    if (e.key === 'Escape' && s.simOpen && s.confirmReset) { e.preventDefault(); this.cancelReset(); return; }
+    if (e.key === 'Escape' && s.simOpen && s.panel && !lesson().hazards.some(h => h.id === s.panel) && !s.instructions) { e.preventDefault(); this.closePanel(); return; }
     const d = this.activeDialog(); if (!d) return;
-    if (e.key === 'Escape') { e.preventDefault(); const s = this.state; if (s.instructions) this.closeInstructions(); else if (s.panel) this.closePanel(); else this.exitSim(); return; }
+    if (e.key === 'Escape') { e.preventDefault(); if (s.instructions) this.closeInstructions(); else if (s.panel) this.closePanel(); else this.exitSim(); return; }
     if (e.key !== 'Tab') return;
     const f = [...d.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"]),input,select,textarea')].filter(el => el.offsetParent !== null);
     if (!f.length) return; const first = f[0], last = f[f.length - 1];
@@ -548,21 +647,60 @@ class Component extends DCLogic {
   }
   score() { return lesson().score(this.state.answers); }
 
-  // actions
   openSim = e => { this.lastLaunch = e && e.currentTarget; const s = this.state; this.setState({ simOpen: true }); this.after(() => { if (this.simView && s.phase === 'intro') this.simView.setPreset('hero'); if (s.phase === 'intro') this.focusInto(this.introRef); else if (s.phase === 'play' && s.view === '3d' && this.simView) this.simView.canvas.focus(); else if (s.phase === 'play') this.focus2D(); }); };
-  exitSim = () => { this.setState({ simOpen: false, panel: null, instructions: false }); this.after(() => { if (this.lastLaunch && this.lastLaunch.isConnected) this.lastLaunch.focus(); }); };
-  begin(view) { const now = Date.now(); this.setState({ phase: 'play', view, startedAt: now, now, lastActivity: now, finishedAt: 0, hintZone: null }); if (view === '3d') this.after(() => this.glideIn()); else this.focus2D(); }
+  exitSim = () => { this.setState({ simOpen: false, panel: null, instructions: false }); this.after(() => { this.syncSceneUi(); if (this.lastLaunch && this.lastLaunch.isConnected) this.lastLaunch.focus(); }); };
+  begin(view) {
+    const now = Date.now();
+    this.setState({ phase: 'play', view, startedAt: now, now, lastActivity: now, finishedAt: 0, hintZone: null });
+    this.after(() => {
+      this.ensureSceneUi();
+      this.syncSceneUi();
+      this.sceneUi?.showBriefingIfNeeded();
+      if (view === '3d') this.glideIn();
+      else this.focus2D();
+    });
+  }
   switchView = () => { if (!this.state.webgl) return; const to = this.state.view === '3d' ? '2d' : '3d'; this.setState({ view: to, panel: null }); if (to === '3d') this.after(() => { if (this.simView) this.simView.preset('inspection', 900).then(() => this.simView.canvas.focus()); }); else this.focus2D(); };
-  resetRun = () => { if (this.simView) this.simView.clearBadges(); const now = Date.now(); clearTimeout(this.hintTimer); const wasResults = this.state.phase === 'results'; this.setState({ answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: now, finishedAt: 0, now, lastActivity: now, panel: null, picked: -1, focusId: null, displayScore: 0, settled: false, phase: 'play' }); if (wasResults) { if (this.state.view === '3d' && this.state.webgl) this.after(() => this.glideIn()); else this.focus2D(); } };
-  tryAgain = () => { this.resetRun(); };
-  finish = () => { this.setState({ phase: 'results', finishedAt: Date.now(), panel: null, instructions: false, focusId: null, displayScore: 0, settled: false }); this.after(() => { this.animateGauge(); if (this.simView) { this.simView.focus(null); this.simView.preset('inspection', 1200); } const h = document.querySelector('[data-screen-label="Results"] [data-autofocus]'); if (h) h.focus(); }); };
+  askReset = e => {
+    const s = this.state;
+    const hasProgress = s.phase === 'results' || Object.keys(s.answers).length > 0 || s.inspected.length > 0;
+    if (!hasProgress) { this.resetRun(); return; }
+    this.lastTrigger = e && e.currentTarget;
+    this.setState({ confirmReset: true });
+    this.focusInto(this.confirmRef);
+  };
+  cancelReset = () => { this.setState({ confirmReset: false }); this.after(() => this.returnFocus()); };
+  confirmResetRun = () => { this.setState({ confirmReset: false }); this.resetRun(); };
+  resetRun = () => { if (this.simView) this.simView.clearBadges(); const now = Date.now(); clearTimeout(this.hintTimer); const wasResults = this.state.phase === 'results'; this.setState({ answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: now, finishedAt: 0, now, lastActivity: now, panel: null, picked: -1, focusId: null, displayScore: 0, settled: false, phase: 'play', confirmReset: false }); this.after(() => { this.syncSceneUi(); if (wasResults) { if (this.state.view === '3d' && this.state.webgl) this.glideIn(); else this.focus2D(); } }); };
+  finish = () => { this.setState({ phase: 'results', finishedAt: Date.now(), panel: null, instructions: false, focusId: null, displayScore: 0, settled: false, confirmReset: false }); this.after(() => { this.syncSceneUi(); this.animateGauge(); if (this.simView) { this.simView.focus(null); this.simView.preset('inspection', 1200); } const h = document.querySelector('[data-screen-label="Results"] [data-autofocus]'); if (h) h.focus(); }); };
   openInstructions = e => { this.lastTrigger = e.currentTarget; this.setState({ instructions: true }); this.focusInto(this.instrRef); };
   closeInstructions = () => { this.setState({ instructions: false }); this.after(() => this.returnFocus()); };
-  closePanel = () => { this.setState({ panel: null, picked: -1 }); this.after(() => this.returnFocus()); };
-  inspect(id, trigger) { if (this.state.phase !== 'play') return; this.lastTrigger = trigger || document.activeElement; this.setState(s => ({ panel: id, picked: -1, inspected: s.inspected.includes(id) ? s.inspected : [...s.inspected, id] })); this.focusInto(this.panelRef); }
+  closePanel = () => {
+    const trigger = this.lastTrigger;
+    this.lastTrigger = null;
+    this.setState({ panel: null, picked: -1 });
+    this.after(() => {
+      if (this.state.panel != null) return;
+      const active = document.activeElement;
+      if (active && active !== document.body && active !== document.documentElement && active !== trigger) return;
+      if (trigger && trigger.isConnected) trigger.focus();
+      else if (this.simView && this.state.view === '3d') this.simView.canvas.focus();
+    });
+  };
+  inspect(id, trigger) {
+    if (this.state.phase !== 'play') return;
+    this.lastTrigger = trigger || document.activeElement;
+    this.setState(s => ({ panel: id, picked: -1, inspected: s.inspected.includes(id) ? s.inspected : [...s.inspected, id] }));
+    const isHazard = lesson().hazards.some(h => h.id === id);
+    this.after(() => {
+      this.syncSceneUi();
+      if (isHazard) this.focusInto(this.panelRef);
+      else this.sceneUi?.focusInspectionClose?.();
+    });
+  }
   submit = () => {
     const { panel, picked, answers } = this.state; const h = lesson().hazards.find(x => x.id === panel); if (!h || picked < 0 || answers[panel] != null) return;
-    const now = Date.now(); this.setState(s => ({ answers: { ...s.answers, [panel]: picked }, lastActivity: now, now, hintZone: null }));
+    const now = Date.now(); this.setState(s => ({ answers: { ...s.answers, [panel]: picked }, lastActivity: now, now, hintZone: null, picked: -1 }));
     if (this.simView) this.simView.setBadge(panel, h.options[picked].ok ? 'check' : 'cross');
   };
   useHint = () => {
@@ -588,36 +726,83 @@ class Component extends DCLogic {
     const showHint = s.phase === 'play' && unfound > 0 && s.lastActivity > 0 && (s.now - s.lastActivity) > 45000;
     const webgl = s.webgl;
     const view3d = s.view === '3d' && webgl, view2d = !view3d;
-    // panel
-    const hz = lesson().hazards.find(h => h.id === s.panel); const dc = lesson().decoys[s.panel];
+    const hz = lesson().hazards.find(h => h.id === s.panel);
+    const eq = s.panel && lesson().equipment ? lesson().equipment[s.panel] : null;
     const answered = hz ? a[hz.id] : null; const panelAnswered = hz && answered != null;
-    const panelOptions = hz ? hz.options.map((o, i) => { const chosen = panelAnswered ? answered === i : s.picked === i; return { letter: LETTERS[i], text: o.text, checked: chosen ? 'true' : 'false', disabled: !!panelAnswered, border: chosen ? (panelAnswered ? (o.ok ? TEAL : AMBER) : '#84BFFF') : '#2B3D55', bg: chosen ? 'rgba(132,191,255,.1)' : 'rgba(11,18,32,.5)', select: () => { if (!panelAnswered) this.setState({ picked: i }); } }; }) : [];
+    const panelOptions = hz ? hz.options.map((o, i) => { const chosen = panelAnswered ? answered === i : s.picked === i; return { letter: LETTERS[i], text: o.text, checked: chosen ? 'true' : 'false', disabled: !!panelAnswered, border: chosen ? (panelAnswered ? (o.ok ? TEAL : AMBER) : '#84BFFF') : '#2B3D55', bg: chosen ? 'rgba(132,191,255,.1)' : 'rgba(11,18,32,.5)', select: () => { if (!panelAnswered && this.state.answers[hz.id] == null) this.setState({ picked: i }); } }; }) : [];
     const chosenOpt = panelAnswered ? hz.options[answered] : null;
-    // hotspots
-    const hotspots = lesson().hotspots.map((h, i) => { const isH = lesson().hazards.some(x => x.id === h.id); const v = isH ? a[h.id] : null; const ok = v != null && lesson().hazards.find(x => x.id === h.id).options[v].ok; const insp = s.inspected.includes(h.id);
-      return { ...h, n: i + 1, left: h.l + '%', top: h.t + '%', aria: `${i + 1}. ${h.label}${v != null ? (ok ? ', assessed: matches guidance' : ', assessed: review') : insp ? ', inspected' : ''}`, ring: v != null ? (ok ? TEAL : AMBER) : insp ? MUTED : '#84BFFF', answered: v != null, badge: ok ? '✓' : '✕', badgeBg: ok ? TEAL : AMBER, status: v != null ? (ok ? 'Correct' : 'Review') : insp ? 'Inspected' : '', statusColor: v != null ? (ok ? TEAL : AMBER) : MUTED, halo: s.hintZone === h.id ? 'halo 1.4s ease-in-out 3' : 'none', open: e => this.inspect(h.id, e.currentTarget) }; });
-    // results
-    const reviewCards = lesson().hazards.map(h => { const v = a[h.id]; const best = h.options.find(o => o.ok); const bi = h.options.indexOf(best); const status = v == null ? 'Missed' : h.options[v].ok ? 'Correct' : 'Review'; const color = status === 'Correct' ? TEAL : status === 'Review' ? AMBER : MUTED;
-      return { title: h.title, status, color, icon: status === 'Correct' ? '✓' : status === 'Review' ? '!' : '–', iconBg: status === 'Missed' ? 'transparent' : color, chosen: v == null ? 'No response recorded' : `${LETTERS[v]}. ${h.options[v].text}`, best: `${LETTERS[bi]}. ${best.text}`, explanation: v == null ? best.fb : h.options[v].fb, pressed: s.focusId === h.id ? 'true' : 'false', border: s.focusId === h.id ? TEAL : '#2B3D55', cta: webgl ? (s.focusId === h.id ? 'Showing in 3D' : 'View in 3D →') : '', focus: () => this.focusHazard(h.id) }; });
+    const hotspots = lesson().hotspots.map((h, i) => {
+      const isH = lesson().hazards.some(x => x.id === h.id);
+      const v = isH ? a[h.id] : null;
+      const ok = v != null && lesson().hazards.find(x => x.id === h.id).options[v].ok;
+      const insp = s.inspected.includes(h.id);
+      const label = (lesson().equipment && lesson().equipment[h.id]?.name) || h.label;
+      const status = v != null ? (ok ? 'Correct' : 'Review') : insp ? 'Inspected' : '';
+      return {
+        ...h, label, n: i + 1, left: h.l + '%', top: h.t + '%',
+        aria: `${i + 1}. ${label}${v != null ? (ok ? ', assessed: matches guidance' : ', assessed: review') : insp ? ', inspected' : ''}`,
+        ring: v != null ? (ok ? TEAL : AMBER) : insp ? MUTED : '#84BFFF',
+        answered: v != null, badge: ok ? '✓' : '✕', badgeBg: ok ? TEAL : AMBER,
+        status, statusColor: v != null ? (ok ? TEAL : AMBER) : MUTED,
+        halo: s.hintZone === h.id ? 'halo 1.4s ease-in-out 3' : 'none',
+        open: e => this.inspect(h.id, e.currentTarget),
+      };
+    });
+    const reviewCards = lesson().hazards.map(h => {
+      const v = a[h.id];
+      const best = h.options.find(o => o.ok);
+      const bi = h.options.indexOf(best);
+      const ok = v != null && h.options[v].ok;
+      const status = v == null ? 'Not found' : ok ? 'Correct' : 'Review';
+      const color = status === 'Correct' ? TEAL : status === 'Review' ? AMBER : MUTED;
+      const findPts = v == null ? 0 : 15;
+      const respPts = ok ? 10 : 0;
+      const pointsLine = v == null ? 'Points: 0 + 0 = 0 (Not found)' : `Points: ${findPts} + ${respPts} = ${findPts + respPts}`;
+      const nextStep = v == null
+        ? `Find "${h.title}" on a retry and choose a response before you finish.`
+        : ok ? '' : `On a retry, prefer: ${best.text}`;
+      return {
+        title: h.title, status, color,
+        icon: status === 'Correct' ? '✓' : status === 'Review' ? '!' : '–',
+        iconBg: status === 'Not found' ? 'transparent' : color,
+        chosen: v == null ? 'Not found' : `${LETTERS[v]}. ${h.options[v].text}`,
+        best: `${LETTERS[bi]}. ${best.text}`,
+        explanation: v == null ? best.fb : h.options[v].fb,
+        pointsLine, nextStep, showNext: !!nextStep,
+        pressed: s.focusId === h.id ? 'true' : 'false',
+        border: s.focusId === h.id ? TEAL : '#2B3D55',
+        cta: webgl ? (s.focusId === h.id ? 'Showing in 3D' : 'View in 3D →') : '',
+        focus: () => this.focusHazard(h.id),
+      };
+    });
     const correctH = lesson().hazards.filter(h => a[h.id] != null && h.options[a[h.id]].ok);
     const needWork = lesson().hazards.filter(h => a[h.id] == null || !h.options[a[h.id]].ok);
     const coachSummary = found === 0 ? "You finished without assessing any hazards, so there's nothing to score yet — treat this run as a baseline." : `You found ${found} of 4 hazards and chose the best response for ${correct} of them${found === 4 && correct === 4 ? ' — a complete sweep.' : '.'}`;
     const coachWell = correctH.length ? `You handled "${correctH[0].title}" well. ${correctH[0].options.find(o => o.ok).fb}` : "No best responses this time. That's common on a first attempt; the scene rewards a slow, deliberate scan rather than speed.";
-    const coachNext = needWork.length ? needWork.map(h => ({ title: `${h.title} (${a[h.id] == null ? 'missed' : 'review'}):`, text: h.options.find(o => o.ok).fb })) : [{ title: 'Nothing outstanding.', text: 'Next time, aim to find all four with fewer decoy inspections.' }];
+    const coachNext = needWork.length ? needWork.map(h => {
+      const best = h.options.find(o => o.ok);
+      const missed = a[h.id] == null;
+      return {
+        title: `${h.title}:`,
+        text: missed
+          ? `Not found this run. Next practice step: locate it in the scene and assess it before you finish.`
+          : `Next practice step: ${best.text}`,
+      };
+    }) : [{ title: 'Nothing outstanding.', text: 'Next time, aim to find all four with fewer decoy inspections.' }];
     const ids = needWork.map(h => h.id);
     const coachTip = lesson().tip(ids);
     const inspTotal = s.inspected.length;
     const focusH = lesson().hazards.find(h => h.id === s.focusId);
     const intro3D = webgl && !s.narrow;
     return {
-      openSim: this.openSim, exitSim: this.exitSim, switchView: this.switchView, resetRun: this.resetRun, tryAgain: this.tryAgain, finish: this.finish, openInstructions: this.openInstructions, closeInstructions: this.closeInstructions, closePanel: this.closePanel, submit: this.submit, useHint: this.useHint, heroMove: this.heroMove, heroLeave: this.heroLeave,
-      heroRef: this.heroRef, pageStageRef: this.pageStageRef, fsStageRef: this.fsStageRef, miniRef: this.miniRef, panelRef: this.panelRef, introRef: this.introRef, instrRef: this.instrRef, hoverRef: this.hoverRef,
-      simOpen: s.simOpen, phaseIntro: s.phase === 'intro', phasePlay: s.phase === 'play', phaseResults: s.phase === 'results', webglMissing: !webgl, view3d, view2d, canSwitch: webgl, switchLabel: s.view === '3d' ? 'Switch to 2D' : 'Switch to 3D',
+      openSim: this.openSim, exitSim: this.exitSim, switchView: this.switchView, askReset: this.askReset, cancelReset: this.cancelReset, confirmResetRun: this.confirmResetRun, finish: this.finish, openInstructions: this.openInstructions, closeInstructions: this.closeInstructions, closePanel: this.closePanel, submit: this.submit, useHint: this.useHint, heroMove: this.heroMove, heroLeave: this.heroLeave,
+      heroRef: this.heroRef, pageStageRef: this.pageStageRef, fsStageRef: this.fsStageRef, miniRef: this.miniRef, panelRef: this.panelRef, introRef: this.introRef, instrRef: this.instrRef, hoverRef: this.hoverRef, confirmRef: this.confirmRef,
+      simOpen: s.simOpen, phaseIntro: s.phase === 'intro', phasePlay: s.phase === 'play', phaseResults: s.phase === 'results', confirmReset: s.confirmReset, webglMissing: !webgl, view3d, view2d, canSwitch: webgl, switchLabel: s.view === '3d' ? 'Switch to 2D' : 'Switch to 3D',
       introPrimaryLabel: intro3D ? 'Begin in 3D' : 'Begin in 2D', introPrimary: () => this.begin(intro3D ? '3d' : '2d'), showIntroSecondary: webgl, introSecondaryLabel: intro3D ? 'Use 2D Inspector' : 'Try 3D', introSecondary: () => this.begin(intro3D ? '2d' : '3d'),
       answeredCount: found, pips, showHint, hintLine: view3d ? 'Look around and select anything that looks unsafe.' : 'Select any numbered object to inspect it. Tab moves between objects.',
       hotspots, instructions: s.instructions,
-      panelOpen: !!(hz || dc), panelEyebrow: hz ? 'Hazard' : 'Inspection', panelTitle: hz ? hz.title : dc ? dc.title : '', panelContext: hz ? hz.context : dc ? dc.context : '', panelIsHazard: !!hz, panelIsDecoy: !!dc && !hz, panelOptions, panelUnanswered: !!hz && !panelAnswered, panelAnswered: !!panelAnswered, submitDisabled: s.picked < 0, submitOpacity: s.picked < 0 ? .55 : 1,
-      verdictText: chosenOpt ? (chosenOpt.ok ? 'Matches the scenario guidance' : 'Review this response') : '', verdictGlyph: chosenOpt && chosenOpt.ok ? '✓' : '!', verdictColor: chosenOpt && chosenOpt.ok ? TEAL : AMBER, verdictBg: chosenOpt && chosenOpt.ok ? 'rgba(66,221,197,.1)' : 'rgba(242,196,109,.1)', verdictBorder: chosenOpt && chosenOpt.ok ? 'rgba(66,221,197,.4)' : 'rgba(242,196,109,.45)', panelFeedback: chosenOpt ? chosenOpt.fb : '', panelNote: dc ? dc.note : '',
+      panelOpen: !!hz, panelEyebrow: 'Inspect', panelTitle: eq ? eq.name : (hz ? hz.title : ''), panelContext: hz ? hz.context : '', panelIsHazard: !!hz, panelIsDecoy: false, panelOptions, panelUnanswered: !!hz && !panelAnswered, panelAnswered: !!panelAnswered, submitDisabled: s.picked < 0, submitOpacity: s.picked < 0 ? .55 : 1,
+      verdictText: chosenOpt ? (chosenOpt.ok ? 'Matches the scenario guidance' : 'Review this response') : '', verdictGlyph: chosenOpt && chosenOpt.ok ? '✓' : '!', verdictColor: chosenOpt && chosenOpt.ok ? TEAL : AMBER, verdictBg: chosenOpt && chosenOpt.ok ? 'rgba(66,221,197,.1)' : 'rgba(242,196,109,.1)', verdictBorder: chosenOpt && chosenOpt.ok ? 'rgba(66,221,197,.4)' : 'rgba(242,196,109,.45)', panelFeedback: chosenOpt ? chosenOpt.fb : '', panelNote: '',
       scoreLabel, noAnswers: found === 0, displayScoreText: String(s.displayScore), gaugeOffset: 527.8 * (1 - s.displayScore / 100), gaugeFilter: s.settled ? 'drop-shadow(0 0 18px rgba(66,221,197,.55))' : 'none', gaugeAria: `Score ${score} out of 100`,
       foundLine: `${found} of 4 hazards found · ${correct} of 4 best responses`, timeStr, hints: s.hints, accuracy: inspTotal ? Math.round(found / inspTotal * 100) + '%' : '—', accuracyNote: inspTotal ? `${found} hazard${found === 1 ? '' : 's'} in ${inspTotal} object${inspTotal === 1 ? '' : 's'} inspected` : 'No objects inspected',
       reviewCards, miniCaption: focusH ? `Viewing: ${focusH.title}` : 'Select a hazard card to fly the camera to it.', coachSummary, coachWell, coachNext, coachTip,

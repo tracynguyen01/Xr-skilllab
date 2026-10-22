@@ -243,6 +243,8 @@ export function createSceneUi(options) {
   closeInspectBtn.addEventListener('click', () => {
     // Close clears the selection only — progress (answers / inspected) stays.
     onCloseInspection?.()
+    // Phone drawer: collapse again so the expanded panel does not cover the object list.
+    if (narrow.matches) setCollapsed(true)
   })
 
   // Native Esc fires "cancel" then closes. Restore focus on the next frame.

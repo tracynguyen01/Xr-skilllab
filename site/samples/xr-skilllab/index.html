@@ -5,6 +5,7 @@
 <title>Warehouse Safety · XR Concept Lab</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<script type="module" src="./content.js"></script>
 </head>
 <body>
 <style>
@@ -469,44 +470,8 @@ h1,h2,h3,p{margin:0}
 </sc-if>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{}">
-const HAZARDS = [
-  { id: 'exit', title: 'Blocked Emergency Exit', context: 'Cartons are stacked in front of a marked emergency exit door.', options: [
-    { text: 'Step around the boxes. The exit is still technically reachable.', ok: false, fb: 'In an emergency people move quickly and in numbers. A partly blocked exit slows everyone down and can trap people.' },
-    { text: 'Report the obstruction and have the route cleared under site procedure.', ok: true, fb: 'Exit routes must stay clear at all times. Reporting it gets the obstruction removed safely and properly.' },
-    { text: 'Lock the exit door until the boxes are moved.', ok: false, fb: 'Locking an emergency exit removes an escape route entirely and creates a far more serious hazard.' }] },
-  { id: 'spill', title: 'Liquid Spill on Walkway', context: 'A glossy liquid pool spreads across the edge of the pedestrian walkway.', options: [
-    { text: 'Walk around it carefully and carry on.', ok: false, fb: 'Others may not see it. An unmanaged spill on a walkway is a common cause of slips and falls.' },
-    { text: 'Cordon it off with a wet-floor sign and report it for clean-up under the spill procedure.', ok: true, fb: 'Warning others immediately and using the approved clean-up process controls the risk, especially if the substance is unknown.' },
-    { text: 'Throw some cardboard over it to soak it up.', ok: false, fb: 'This hides the hazard, may not absorb it, and the substance could be harmful to handle.' }] },
-  { id: 'rack', title: 'Unstable Pallet Load', context: 'Cartons on an upper rack level are leaning and overhanging the beam.', options: [
-    { text: 'Push the leaning boxes back into place by hand.', ok: false, fb: 'Disturbing an unstable load can bring it down on you. Correcting it needs the right equipment and people.' },
-    { text: 'Keep people clear of the area and report it so it can be safely restacked.', ok: true, fb: 'Restricting access removes exposure to falling objects while trained staff correct the load.' },
-    { text: "Leave it. It's been like that all morning.", ok: false, fb: "A load that hasn't fallen yet is still a falling-object hazard. Time doesn't make it safer." }] },
-  { id: 'forklift', title: 'Forklift–Pedestrian Conflict', context: 'A forklift is reversing across the walkway where there is no barrier or marked crossing.', options: [
-    { text: 'Cross quickly while the forklift is reversing away.', ok: false, fb: "Reversing forklifts have limited visibility and can change direction. Never cross a moving vehicle's path." },
-    { text: 'Wait, use the designated crossing point and confirm the driver has seen you.', ok: true, fb: 'Separating people from vehicles, and making eye contact before crossing, is a core traffic-management control.' },
-    { text: 'Wave at the driver and walk behind the forklift.', ok: false, fb: "A wave isn't confirmation, and walking behind a vehicle puts you in its blind spot and reversing path." }] },
-];
-const DECOYS = {
-  extinguisher: { title: 'Fire extinguisher', context: 'A wall-mounted extinguisher beside the workbench area.', note: 'Mounted, tagged and unobstructed.' },
-  firstaid: { title: 'First-aid station', context: 'A first-aid cabinet on the right-hand wall.', note: 'Clearly signed and accessible.' },
-  goodrack: { title: 'Rack bay 02', context: 'A fully loaded bay in the back racking row.', note: 'Load is square, within the beam and labelled.' },
-  bay01: { title: 'Rack bay 01', context: 'A loaded bay in the back racking row.', note: 'Load is stable and sits within the beam.' },
-  bay03: { title: 'Rack bay 03', context: 'A partly loaded bay in the back racking row.', note: 'Load is stable and sits within the beam.' },
-  bay04: { title: 'Rack bay 04', context: 'A loaded bay in the right-hand racking row.', note: 'Load is stable and sits within the beam.' },
-  bay06: { title: 'Rack bay 06', context: 'A partly loaded bay in the right-hand racking row.', note: 'Load is stable and sits within the beam.' },
-  pallets: { title: 'Floor-stacked pallets', context: 'Pallets staged near the loading dock.', note: 'Stable, inside the storage area and clear of the walkway.' },
-  dock: { title: 'Loading dock', context: 'The roller door on the back wall.', note: 'Door closed, frame marked and dock plate clear.' },
-  workbench: { title: 'Workbench', context: 'A workbench against the left-hand wall.', note: 'Tools stowed and the surface is clear.' },
-};
-const HOTSPOTS = [
-  { id: 'dock', l: 29, t: 2, label: 'Loading dock' }, { id: 'pallets', l: 26.7, t: 9, label: 'Floor-stacked pallets' },
-  { id: 'bay01', l: 10, t: 22.2, label: 'Rack bay 01' }, { id: 'goodrack', l: 21.7, t: 22.2, label: 'Rack bay 02' }, { id: 'bay03', l: 33.3, t: 22.2, label: 'Rack bay 03' },
-  { id: 'exit', l: 75, t: 5, label: 'Emergency exit' },
-  { id: 'bay04', l: 93.75, t: 18.9, label: 'Rack bay 04' }, { id: 'rack', l: 93.75, t: 34.4, label: 'Rack bay 05' }, { id: 'bay06', l: 93.75, t: 50, label: 'Rack bay 06' },
-  { id: 'extinguisher', l: 2, t: 52.8, label: 'Fire extinguisher' }, { id: 'forklift', l: 40.8, t: 65.5, label: 'Forklift' }, { id: 'spill', l: 70.8, t: 70.5, label: 'Walkway, east section' },
-  { id: 'firstaid', l: 98, t: 72, label: 'First-aid station' }, { id: 'workbench', l: 3.5, t: 80.5, label: 'Workbench' },
-];
+// Lesson data/scoring live in content.js (window.LESSON).
+const lesson = () => window.LESSON;
 const LETTERS = ['A', 'B', 'C'];
 const TEAL = '#42DDC5', AMBER = '#F2C46D', MUTED = '#B6C4D6';
 const fmtTime = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
@@ -522,8 +487,10 @@ class Component extends DCLogic {
     this.setState({ narrow: this.mqN.matches, reduced: this.mqR.matches, view: this.mqN.matches ? '2d' : '3d' });
     this.onKey = e => this.trapKey(e); document.addEventListener('keydown', this.onKey);
     this.timer = setInterval(() => { if (this.state.phase === 'play' && this.state.startedAt && this.state.simOpen) this.setState({ now: Date.now() }); }, 1000);
-    const init = () => this.initViews();
-    if (window.XRWarehouse) init(); else window.addEventListener('xrwarehouse-ready', init, { once: true });
+    const boot = () => { if (!window.XRWarehouse || !window.LESSON || this._booted) return; this._booted = true; this.initViews(); };
+    window.addEventListener('xrwarehouse-ready', boot);
+    window.addEventListener('lesson-ready', boot);
+    boot();
     this.readyTimeout = setTimeout(() => { if (!this.simView) this.setState({ webgl: false, view: '2d' }); }, 12000);
   }
   componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.readyTimeout); document.removeEventListener('keydown', this.onKey); document.body.style.overflow = ''; }
@@ -579,7 +546,7 @@ class Component extends DCLogic {
     const step = t => { const p = dur ? Math.min(1, (t - start) / dur) : 1; const e = 1 - Math.pow(1 - p, 3); this.setState({ displayScore: Math.round(score * e) }); if (p < 1) this.raf = requestAnimationFrame(step); else this.setState({ settled: true }); };
     this.raf = requestAnimationFrame(step);
   }
-  score() { const a = this.state.answers; let found = 0, correct = 0; HAZARDS.forEach(h => { if (a[h.id] != null) { found++; if (h.options[a[h.id]].ok) correct++; } }); return found * 15 + correct * 10; }
+  score() { return lesson().score(this.state.answers); }
 
   // actions
   openSim = e => { this.lastLaunch = e && e.currentTarget; const s = this.state; this.setState({ simOpen: true }); this.after(() => { if (this.simView && s.phase === 'intro') this.simView.setPreset('hero'); if (s.phase === 'intro') this.focusInto(this.introRef); else if (s.phase === 'play' && s.view === '3d' && this.simView) this.simView.canvas.focus(); else if (s.phase === 'play') this.focus2D(); }); };
@@ -594,12 +561,12 @@ class Component extends DCLogic {
   closePanel = () => { this.setState({ panel: null, picked: -1 }); this.after(() => this.returnFocus()); };
   inspect(id, trigger) { if (this.state.phase !== 'play') return; this.lastTrigger = trigger || document.activeElement; this.setState(s => ({ panel: id, picked: -1, inspected: s.inspected.includes(id) ? s.inspected : [...s.inspected, id] })); this.focusInto(this.panelRef); }
   submit = () => {
-    const { panel, picked, answers } = this.state; const h = HAZARDS.find(x => x.id === panel); if (!h || picked < 0 || answers[panel] != null) return;
+    const { panel, picked, answers } = this.state; const h = lesson().hazards.find(x => x.id === panel); if (!h || picked < 0 || answers[panel] != null) return;
     const now = Date.now(); this.setState(s => ({ answers: { ...s.answers, [panel]: picked }, lastActivity: now, now, hintZone: null }));
     if (this.simView) this.simView.setBadge(panel, h.options[picked].ok ? 'check' : 'cross');
   };
   useHint = () => {
-    const h = HAZARDS.find(x => this.state.answers[x.id] == null); if (!h) return; const now = Date.now();
+    const h = lesson().hazards.find(x => this.state.answers[x.id] == null); if (!h) return; const now = Date.now();
     this.setState(s => ({ hints: s.hints + 1, lastActivity: now, now, hintZone: h.id }));
     if (this.state.view === '3d' && this.simView) this.simView.pulseZone(h.id);
     clearTimeout(this.hintTimer); this.hintTimer = setTimeout(() => this.setState({ hintZone: null }), 4500);
@@ -610,37 +577,37 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state, a = s.answers;
-    const found = HAZARDS.filter(h => a[h.id] != null).length;
-    const correct = HAZARDS.filter(h => a[h.id] != null && h.options[a[h.id]].ok).length;
-    const score = found * 15 + correct * 10;
+    const found = lesson().hazards.filter(h => a[h.id] != null).length;
+    const correct = lesson().hazards.filter(h => a[h.id] != null && h.options[a[h.id]].ok).length;
+    const score = lesson().score(a);
     const scoreLabel = found === 0 ? 'Nothing assessed yet' : score >= 85 ? 'Sharp eye' : score >= 60 ? 'Solid start' : 'Keep practising';
-    const pips = HAZARDS.map(h => { const v = a[h.id]; return v == null ? { bg: 'transparent', border: MUTED } : { bg: h.options[v].ok ? TEAL : AMBER, border: 'transparent' }; });
+    const pips = lesson().hazards.map(h => { const v = a[h.id]; return v == null ? { bg: 'transparent', border: MUTED } : { bg: h.options[v].ok ? TEAL : AMBER, border: 'transparent' }; });
     const nowMs = s.finishedAt || s.now || Date.now();
     const timeStr = s.startedAt ? fmtTime(nowMs - s.startedAt) : '00:00';
-    const unfound = HAZARDS.filter(h => a[h.id] == null).length;
+    const unfound = lesson().hazards.filter(h => a[h.id] == null).length;
     const showHint = s.phase === 'play' && unfound > 0 && s.lastActivity > 0 && (s.now - s.lastActivity) > 45000;
     const webgl = s.webgl;
     const view3d = s.view === '3d' && webgl, view2d = !view3d;
     // panel
-    const hz = HAZARDS.find(h => h.id === s.panel); const dc = DECOYS[s.panel];
+    const hz = lesson().hazards.find(h => h.id === s.panel); const dc = lesson().decoys[s.panel];
     const answered = hz ? a[hz.id] : null; const panelAnswered = hz && answered != null;
     const panelOptions = hz ? hz.options.map((o, i) => { const chosen = panelAnswered ? answered === i : s.picked === i; return { letter: LETTERS[i], text: o.text, checked: chosen ? 'true' : 'false', disabled: !!panelAnswered, border: chosen ? (panelAnswered ? (o.ok ? TEAL : AMBER) : '#84BFFF') : '#2B3D55', bg: chosen ? 'rgba(132,191,255,.1)' : 'rgba(11,18,32,.5)', select: () => { if (!panelAnswered) this.setState({ picked: i }); } }; }) : [];
     const chosenOpt = panelAnswered ? hz.options[answered] : null;
     // hotspots
-    const hotspots = HOTSPOTS.map((h, i) => { const isH = HAZARDS.some(x => x.id === h.id); const v = isH ? a[h.id] : null; const ok = v != null && HAZARDS.find(x => x.id === h.id).options[v].ok; const insp = s.inspected.includes(h.id);
+    const hotspots = lesson().hotspots.map((h, i) => { const isH = lesson().hazards.some(x => x.id === h.id); const v = isH ? a[h.id] : null; const ok = v != null && lesson().hazards.find(x => x.id === h.id).options[v].ok; const insp = s.inspected.includes(h.id);
       return { ...h, n: i + 1, left: h.l + '%', top: h.t + '%', aria: `${i + 1}. ${h.label}${v != null ? (ok ? ', assessed: matches guidance' : ', assessed: review') : insp ? ', inspected' : ''}`, ring: v != null ? (ok ? TEAL : AMBER) : insp ? MUTED : '#84BFFF', answered: v != null, badge: ok ? '✓' : '✕', badgeBg: ok ? TEAL : AMBER, status: v != null ? (ok ? 'Correct' : 'Review') : insp ? 'Inspected' : '', statusColor: v != null ? (ok ? TEAL : AMBER) : MUTED, halo: s.hintZone === h.id ? 'halo 1.4s ease-in-out 3' : 'none', open: e => this.inspect(h.id, e.currentTarget) }; });
     // results
-    const reviewCards = HAZARDS.map(h => { const v = a[h.id]; const best = h.options.find(o => o.ok); const bi = h.options.indexOf(best); const status = v == null ? 'Missed' : h.options[v].ok ? 'Correct' : 'Review'; const color = status === 'Correct' ? TEAL : status === 'Review' ? AMBER : MUTED;
+    const reviewCards = lesson().hazards.map(h => { const v = a[h.id]; const best = h.options.find(o => o.ok); const bi = h.options.indexOf(best); const status = v == null ? 'Missed' : h.options[v].ok ? 'Correct' : 'Review'; const color = status === 'Correct' ? TEAL : status === 'Review' ? AMBER : MUTED;
       return { title: h.title, status, color, icon: status === 'Correct' ? '✓' : status === 'Review' ? '!' : '–', iconBg: status === 'Missed' ? 'transparent' : color, chosen: v == null ? 'No response recorded' : `${LETTERS[v]}. ${h.options[v].text}`, best: `${LETTERS[bi]}. ${best.text}`, explanation: v == null ? best.fb : h.options[v].fb, pressed: s.focusId === h.id ? 'true' : 'false', border: s.focusId === h.id ? TEAL : '#2B3D55', cta: webgl ? (s.focusId === h.id ? 'Showing in 3D' : 'View in 3D →') : '', focus: () => this.focusHazard(h.id) }; });
-    const correctH = HAZARDS.filter(h => a[h.id] != null && h.options[a[h.id]].ok);
-    const needWork = HAZARDS.filter(h => a[h.id] == null || !h.options[a[h.id]].ok);
+    const correctH = lesson().hazards.filter(h => a[h.id] != null && h.options[a[h.id]].ok);
+    const needWork = lesson().hazards.filter(h => a[h.id] == null || !h.options[a[h.id]].ok);
     const coachSummary = found === 0 ? "You finished without assessing any hazards, so there's nothing to score yet — treat this run as a baseline." : `You found ${found} of 4 hazards and chose the best response for ${correct} of them${found === 4 && correct === 4 ? ' — a complete sweep.' : '.'}`;
     const coachWell = correctH.length ? `You handled "${correctH[0].title}" well. ${correctH[0].options.find(o => o.ok).fb}` : "No best responses this time. That's common on a first attempt; the scene rewards a slow, deliberate scan rather than speed.";
     const coachNext = needWork.length ? needWork.map(h => ({ title: `${h.title} (${a[h.id] == null ? 'missed' : 'review'}):`, text: h.options.find(o => o.ok).fb })) : [{ title: 'Nothing outstanding.', text: 'Next time, aim to find all four with fewer decoy inspections.' }];
     const ids = needWork.map(h => h.id);
-    const coachTip = ids.includes('exit') || ids.includes('spill') ? 'Start by scanning exit routes and walkways.' : ids.includes('rack') ? 'Look up. Check every upper rack level for loads that lean or overhang the beam.' : ids.includes('forklift') ? 'Watch where vehicles and people share space, and look for the marked crossing.' : 'Trust your first read of the scene and try to finish with fewer decoy inspections.';
+    const coachTip = lesson().tip(ids);
     const inspTotal = s.inspected.length;
-    const focusH = HAZARDS.find(h => h.id === s.focusId);
+    const focusH = lesson().hazards.find(h => h.id === s.focusId);
     const intro3D = webgl && !s.narrow;
     return {
       openSim: this.openSim, exitSim: this.exitSim, switchView: this.switchView, resetRun: this.resetRun, tryAgain: this.tryAgain, finish: this.finish, openInstructions: this.openInstructions, closeInstructions: this.closeInstructions, closePanel: this.closePanel, submit: this.submit, useHint: this.useHint, heroMove: this.heroMove, heroLeave: this.heroLeave,

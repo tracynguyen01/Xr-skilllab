@@ -47,8 +47,8 @@ export const hazards = [
 // Ids only for scoring tests — display names live on `equipment` / `hotspots`.
 // Decoy `context` is unused in the UI (Info cards use `equipment`); kept for the shared content shape.
 export const decoys = {
-  segregated: { title: 'Drum bay (NW)', context: 'A drum bay on the north-west side of the plant floor.' },
-  clearshower: { title: 'Safety shower (SE)', context: 'A safety shower on the south-east wall.' },
+  segregated: { title: 'Drum bay (north)', context: 'A drum bay on the north-west side of the plant floor.' },
+  clearshower: { title: 'Safety shower (south)', context: 'A safety shower on the east wall, south of the other shower.' },
   reactor: { title: 'Batch reactor', context: 'A batch reactor in the centre of the plant floor.' },
   bund: { title: 'Storage tanks', context: 'Two tanks inside a low bund on the south floor.' },
   sds: { title: 'Wall board', context: 'A wall board on the east wall.' },
@@ -57,14 +57,14 @@ export const decoys = {
 // Neutral Info-card copy — location only; no cues about whether an object is a scored hazard.
 export const equipment = {
   incompatible: {
-    name: 'Drum bay (west)',
+    name: 'Drum bay (south)',
     purpose: 'A drum storage bay in this fictional batch plant.',
-    relevance: 'This bay sits on the west side of the plant floor.',
+    relevance: 'This bay sits on the south-west side of the plant floor.',
   },
   eyewash: {
-    name: 'Safety shower (east)',
+    name: 'Safety shower (north)',
     purpose: 'A wall-mounted safety shower in this teaching scene.',
-    relevance: 'This shower sits on the east wall north of the south-east shower.',
+    relevance: 'This shower sits on the east wall, north of the other shower.',
   },
   vapour: {
     name: 'Valve manifold',
@@ -77,14 +77,14 @@ export const equipment = {
     relevance: 'The header stands north of the reactor on the plant floor.',
   },
   segregated: {
-    name: 'Drum bay (NW)',
+    name: 'Drum bay (north)',
     purpose: 'A drum storage bay in this fictional batch plant.',
     relevance: 'This bay sits on the north-west side of the plant floor.',
   },
   clearshower: {
-    name: 'Safety shower (SE)',
+    name: 'Safety shower (south)',
     purpose: 'A wall-mounted safety shower in this teaching scene.',
-    relevance: 'This shower sits on the east wall south of the east shower.',
+    relevance: 'This shower sits on the east wall, south of the other shower.',
   },
   reactor: {
     name: 'Batch reactor',
@@ -104,13 +104,13 @@ export const equipment = {
 }
 
 export const hotspots = [
-  { id: 'segregated', l: 18, t: 24, label: 'Drum bay (NW)' },
+  { id: 'segregated', l: 18, t: 24, label: 'Drum bay (north)' },
   { id: 'reactor', l: 40, t: 32, label: 'Batch reactor' },
   { id: 'relief', l: 62, t: 28, label: 'Relief header' },
-  { id: 'eyewash', l: 78, t: 30, label: 'Safety shower (east)' },
+  { id: 'eyewash', l: 78, t: 30, label: 'Safety shower (north)' },
   { id: 'vapour', l: 56, t: 48, label: 'Valve manifold' },
-  { id: 'clearshower', l: 80, t: 52, label: 'Safety shower (SE)' },
-  { id: 'incompatible', l: 18, t: 68, label: 'Drum bay (west)' },
+  { id: 'clearshower', l: 80, t: 52, label: 'Safety shower (south)' },
+  { id: 'incompatible', l: 18, t: 68, label: 'Drum bay (south)' },
   { id: 'bund', l: 48, t: 74, label: 'Storage tanks' },
   { id: 'sds', l: 84, t: 80, label: 'Wall board' },
 ]

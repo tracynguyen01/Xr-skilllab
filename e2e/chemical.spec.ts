@@ -42,8 +42,8 @@ test('Chemical explainable results, missed list, and confirm reset', async ({ pa
     await expect(dialog).toBeHidden()
   }
 
-  await answerByKeyboard('Drum bay (west)')
-  await answerByKeyboard('Safety shower (east)')
+  await answerByKeyboard('Drum bay (south)')
+  await answerByKeyboard('Safety shower (north)')
   await answerByKeyboard('Valve manifold')
   await answerByKeyboard('Relief header')
 

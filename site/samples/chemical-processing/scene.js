@@ -81,7 +81,7 @@ function buildScene() {
   });
   register(bund, 'bund', 'Storage tanks', [0, 3.2, 0]);
 
-  // West drum bay — mixed colours (contrasts with the NW bay of matching blue drums).
+  // South drum bay — mixed colours (contrasts with the north bay of matching blue drums).
   const mixed = new THREE.Group(); scene.add(mixed); mixed.position.set(-5.4, 0, 2.4);
   box(2.6, .06, 1.8, M.dark, .7, .03, .35, mixed);
   const colors = [M.red, M.yellow, M.blue, M.red, M.violet, M.yellow];
@@ -90,9 +90,9 @@ function buildScene() {
     cyl(.32, .32, .75, mat, col * .72, .4, row * .75, mixed);
     cyl(.28, .28, .04, M.dark, col * .72, .8, row * .75, mixed);
   });
-  register(mixed, 'incompatible', 'Drum bay (west)', [0.7, 1.5, .4]);
+  register(mixed, 'incompatible', 'Drum bay (south)', [0.7, 1.5, .4]);
 
-  // NW drum bay — matching blue drums behind a yellow divider (decoy contrast).
+  // North drum bay — matching blue drums behind a yellow divider (decoy contrast).
   const seg = new THREE.Group(); scene.add(seg); seg.position.set(-5.6, 0, -3.4);
   box(2.4, .08, 1.3, M.dark, .6, .06, 0, seg);
   [0, .7, 1.4].forEach((x) => {
@@ -100,9 +100,9 @@ function buildScene() {
     cyl(.26, .26, .04, M.dark, x, .82, 0, seg);
   });
   box(.08, .9, 1.2, M.yellow, 2, .5, 0, seg);
-  register(seg, 'segregated', 'Drum bay (NW)', [0.7, 1.4, 0]);
+  register(seg, 'segregated', 'Drum bay (north)', [0.7, 1.4, 0]);
 
-  // East safety shower with a red drum and crate in front (hazard).
+  // North safety shower with a red drum and crate in front (hazard). Same yellow as the south twin.
   const shower = new THREE.Group(); scene.add(shower); shower.position.set(5.8, 0, -2.6);
   cyl(.06, .06, 2.3, M.yellow, 0, 1.15, 0, shower);
   cyl(.06, .06, 1.1, M.yellow, .5, 2.25, 0, shower).rotation.z = Math.PI / 2;
@@ -111,18 +111,18 @@ function buildScene() {
   cyl(.22, .28, .12, M.steel, .2, 1.15, .35, shower);
   cyl(.28, .32, .7, M.red, .35, .38, .55, shower);
   box(.7, .35, .55, M.dark, .15, .2, .15, shower);
-  // Green floor mark so the station reads as emergency kit
+  // Floor mark — same colour on both showers so paint does not hint which is scored.
   box(.9, .02, .9, M.green, .2, .01, .2, shower);
-  register(shower, 'eyewash', 'Safety shower (east)', [0.4, 2.6, 0]);
+  register(shower, 'eyewash', 'Safety shower (north)', [0.4, 2.6, 0]);
 
-  // SE safety shower — green post, open approach (decoy contrast).
+  // South safety shower — same yellow post and green floor mark; open approach.
   const clear = new THREE.Group(); scene.add(clear); clear.position.set(6.4, 0, 1.8);
-  cyl(.06, .06, 2.3, M.green, 0, 1.15, 0, clear);
-  cyl(.06, .06, .9, M.green, .4, 2.25, 0, clear).rotation.z = Math.PI / 2;
-  mesh(new THREE.SphereGeometry(.14, 12, 12), M.green, .85, 2.25, 0, clear);
+  cyl(.06, .06, 2.3, M.yellow, 0, 1.15, 0, clear);
+  cyl(.06, .06, .9, M.yellow, .4, 2.25, 0, clear).rotation.z = Math.PI / 2;
+  mesh(new THREE.SphereGeometry(.14, 12, 12), M.yellow, .85, 2.25, 0, clear);
   cyl(.2, .26, .1, M.steel, .15, 1.15, .3, clear);
-  box(.9, .02, .9, M.yellow, .2, .01, .2, clear);
-  register(clear, 'clearshower', 'Safety shower (SE)', [.3, 2.6, 0]);
+  box(.9, .02, .9, M.green, .2, .01, .2, clear);
+  register(clear, 'clearshower', 'Safety shower (south)', [.3, 2.6, 0]);
 
   // Valve manifold: pipe rack, handwheel, rising vapour.
   const valve = new THREE.Group(); scene.add(valve); valve.position.set(1.6, 0, -.2);

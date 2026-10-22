@@ -5,16 +5,16 @@ const PRESETS = {
   hero: { t: [0, 2, 0], theta: 0.62, phi: 1.16, r: 22 },
   establishing: { t: [0, 2.4, 0], theta: 1, phi: 1.05, r: 30 },
   inspection: { t: [0, 1.6, 0], theta: 0.35, phi: 1.22, r: 14 },
-  // Pull back so each subject fills the frame without a neighbour blocking it.
-  incompatible: { t: [-5.2, 1.0, 2.4], theta: 1.1, phi: 1.22, r: 8 },
-  eyewash: { t: [5.8, 1.4, -2.6], theta: -1.4, phi: 1.2, r: 8 },
+  // Orbit angles chosen so the subject fills the frame and is not clipped by a neighbour.
+  incompatible: { t: [-5.2, 1.0, 2.4], theta: 0.85, phi: 1.22, r: 7 },
+  eyewash: { t: [5.8, 1.4, -2.6], theta: -0.95, phi: 1.2, r: 7 },
   vapour: { t: [1.6, 1.5, -0.2], theta: 0.55, phi: 1.18, r: 7 },
   relief: { t: [2.6, 2.0, -3.8], theta: 0.9, phi: 1.15, r: 8 },
-  segregated: { t: [-5.4, 1.0, -3.2], theta: 0.35, phi: 1.25, r: 7 },
-  clearshower: { t: [6.4, 1.4, 1.8], theta: -2.0, phi: 1.22, r: 7 },
+  segregated: { t: [-5.4, 1.0, -3.2], theta: 0.55, phi: 1.25, r: 7 },
+  clearshower: { t: [6.4, 1.4, 1.8], theta: -1.15, phi: 1.22, r: 7 },
   reactor: { t: [-1.2, 2.0, -1.2], theta: 0.85, phi: 1.12, r: 10 },
   bund: { t: [0.2, 1.5, 4.2], theta: -0.35, phi: 1.2, r: 10 },
-  sds: { t: [7.4, 1.5, 4.2], theta: -2.4, phi: 1.25, r: 6 },
+  sds: { t: [7.4, 1.5, 4.2], theta: -1.35, phi: 1.25, r: 6 },
 };
 
 function buildScene() {
@@ -31,7 +31,7 @@ function buildScene() {
     yellow: std({ color: 0xf2c14e, roughness: .45 }),
     blue: std({ color: 0x3c6fbf, roughness: .4, metalness: .15 }),
     red: std({ color: 0xc4473a, roughness: .42 }),
-    green: std({ color: 0x2f9d6c, roughness: .45 }),
+    green: std({ color: 0x1f9a55, roughness: .4 }),
     violet: std({ color: 0x8b7cff, roughness: .4, metalness: .1 }),
     orange: std({ color: 0xe07a3d, roughness: .45 }),
     glass: std({ color: 0xb7d4ea, roughness: .12, metalness: .05, transparent: true, opacity: .85 }),

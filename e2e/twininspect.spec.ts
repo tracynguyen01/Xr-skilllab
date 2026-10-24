@@ -73,11 +73,10 @@ test('TwinInspect 390px: pointer Finish and finding add/edit/delete', async ({ p
 
   const rooms = page.getByRole('navigation', { name: 'Rooms' })
   await expect(rooms.getByRole('button', { name: /Room:/i })).toBeVisible({ timeout: 15000 })
-  // Compact bar must not block Finish — click by pointer (not keyboard).
+  // Compact bar must not block Finish — click by pointer (not keyboard / not Enter).
   const finish = page.getByRole('button', { name: /Finish.*Report/i })
   await expect(finish).toBeVisible()
-  await finish.click({ trial: true })
-  await finish.click()
+  await finish.click({ force: false, trial: false, timeout: 15000 })
   const report = page.locator('[data-screen-label="Report"]')
   await expect(report.getByText('Fictional property, not a real inspection')).toBeVisible({ timeout: 10000 })
   await expect(report.getByText(/No findings yet/i)).toBeVisible()

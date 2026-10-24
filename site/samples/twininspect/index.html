@@ -56,7 +56,7 @@ h1,h2,h3,h4,p{margin:0}
       <a href="#why" style="padding:8px 14px;border-radius:10px;color:#5E6670;font-weight:600;font-size:15px" style-hover="color:#1A1D21;background:#EDE9E2;text-decoration:none">Why Remote</a>
       <a href="#limits" style="padding:8px 14px;border-radius:10px;color:#5E6670;font-weight:600;font-size:15px" style-hover="color:#1A1D21;background:#EDE9E2;text-decoration:none">Limits</a>
     </div>
-    <button type="button" onClick="{{ openSim }}" style="display:inline-flex;align-items:center;height:44px;padding:0 18px;border-radius:12px;border:0;background:#1F6F5C;color:#fff;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .2s" style-hover="background:#185A4B">Start the Live Demo</button>
+    <button type="button" onClick="{{ openSim }}" style="display:inline-flex;align-items:center;height:44px;padding:0 18px;border-radius:12px;border:0;background:#1F6F5C;color:#fff;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .2s" style-hover="background:#185A4B">Start the demo</button>
   </nav>
 </header>
 
@@ -66,10 +66,10 @@ h1,h2,h3,h4,p{margin:0}
     <div style="position:relative;max-width:1200px;margin:0 auto;padding:72px 20px 56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:48px;align-items:center">
       <div style="display:flex;flex-direction:column;gap:22px">
         <p style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#1F6F5C">Concept · Digital Twin + XR Inspection</p>
-        <h1 id="heroTitle" style="font-size:clamp(38px,5.6vw,66px);font-weight:800;line-height:1.04;letter-spacing:-.03em;text-wrap:pretty">Inspect any home, from anywhere.</h1>
+        <h1 id="heroTitle" style="font-size:clamp(38px,5.6vw,66px);font-weight:800;line-height:1.04;letter-spacing:-.03em;text-wrap:pretty">A concept for inspecting a home remotely.</h1>
         <p style="font-size:18px;color:#5E6670;max-width:560px;text-wrap:pretty">In this concept, walk a precise 3D twin of the property, check thermal and moisture evidence, pin findings in place, and deliver the report before you've finished your coffee.</p>
         <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">
-          <button type="button" onClick="{{ openSim }}" style="display:inline-flex;align-items:center;height:50px;padding:0 24px;border-radius:12px;border:0;background:#1F6F5C;color:#fff;font-size:16px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .2s,transform .2s" style-hover="background:#185A4B" style-active="transform:scale(.98)">Start the Live Demo</button>
+          <button type="button" onClick="{{ openSim }}" style="display:inline-flex;align-items:center;height:50px;padding:0 24px;border-radius:12px;border:0;background:#1F6F5C;color:#fff;font-size:16px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .2s,transform .2s" style-hover="background:#185A4B" style-active="transform:scale(.98)">Start the demo</button>
           <a href="#how" style="display:inline-flex;align-items:center;height:50px;padding:0 22px;border-radius:12px;border:1px solid #E4DFD7;background:#fff;color:#1A1D21;font-size:16px;font-weight:600;white-space:nowrap;transition:border-color .2s" style-hover="border-color:#2F6FED;color:#1A1D21;text-decoration:none">How It Works</a>
         </div>
         <p style="font-size:14px;color:#5E6670">Runs in your browser · Headset optional · Demo property is fictional</p>
@@ -79,7 +79,7 @@ h1,h2,h3,h4,p{margin:0}
         <sc-if value="{{ webglMissing }}" hint-placeholder-val="{{ false }}">
           <div style="position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:#5E6670;font-size:15px">3D preview isn't available on this device. The full inspection works on the floor plan.</div>
         </sc-if>
-        <div aria-hidden="true" style="position:absolute;left:14px;bottom:14px;display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);font-size:12px;font-weight:600;color:#5E6670;pointer-events:none;border:1px solid #E4DFD7"><span style="width:8px;height:8px;border-radius:50%;background:#1F6F5C"></span>Live 3D twin · fictional property</div>
+        <div aria-hidden="true" style="position:absolute;left:14px;bottom:14px;display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);font-size:12px;font-weight:600;color:#5E6670;pointer-events:none;border:1px solid #E4DFD7"><span style="width:8px;height:8px;border-radius:50%;background:#1F6F5C"></span>3D twin · fictional property</div>
       </div>
     </div>
   </section>
@@ -116,7 +116,7 @@ h1,h2,h3,h4,p{margin:0}
           </div>
         </div>
         <h3 style="font-size:20px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px"><span style="color:#1F6F5C;margin-right:8px">02</span>Inspect</h3>
-        <p style="color:#5E6670">A qualified inspector walks the twin from anywhere, with measurement tools, evidence layers and pre-set flags to review.</p>
+        <p style="color:#5E6670">In this concept, an inspector walks a 3D model of the home, with measurement tools, evidence layers and pre-set flags to review.</p>
       </div>
       <div style="background:#fff;border:1px solid #E4DFD7;border-radius:16px;padding:20px;box-shadow:0 1px 2px rgba(26,29,33,.04),0 10px 30px rgba(26,29,33,.06)">
         <div aria-hidden="true" style="height:150px;border-radius:12px;background:#F6F4F0;border:1px solid #E4DFD7;display:grid;place-items:center;margin-bottom:18px;overflow:hidden">
@@ -170,7 +170,7 @@ h1,h2,h3,h4,p{margin:0}
         <div style="background:#fff;border:1px solid #1F6F5C;border-radius:16px;padding:28px;box-shadow:0 20px 50px rgba(31,111,92,.10)">
           <h3 style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:#1F6F5C;font-weight:700;margin-bottom:16px">TwinInspect</h3>
           <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px">
-            <li style="display:flex;gap:12px"><span aria-hidden="true" style="flex:none;width:22px;height:22px;border-radius:50%;background:#1F6F5C;color:#fff;display:grid;place-items:center;font-size:12px">✓</span>Inspect from anywhere</li>
+            <li style="display:flex;gap:12px"><span aria-hidden="true" style="flex:none;width:22px;height:22px;border-radius:50%;background:#1F6F5C;color:#fff;display:grid;place-items:center;font-size:12px">✓</span>Concept: inspect remotely</li>
             <li style="display:flex;gap:12px"><span aria-hidden="true" style="flex:none;width:22px;height:22px;border-radius:50%;background:#1F6F5C;color:#fff;display:grid;place-items:center;font-size:12px">✓</span>Revisit the twin any time</li>
             <li style="display:flex;gap:12px"><span aria-hidden="true" style="flex:none;width:22px;height:22px;border-radius:50%;background:#1F6F5C;color:#fff;display:grid;place-items:center;font-size:12px">✓</span>Every finding pinned with evidence</li>
             <li style="display:flex;gap:12px"><span aria-hidden="true" style="flex:none;width:22px;height:22px;border-radius:50%;background:#1F6F5C;color:#fff;display:grid;place-items:center;font-size:12px">✓</span>Report generated as you work</li>
@@ -184,7 +184,7 @@ h1,h2,h3,h4,p{margin:0}
     <p style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#1F6F5C;margin-bottom:12px">Architecture</p>
     <h2 id="howTitle" style="font-size:clamp(28px,3.6vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:32px">How It Works</h2>
     <div style="overflow-x:auto;padding-bottom:8px;margin-bottom:28px">
-      <svg viewBox="0 0 1200 170" role="img" aria-label="Pipeline: on-site capture, digital twin, inspection workspace, review flags with suggestions only, inspector confirms or dismisses, report" style="display:block;width:100%;min-width:900px;height:auto">
+      <svg viewBox="0 0 1200 170" role="img" aria-label="Pipeline: on-site capture, digital twin, inspection workspace, review layer (future optional AI suggestions), inspector confirms or dismisses, report" style="display:block;width:100%;min-width:900px;height:auto">
         <g fill="#fff" stroke="#E4DFD7" stroke-width="1.5">
           <rect x="1" y="30" width="176" height="108" rx="14"></rect><rect x="206" y="30" width="176" height="108" rx="14"></rect><rect x="411" y="30" width="176" height="108" rx="14"></rect><rect x="616" y="30" width="176" height="108" rx="14" stroke="#2F6FED" stroke-dasharray="6 4"></rect><rect x="821" y="30" width="176" height="108" rx="14" stroke="#1F6F5C"></rect><rect x="1023" y="30" width="176" height="108" rx="14"></rect>
         </g>
@@ -196,14 +196,14 @@ h1,h2,h3,h4,p{margin:0}
           <line x1="997" y1="84" x2="1013" y2="84"></line><polygon points="1013,78 1023,84 1013,90"></polygon>
         </g>
         <g font-family="Manrope, Helvetica, Arial, sans-serif" text-anchor="middle" fill="#1A1D21" font-size="18" font-weight="700">
-          <text x="89" y="74">On-site capture</text><text x="294" y="80">Digital twin</text><text x="499" y="74">Inspection workspace</text><text x="704" y="74">Review flags</text><text x="909" y="74">Inspector decides</text><text x="1111" y="80">Report</text>
+          <text x="89" y="74">On-site capture</text><text x="294" y="80">Digital twin</text><text x="499" y="74">Inspection workspace</text><text x="704" y="74">Review layer</text><text x="909" y="74">Inspector decides</text><text x="1111" y="80">Report</text>
         </g>
         <g font-family="Manrope, Helvetica, Arial, sans-serif" text-anchor="middle" fill="#5E6670" font-size="14">
-          <text x="89" y="98">3D scan · thermal ·</text><text x="89" y="116">moisture readings</text><text x="294" y="104">metres, not pixels</text><text x="499" y="100">3D / 2D / VR</text><text x="704" y="100">suggestions only</text><text x="909" y="100">confirms or dismisses</text><text x="1111" y="104">confirmed findings only</text>
+          <text x="89" y="98">3D scan · thermal ·</text><text x="89" y="116">moisture readings</text><text x="294" y="104">metres, not pixels</text><text x="499" y="100">3D / 2D / VR</text><text x="704" y="100">future: optional AI</text><text x="909" y="100">confirms or dismisses</text><text x="1111" y="104">confirmed findings only</text>
         </g>
       </svg>
     </div>
-    <p style="color:#5E6670;font-size:14px;max-width:760px;margin-bottom:20px;text-wrap:pretty">Concept pipeline. This demo uses a pre-built model, not a live scan.</p>
+    <p style="color:#5E6670;font-size:14px;max-width:760px;margin-bottom:20px;text-wrap:pretty">Concept pipeline. This demo uses a pre-built model, not a live scan. Review layer (future: optional AI suggestions).</p>
     <p style="color:#5E6670;font-size:17px;max-width:760px;text-wrap:pretty">Review flags never write to the report directly. They can only raise a suggestion with evidence attached. Only findings an inspector has confirmed, or found themselves, reach the report, and every dismissal is recorded with a reason.</p>
   </section>
 
@@ -226,7 +226,7 @@ h1,h2,h3,h4,p{margin:0}
 <footer data-print-hide="" style="border-top:1px solid #E4DFD7;background:#FBFAF8">
   <div style="max-width:1200px;margin:0 auto;padding:32px 20px;display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-between;align-items:flex-start">
     <div style="display:flex;align-items:center;gap:10px;font-weight:800"><svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true"><path d="M4 12.5 13 5l9 7.5V22H4z" fill="none" stroke="#1F6F5C" stroke-width="2" stroke-linejoin="round"></path><circle cx="13" cy="15" r="3.2" fill="none" stroke="#2F6FED" stroke-width="2"></circle></svg>TwinInspect</div>
-    <p style="color:#5E6670;font-size:14px;max-width:680px;text-wrap:pretty">TwinInspect is a concept prototype. The demo property, readings and detections are fictional and illustrative. It does not replace a licensed building inspection.</p>
+    <p style="color:#5E6670;font-size:14px;max-width:680px;text-wrap:pretty">TwinInspect is a concept prototype. The demo property, readings and pre-set flags are fictional and illustrative. It does not replace a licensed building inspection.</p>
   </div>
 </footer>
 
@@ -245,7 +245,7 @@ h1,h2,h3,h4,p{margin:0}
           <h2 id="introTitle" data-autofocus="" tabindex="-1" style="font-family:'Source Serif 4',Georgia,serif;font-size:clamp(28px,4vw,38px);font-weight:600;letter-spacing:-.01em;line-height:1.1;margin:8px 0 14px;outline:none">12 Wattle Lane — Pre-purchase review</h2>
           <p style="font-size:17px;color:rgba(255,255,255,.9);text-wrap:pretty">This is a fictional demo home with simulated readings. Walk the twin, review the pre-set flags, look for anything the flags missed, and build your report.</p>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px">
-            <span style="padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-size:13px;font-weight:600;white-space:nowrap">3 bed</span><span style="padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-size:13px;font-weight:600;white-space:nowrap">1 bath</span><span style="padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-size:13px;font-weight:600;white-space:nowrap">single storey</span><span style="padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-size:13px;font-weight:600;white-space:nowrap">captured with phone LiDAR + thermal camera</span>
+            <span style="padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-size:13px;font-weight:600;white-space:nowrap">3 bed</span><span style="padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-size:13px;font-weight:600;white-space:nowrap">1 bath</span><span style="padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-size:13px;font-weight:600;white-space:nowrap">single storey</span><span style="padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);font-size:13px;font-weight:600;white-space:nowrap">Pre-built demo model</span>
           </div>
           <sc-if value="{{ webglMissing }}" hint-placeholder-val="{{ false }}">
             <p role="status" style="margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(217,119,6,.18);border:1px solid rgba(217,119,6,.5);font-size:15px">3D isn't available on this device. You can complete the full inspection on the floor plan.</p>
@@ -314,14 +314,51 @@ h1,h2,h3,h4,p{margin:0}
         </div>
       </sc-if>
 
+      <!-- Wide: room list sits to the right of the tool bar so it never covers tools. -->
+      <sc-if value="{{ roomsWide }}" hint-placeholder-val="{{ true }}">
+        <nav aria-label="Rooms" style="position:absolute;left:84px;top:72px;width:220px;max-height:calc(100% - 280px);display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:14px;background:rgba(26,29,33,.84);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);color:#fff;z-index:10;overflow:auto">
+          <p style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:rgba(255,255,255,.7)">{{ roomNavLabel }}</p>
+          <div style="display:flex;gap:6px">
+            <button type="button" onClick="{{ prevRoom }}" aria-label="Previous room" style="flex:1;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:13px;font-weight:700;cursor:pointer">Previous</button>
+            <button type="button" onClick="{{ nextRoom }}" aria-label="Next room" style="flex:1;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:13px;font-weight:700;cursor:pointer">Next</button>
+          </div>
+          <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px">
+            <sc-for list="{{ roomNav }}" as="rn" hint-placeholder-count="8">
+              <li><button type="button" onClick="{{ rn.select }}" aria-current="{{ rn.current }}" aria-label="{{ rn.aria }}" style="width:100%;min-height:40px;padding:8px 10px;border-radius:10px;border:1px solid {{ rn.border }};background:{{ rn.bg }};color:#fff;font-size:13px;font-weight:600;text-align:left;cursor:pointer">{{ rn.name }}</button></li>
+            </sc-for>
+          </ul>
+          <p style="font-size:11px;color:rgba(255,255,255,.55)">Alt+← / Alt+→ also move between rooms.</p>
+        </nav>
+      </sc-if>
+      <!-- Narrow: left-only compact bar (not full-width) so Finish / Report stay clickable. -->
+      <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+        <nav aria-label="Rooms" style="position:absolute;left:12px;top:120px;z-index:10;display:flex;flex-direction:column;gap:6px;width:min(260px,calc(100% - 96px))">
+          <div style="display:flex;align-items:center;gap:4px;height:44px;padding:4px;border-radius:12px;background:rgba(26,29,33,.9);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);color:#fff">
+            <button type="button" onClick="{{ prevRoom }}" aria-label="Previous room" style="flex:none;width:40px;height:36px;border-radius:8px;border:0;background:transparent;color:#fff;font-size:16px;font-weight:700;cursor:pointer" style-hover="background:rgba(255,255,255,.12)">◀</button>
+            <button type="button" onClick="{{ toggleRoomsList }}" aria-expanded="{{ roomsListExpanded }}" aria-controls="twin-room-list" style="flex:1;min-width:0;height:36px;padding:0 8px;border-radius:8px;border:0;background:transparent;color:#fff;font-size:13px;font-weight:700;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" style-hover="background:rgba(255,255,255,.12)">Room: {{ roomShort }} <span aria-hidden="true" style="opacity:.7">▾</span></button>
+            <button type="button" onClick="{{ nextRoom }}" aria-label="Next room" style="flex:none;width:40px;height:36px;border-radius:8px;border:0;background:transparent;color:#fff;font-size:16px;font-weight:700;cursor:pointer" style-hover="background:rgba(255,255,255,.12)">▶</button>
+          </div>
+          <sc-if value="{{ roomsListOpen }}" hint-placeholder-val="{{ false }}">
+            <ul id="twin-room-list" style="list-style:none;margin:0;padding:8px;max-height:min(42vh,280px);overflow:auto;display:flex;flex-direction:column;gap:4px;border-radius:12px;background:rgba(26,29,33,.94);border:1px solid rgba(255,255,255,.14)">
+              <sc-for list="{{ roomNav }}" as="rn" hint-placeholder-count="8">
+                <li><button type="button" onClick="{{ rn.select }}" aria-current="{{ rn.current }}" aria-label="{{ rn.aria }}" style="width:100%;min-height:40px;padding:8px 10px;border-radius:10px;border:1px solid {{ rn.border }};background:{{ rn.bg }};color:#fff;font-size:13px;font-weight:600;text-align:left;cursor:pointer">{{ rn.name }}</button></li>
+              </sc-for>
+            </ul>
+          </sc-if>
+        </nav>
+      </sc-if>
+
       <sc-if value="{{ view3d }}" hint-placeholder-val="{{ true }}">
         <div aria-label="Floor plan minimap" style="position:absolute;left:12px;bottom:12px;width:200px;padding:8px;border-radius:14px;background:rgba(26,29,33,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);z-index:9">
-          <svg viewBox="0 0 660 560" style="display:block;width:100%;height:auto" aria-hidden="true">
+          <!-- Rooms use HTML boxes so SVG never shows raw {{ r.x }} tokens. -->
+          <div style="position:relative;aspect-ratio:660/560;width:100%">
             <sc-for list="{{ planRooms }}" as="r" hint-placeholder-count="9">
-              <rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" fill="{{ r.miniFill }}" stroke="rgba(255,255,255,.5)" stroke-width="3"></rect>
+              <div aria-hidden="true" style="position:absolute;left:{{ r.left }};top:{{ r.top }};width:{{ r.widthPct }};height:{{ r.heightPct }};background:{{ r.miniFill }};border:1px solid rgba(255,255,255,.5);box-sizing:border-box"></div>
             </sc-for>
-            <g ref="{{ miniPosRef }}"><path d="M0 0 L-70 -110 A130 130 0 0 1 70 -110 Z" fill="rgba(143,211,191,.35)"></path><circle r="12" fill="#8FD3BF" stroke="#1A1D21" stroke-width="3"></circle></g>
-          </svg>
+            <svg viewBox="0 0 660 560" style="position:absolute;inset:0;width:100%;height:100%;display:block" aria-hidden="true">
+              <g ref="{{ miniPosRef }}"><path d="M0 0 L-70 -110 A130 130 0 0 1 70 -110 Z" fill="rgba(143,211,191,.35)"></path><circle r="12" fill="#8FD3BF" stroke="#1A1D21" stroke-width="3"></circle></g>
+            </svg>
+          </div>
         </div>
         <div style="position:absolute;left:0;right:0;bottom:16px;display:flex;justify-content:center;padding:0 230px 0 230px;pointer-events:none;z-index:8">
           <p style="padding:9px 16px;border-radius:999px;background:rgba(26,29,33,.78);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);font-size:13px;font-weight:600;color:#fff;text-align:center;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ hintLine }}</p>
@@ -352,15 +389,21 @@ h1,h2,h3,h4,p{margin:0}
                 <svg viewBox="0 0 660 560" role="img" aria-label="Floor plan of 12 Wattle Lane with room labels and dimensions" style="position:absolute;inset:0;width:100%;height:100%">
                   <rect x="0" y="0" width="660" height="560" fill="#F6F4F0"></rect>
                   <rect x="520" y="0" width="52" height="520" fill="#E9E5DD"></rect><rect x="392" y="400" width="48" height="160" fill="#E9E5DD"></rect>
-                  <sc-for list="{{ planRooms }}" as="r" hint-placeholder-count="9">
-                    <g><rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" fill="{{ r.fill }}" stroke="#1A1D21" stroke-width="4"></rect><text x="{{ r.cx }}" y="{{ r.cy }}" text-anchor="middle" font-family="Manrope, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1A1D21">{{ r.name }}</text><text x="{{ r.cx }}" y="{{ r.cy2 }}" text-anchor="middle" font-family="Manrope, Helvetica, Arial, sans-serif" font-size="12" fill="#5E6670">{{ r.dims }}</text></g>
-                  </sc-for>
                   <g stroke="#fff" stroke-width="6"><line x1="384" y1="268" x2="384" y2="348"></line><line x1="424" y1="188" x2="424" y2="220"></line><line x1="424" y1="308" x2="424" y2="340"></line><line x1="400" y1="156" x2="432" y2="156"></line><line x1="176" y1="76" x2="176" y2="108"></line><line x1="176" y1="252" x2="176" y2="284"></line><line x1="400" y1="400" x2="432" y2="400"></line><line x1="520" y1="308" x2="520" y2="340"></line></g>
                   <g stroke="#2F6FED" stroke-width="2" fill="none" opacity=".6"><line x1="456" y1="40" x2="504" y2="40"></line><line x1="200" y1="40" x2="280" y2="40"></line><line x1="72" y1="40" x2="144" y2="40"></line><line x1="40" y1="108" x2="40" y2="172"></line><line x1="40" y1="300" x2="40" y2="360"></line><line x1="520" y1="60" x2="520" y2="124"></line><line x1="520" y1="180" x2="520" y2="212"></line><line x1="80" y1="400" x2="136" y2="400"></line><line x1="256" y1="400" x2="344" y2="400"></line></g>
                   <text x="540" y="300" font-family="Manrope, Helvetica, Arial, sans-serif" font-size="12" fill="#5E6670" transform="rotate(90 540 300)">side path</text>
                   <text x="416" y="500" font-family="Manrope, Helvetica, Arial, sans-serif" font-size="12" fill="#5E6670" transform="rotate(90 416 500)">front path</text>
                   <text x="330" y="548" text-anchor="middle" font-family="Manrope, Helvetica, Arial, sans-serif" font-size="12" fill="#5E6670">Overall 12.0 × 9.0 m · ceilings 2.4 m · north at top</text>
                 </svg>
+                <!-- Room fills/labels as HTML (avoids raw {{ r.x }} in SVG attrs). -->
+                <div style="position:absolute;inset:0;pointer-events:none">
+                  <sc-for list="{{ planRooms }}" as="r" hint-placeholder-count="9">
+                    <div style="position:absolute;left:{{ r.left }};top:{{ r.top }};width:{{ r.widthPct }};height:{{ r.heightPct }};background:{{ r.fill }};border:2px solid #1A1D21;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px;text-align:center">
+                      <span style="font-family:Manrope,Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;color:#1A1D21;line-height:1.2">{{ r.name }}</span>
+                      <span style="font-family:Manrope,Helvetica,Arial,sans-serif;font-size:10px;color:#5E6670;line-height:1.2">{{ r.dims }}</span>
+                    </div>
+                  </sc-for>
+                </div>
                 <div style="position:absolute;inset:0">
                   <sc-for list="{{ planMarkers }}" as="mk" hint-placeholder-count="12">
                     <button type="button" onClick="{{ mk.open }}" aria-label="{{ mk.aria }}" title="{{ mk.title }}" style="position:absolute;left:{{ mk.left }};top:{{ mk.top }};transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;padding:0;z-index:{{ mk.z }}">
@@ -383,7 +426,7 @@ h1,h2,h3,h4,p{margin:0}
                 </div>
               </sc-if>
             </div>
-            <p style="font-size:13px;color:#5E6670;margin-top:10px">Markers: <strong>◎</strong> capture points · <strong style="color:#2F6FED">!</strong> review flags · numbered pins are your findings · % are moisture readings (Layers → Moisture).</p>
+            <p style="font-size:13px;color:#5E6670;margin-top:10px">Markers: <strong>◎</strong> capture points · <strong style="color:#2F6FED">!</strong> pre-flagged areas (scripted, illustrative) · numbered pins are your findings · % are moisture readings (Layers → Moisture).</p>
           </div>
         </div>
       </sc-if>
@@ -397,12 +440,13 @@ h1,h2,h3,h4,p{margin:0}
           </div>
           <div role="tabpanel" style="flex:1;overflow:auto;padding:12px">
             <sc-if value="{{ tabIsFlags }}" hint-placeholder-val="{{ true }}">
-              <p style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#A9C7FF;padding:8px 10px;border-radius:10px;background:rgba(47,111,237,.14);border:1px solid rgba(47,111,237,.35);margin-bottom:12px"><span aria-hidden="true" style="width:8px;height:8px;border-radius:50%;background:#2F6FED"></span>Simulated detection for this demo. Flags suggest; you decide.</p>
+              <p style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#A9C7FF;padding:8px 10px;border-radius:10px;background:rgba(47,111,237,.14);border:1px solid rgba(47,111,237,.35);margin-bottom:12px"><span aria-hidden="true" style="width:8px;height:8px;border-radius:50%;background:#2F6FED"></span>Pre-flagged area (scripted, illustrative). Flags suggest; you decide.</p>
               <div style="display:flex;flex-direction:column;gap:10px">
                 <sc-for list="{{ flagCards }}" as="fc" hint-placeholder-count="5">
                   <div style="padding:12px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid {{ fc.border }}">
                     <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><p style="font-weight:700">{{ fc.title }}</p><span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:{{ fc.statusBg }};color:{{ fc.statusFg }};white-space:nowrap">{{ fc.status }}</span></div>
-                    <p style="font-size:13px;color:rgba(255,255,255,.75);margin-top:4px">{{ fc.where }} · suggested: {{ fc.severity }}</p>
+                    <p style="font-size:11px;font-weight:700;color:#A9C7FF;margin-top:6px">{{ fc.badge }}</p>
+                    <p style="font-size:13px;color:rgba(255,255,255,.75);margin-top:4px">{{ fc.where }} · suggested severity: {{ fc.severity }}</p>
                     <p style="font-size:13px;color:rgba(255,255,255,.75);margin-top:4px">{{ fc.evidence }}</p>
                     <sc-if value="{{ fc.isOpen }}" hint-placeholder-val="{{ true }}">
                       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
@@ -417,17 +461,23 @@ h1,h2,h3,h4,p{margin:0}
               </div>
             </sc-if>
             <sc-if value="{{ tabIsFindings }}" hint-placeholder-val="{{ false }}">
-              <sc-if value="{{ noFindings }}" hint-placeholder-val="{{ true }}"><p style="padding:14px;border-radius:12px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);font-size:14px">No findings yet. Review the flags or pin anything you notice.</p></sc-if>
+              <sc-if value="{{ noFindings }}" hint-placeholder-val="{{ true }}"><h3 data-no-findings="" tabindex="-1" style="margin:0;padding:14px;border-radius:12px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.8);font-size:14px;font-weight:600;outline:none">No findings yet. Review the flags or pin anything you notice.</h3></sc-if>
               <div style="display:flex;flex-direction:column;gap:14px">
                 <sc-for list="{{ findingGroups }}" as="fg" hint-placeholder-count="2">
                   <div>
                     <p style="display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:{{ fg.color }};margin-bottom:6px"><span aria-hidden="true">{{ fg.icon }}</span>{{ fg.label }} <span style="opacity:.7">({{ fg.count }})</span></p>
                     <div style="display:flex;flex-direction:column;gap:6px">
                       <sc-for list="{{ fg.items }}" as="fi" hint-placeholder-count="1">
-                        <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:10px;background:rgba(255,255,255,.06)">
-                          <span aria-hidden="true" style="flex:none;width:22px;height:22px;border-radius:50%;background:{{ fi.color }};color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center">{{ fi.n }}</span>
-                          <div style="flex:1;min-width:0"><p style="font-weight:700;font-size:14px">{{ fi.title }}</p><p style="font-size:12px;color:rgba(255,255,255,.7)">{{ fi.where }} · {{ fi.source }}</p></div>
-                          <button type="button" onClick="{{ fi.go }}" aria-label="Go to {{ fi.title }}" style="flex:none;height:36px;padding:0 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:12px;font-weight:700;cursor:pointer">Go</button>
+                        <div data-finding-id="{{ fi.id }}" tabindex="-1" style="display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:10px;background:rgba(255,255,255,.06);outline:none">
+                          <div style="display:flex;gap:10px;align-items:flex-start">
+                            <span aria-hidden="true" style="flex:none;width:22px;height:22px;border-radius:50%;background:{{ fi.color }};color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center">{{ fi.n }}</span>
+                            <div style="flex:1;min-width:0"><p style="font-weight:700;font-size:14px">{{ fi.title }}</p><p style="font-size:12px;color:rgba(255,255,255,.7)">{{ fi.where }} · Severity: {{ fi.severityLabel }} · {{ fi.source }}</p></div>
+                          </div>
+                          <div style="display:flex;flex-wrap:wrap;gap:6px">
+                            <button type="button" onClick="{{ fi.go }}" aria-label="Go to {{ fi.title }}" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:12px;font-weight:700;cursor:pointer">Go</button>
+                            <button type="button" onClick="{{ fi.edit }}" aria-label="Edit {{ fi.title }}" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:12px;font-weight:700;cursor:pointer">Edit</button>
+                            <button type="button" onClick="{{ fi.remove }}" aria-label="Delete {{ fi.title }}" style="height:36px;padding:0 10px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:transparent;color:#fff;font-size:12px;font-weight:700;cursor:pointer">Delete</button>
+                          </div>
                         </div>
                       </sc-for>
                     </div>
@@ -453,21 +503,21 @@ h1,h2,h3,h4,p{margin:0}
               <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#5E6670">Category<select value="{{ formCategory }}" onChange="{{ setCategory }}" style="height:44px;padding:0 10px;border-radius:10px;border:1px solid #E4DFD7;background:#FBFAF8;color:#1A1D21;font-size:15px"><option>Water/Moisture</option><option>Structural</option><option>Electrical</option><option>Safety</option><option>Drainage</option><option>Other</option></select></label>
               <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#5E6670">Attach measurement<select value="{{ formMeasure }}" onChange="{{ setMeasure }}" style="height:44px;padding:0 10px;border-radius:10px;border:1px solid #E4DFD7;background:#FBFAF8;color:#1A1D21;font-size:15px"><option value="">None</option><sc-for list="{{ measureOptions }}" as="mo" hint-placeholder-count="0"><option value="{{ mo.id }}">{{ mo.label }}</option></sc-for></select></label>
             </div>
-            <div role="radiogroup" aria-label="Severity" style="display:flex;flex-direction:column;gap:6px"><p style="font-size:13px;font-weight:700;color:#5E6670">Severity</p>
+            <div role="radiogroup" aria-label="Severity" style="display:flex;flex-direction:column;gap:6px"><p style="font-size:13px;font-weight:700;color:#5E6670">Severity (text label)</p>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,120px),1fr));gap:8px">
-                <sc-for list="{{ severityOptions }}" as="so" hint-placeholder-count="4">
-                  <button type="button" role="radio" aria-checked="{{ so.checked }}" onClick="{{ so.select }}" style="display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 10px;border-radius:10px;border:2px solid {{ so.border }};background:{{ so.bg }};color:#1A1D21;font-size:13px;font-weight:700;cursor:pointer;text-align:left"><span aria-hidden="true" style="flex:none;width:18px;height:18px;border-radius:50%;background:{{ so.color }};color:#fff;font-size:10px;display:grid;place-items:center">{{ so.icon }}</span>{{ so.label }}</button>
+                <sc-for list="{{ severityOptions }}" as="so" hint-placeholder-count="3">
+                  <button type="button" role="radio" aria-checked="{{ so.checked }}" onClick="{{ so.select }}" style="display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 10px;border-radius:10px;border:2px solid {{ so.border }};background:{{ so.bg }};color:#1A1D21;font-size:14px;font-weight:700;cursor:pointer;text-align:left"><span aria-hidden="true" style="flex:none;width:18px;height:18px;border-radius:50%;background:{{ so.color }};color:#fff;font-size:10px;display:grid;place-items:center">{{ so.icon }}</span><span>{{ so.label }}</span></button>
                 </sc-for>
               </div>
             </div>
-            <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#5E6670">Notes<textarea rows="{{ 3 }}" value="{{ formNotes }}" onChange="{{ setNotes }}" style="padding:10px 12px;border-radius:10px;border:1px solid #E4DFD7;background:#FBFAF8;color:#1A1D21;font-size:15px;line-height:1.5;resize:vertical;font-weight:500"></textarea></label>
-            <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#5E6670">Recommended action<textarea rows="{{ 2 }}" value="{{ formAction }}" onChange="{{ setAction }}" style="padding:10px 12px;border-radius:10px;border:1px solid #E4DFD7;background:#FBFAF8;color:#1A1D21;font-size:15px;line-height:1.5;resize:vertical;font-weight:500"></textarea></label>
-            <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"><span style="font-size:13px;font-weight:700;color:#5E6670;margin-right:4px">Evidence attached:</span>
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#5E6670">Evidence note<textarea rows="{{ 3 }}" value="{{ formNotes }}" onChange="{{ setNotes }}" placeholder="Short note about what you saw" style="padding:10px 12px;border-radius:10px;border:1px solid #E4DFD7;background:#FBFAF8;color:#1A1D21;font-size:15px;line-height:1.5;resize:vertical;font-weight:500"></textarea></label>
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:#5E6670">Suggested follow-up<textarea rows="{{ 2 }}" value="{{ formAction }}" onChange="{{ setAction }}" placeholder="Optional next step (illustrative only)" style="padding:10px 12px;border-radius:10px;border:1px solid #E4DFD7;background:#FBFAF8;color:#1A1D21;font-size:15px;line-height:1.5;resize:vertical;font-weight:500"></textarea></label>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"><span style="font-size:13px;font-weight:700;color:#5E6670;margin-right:4px">Attached cues:</span>
               <sc-for list="{{ formEvidence }}" as="ev" hint-placeholder-count="1"><span style="font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:#F6F4F0;border:1px solid #E4DFD7;white-space:nowrap">{{ ev }}</span></sc-for>
             </div>
             <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;padding-top:6px">
               <button type="button" onClick="{{ closeForm }}" style="height:46px;padding:0 18px;border-radius:12px;border:1px solid #E4DFD7;background:#fff;color:#1A1D21;font-size:15px;font-weight:600;cursor:pointer" style-hover="border-color:#2F6FED">Cancel</button>
-              <button type="button" onClick="{{ saveForm }}" disabled="{{ saveDisabled }}" style="height:46px;padding:0 20px;border-radius:12px;border:0;background:#1F6F5C;color:#fff;font-size:15px;font-weight:700;cursor:pointer;opacity:{{ saveOpacity }}" style-hover="background:#185A4B">Save finding</button>
+              <button type="button" onClick="{{ saveForm }}" disabled="{{ saveDisabled }}" style="height:46px;padding:0 20px;border-radius:12px;border:0;background:#1F6F5C;color:#fff;font-size:15px;font-weight:700;cursor:pointer;opacity:{{ saveOpacity }}" style-hover="background:#185A4B">{{ saveLabel }}</button>
             </div>
           </div>
         </div>
@@ -511,7 +561,7 @@ h1,h2,h3,h4,p{margin:0}
     <sc-if value="{{ phaseReport }}" hint-placeholder-val="{{ false }}">
       <div data-screen-label="Report" style="position:absolute;inset:0;overflow:auto;background:#E9E5DD;z-index:40;color:#1A1D21">
         <div data-print-hide="" style="position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;padding:12px 20px;background:rgba(233,229,221,.9);backdrop-filter:blur(12px);border-bottom:1px solid #D9D3C8">
-          <p style="font-weight:700;font-size:14px;color:#5E6670">Inspection report · generated from this session</p>
+          <p style="font-weight:700;font-size:14px;color:#5E6670">Fictional report · from this demo session</p>
           <div style="display:flex;flex-wrap:wrap;gap:8px">
             <button type="button" onClick="{{ printReport }}" style="height:44px;padding:0 16px;border-radius:12px;border:0;background:#1F6F5C;color:#fff;font-size:14px;font-weight:700;cursor:pointer" style-hover="background:#185A4B">Download PDF</button>
             <button type="button" onClick="{{ copyLink }}" style="height:44px;padding:0 16px;border-radius:12px;border:1px solid #D9D3C8;background:#fff;font-size:14px;font-weight:700;cursor:pointer" style-hover="border-color:#2F6FED">Copy share link</button>
@@ -521,11 +571,12 @@ h1,h2,h3,h4,p{margin:0}
         </div>
         <article data-print-page="" style="max-width:860px;margin:28px auto 60px;padding:0 20px">
           <div style="background:#fff;border:1px solid #E4DFD7;border-radius:6px;box-shadow:0 20px 60px rgba(26,29,33,.12);padding:clamp(28px,5vw,56px);display:flex;flex-direction:column;gap:40px">
+            <p role="note" style="margin:0;padding:12px 14px;border-radius:10px;background:#F6F4F0;border:1px solid #E4DFD7;font-size:14px;font-weight:700;color:#1A1D21">Fictional property, not a real inspection</p>
             <header style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:28px;align-items:start;border-bottom:2px solid #1A1D21;padding-bottom:32px">
               <div style="display:flex;flex-direction:column;gap:12px">
-                <p style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#1F6F5C">Pre-purchase inspection report</p>
+                <p style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#1F6F5C">Demo inspection report</p>
                 <h2 data-autofocus="" tabindex="-1" style="font-family:'Source Serif 4',Georgia,serif;font-size:clamp(32px,5vw,46px);font-weight:600;line-height:1.08;letter-spacing:-.01em;outline:none">12 Wattle Lane</h2>
-                <dl style="display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0;font-size:14px"><dt style="color:#5E6670">Inspector</dt><dd style="margin:0;font-weight:600">Demo Inspector</dd><dt style="color:#5E6670">Date</dt><dd style="margin:0;font-weight:600">{{ reportDate }}</dd><dt style="color:#5E6670">Capture</dt><dd style="margin:0;font-weight:600">Phone LiDAR + thermal camera, on site</dd><dt style="color:#5E6670">Mode</dt><dd style="margin:0;font-weight:600">Remote, via digital twin</dd></dl>
+                <dl style="display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0;font-size:14px"><dt style="color:#5E6670">Inspector</dt><dd style="margin:0;font-weight:600">Demo Inspector</dd><dt style="color:#5E6670">Date</dt><dd style="margin:0;font-weight:600">{{ reportDate }}</dd><dt style="color:#5E6670">Capture</dt><dd style="margin:0;font-weight:600">Pre-built demo model (not a live scan)</dd><dt style="color:#5E6670">Mode</dt><dd style="margin:0;font-weight:600">Demo walkthrough (fictional property)</dd></dl>
                 <p style="display:inline-flex;align-self:flex-start;padding:8px 12px;border:2px solid #C2410C;color:#C2410C;border-radius:6px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transform:rotate(-2deg)">Concept prototype — not a licensed inspection</p>
               </div>
               <div style="aspect-ratio:4/3;border-radius:8px;overflow:hidden;border:1px solid #E4DFD7;background:#E8EEF2;display:grid;place-items:center">
@@ -545,7 +596,7 @@ h1,h2,h3,h4,p{margin:0}
             </section>
 
             <section aria-labelledby="hitlTitle" style="padding:24px;border-radius:12px;background:#F6F4F0;border:1px solid #E4DFD7;display:flex;flex-direction:column;gap:14px">
-              <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><h3 id="hitlTitle" style="font-family:'Source Serif 4',Georgia,serif;font-size:26px;font-weight:600">Human in the loop</h3><p style="font-size:13px;color:#5E6670">Simulated detection for this demo. Flags suggest; the inspector decides.</p></div>
+              <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline"><h3 id="hitlTitle" style="font-family:'Source Serif 4',Georgia,serif;font-size:26px;font-weight:600">Human in the loop</h3><p style="font-size:13px;color:#5E6670">Pre-flagged area (scripted, illustrative). Flags suggest; the inspector decides.</p></div>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:10px;font-variant-numeric:tabular-nums">
                 <div style="padding:14px;border-radius:10px;background:#fff;border:1px solid #E4DFD7"><p style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5E6670;font-weight:700">Review flags</p><p style="font-size:28px;font-weight:800">{{ aiTotal }}</p></div>
                 <div style="padding:14px;border-radius:10px;background:#fff;border:1px solid #E4DFD7"><p style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5E6670;font-weight:700">Confirmed</p><p style="font-size:28px;font-weight:800;color:#1F6F5C">{{ aiConfirmed }}</p></div>
@@ -560,7 +611,7 @@ h1,h2,h3,h4,p{margin:0}
 
             <section aria-labelledby="findTitle" style="display:flex;flex-direction:column;gap:16px">
               <h3 id="findTitle" style="font-family:'Source Serif 4',Georgia,serif;font-size:26px;font-weight:600">Findings</h3>
-              <sc-if value="{{ noFindings }}" hint-placeholder-val="{{ false }}"><p style="padding:16px;border-radius:10px;background:#F6F4F0;border:1px solid #E4DFD7;color:#5E6670">No findings were recorded in this session. Coverage and limits are reported below.</p></sc-if>
+              <sc-if value="{{ noFindings }}" hint-placeholder-val="{{ false }}"><p style="padding:16px;border-radius:10px;background:#F6F4F0;border:1px solid #E4DFD7;color:#5E6670">No findings yet. Record a finding during the walkthrough to see it listed here.</p></sc-if>
               <sc-if value="{{ hasLinked }}" hint-placeholder-val="{{ false }}"><p style="padding:12px 14px;border-radius:10px;background:rgba(47,111,237,.08);border:1px solid rgba(47,111,237,.3);font-size:14px"><strong>Linked findings:</strong> {{ linkedLine }}</p></sc-if>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:20px;align-items:start">
                 <div style="display:flex;flex-direction:column;gap:16px">
@@ -573,10 +624,11 @@ h1,h2,h3,h4,p{margin:0}
                           <h4 style="font-size:18px;font-weight:800;letter-spacing:-.01em"><span style="color:#5E6670;margin-right:6px">{{ rc.n }}.</span>{{ rc.title }}</h4>
                           <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:{{ rc.color }};color:#fff;font-size:12px;font-weight:800;white-space:nowrap"><span aria-hidden="true">{{ rc.icon }}</span>{{ rc.severity }}</span>
                         </div>
-                        <p style="font-size:14px;color:#5E6670">{{ rc.where }} · {{ rc.category }}</p>
+                        <p style="font-size:14px;color:#5E6670"><strong>Location:</strong> {{ rc.where }} · {{ rc.category }}</p>
+                        <p style="font-size:14px"><strong>Severity:</strong> {{ rc.severity }}</p>
                         <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ rc.evidence }}" as="e" hint-placeholder-count="1"><span style="font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:#F6F4F0;border:1px solid #E4DFD7;white-space:nowrap">{{ e }}</span></sc-for></div>
-                        <p style="font-size:15px">{{ rc.notes }}</p>
-                        <p style="font-size:15px"><strong>Recommended action:</strong> {{ rc.action }}</p>
+                        <p style="font-size:15px"><strong>Evidence note:</strong> {{ rc.notes }}</p>
+                        <p style="font-size:15px"><strong>Suggested follow-up:</strong> {{ rc.action }}</p>
                         <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding-top:8px;border-top:1px solid #E4DFD7">
                           <p style="font-size:13px;color:#5E6670"><strong style="color:{{ rc.sourceColor }}">{{ rc.source }}</strong></p>
                           <sc-if value="{{ canView3d }}" hint-placeholder-val="{{ true }}"><button data-print-hide="" type="button" onClick="{{ rc.view }}" aria-pressed="{{ rc.pressed }}" style="height:36px;padding:0 12px;border-radius:8px;border:1px solid #E4DFD7;background:#fff;font-size:13px;font-weight:700;cursor:pointer;color:#1F6F5C" style-hover="border-color:#1F6F5C">{{ rc.viewLabel }}</button></sc-if>
@@ -603,15 +655,16 @@ h1,h2,h3,h4,p{margin:0}
                 <sc-if value="{{ hasUnvisited }}" hint-placeholder-val="{{ false }}"><div><p style="font-size:13px;font-weight:700;margin-bottom:6px">Not reviewed in this session</p><ul style="margin:0;padding-left:18px;font-size:14px;color:#5E6670"><sc-for list="{{ unvisitedRooms }}" as="u" hint-placeholder-count="1"><li>{{ u }}</li></sc-for></ul></div></sc-if>
                 <div style="display:flex;gap:14px;font-size:12px;color:#5E6670"><span style="display:inline-flex;align-items:center;gap:6px"><span aria-hidden="true" style="width:14px;height:14px;background:#CFE6DC;border:1px solid #1A1D21"></span>Reviewed</span><span style="display:inline-flex;align-items:center;gap:6px"><span aria-hidden="true" style="width:14px;height:14px;background:repeating-linear-gradient(45deg,#fff 0 3px,#B9B2A6 3px 5px);border:1px solid #1A1D21"></span>Not reviewed</span></div>
               </div>
-              <svg viewBox="0 0 660 560" role="img" aria-label="Floor plan showing reviewed and unreviewed rooms" style="display:block;width:100%;height:auto;border:1px solid #E4DFD7;border-radius:8px;background:#FBFAF8">
-                <defs><pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#fff"></rect><rect width="3" height="8" fill="#B9B2A6"></rect></pattern></defs>
+              <div role="img" aria-label="Floor plan showing reviewed and unreviewed rooms" style="position:relative;aspect-ratio:660/560;width:100%;border:1px solid #E4DFD7;border-radius:8px;background:#FBFAF8;overflow:hidden">
                 <sc-for list="{{ planRooms }}" as="r" hint-placeholder-count="9">
-                  <g><rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" fill="{{ r.reportFill }}" stroke="#1A1D21" stroke-width="4"></rect><text x="{{ r.cx }}" y="{{ r.cy }}" text-anchor="middle" font-family="Manrope, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1A1D21">{{ r.name }}</text></g>
+                  <div style="position:absolute;left:{{ r.left }};top:{{ r.top }};width:{{ r.widthPct }};height:{{ r.heightPct }};background:{{ r.reportFill }};border:2px solid #1A1D21;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:2px;text-align:center">
+                    <span style="font-family:Manrope,Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;color:#1A1D21">{{ r.name }}</span>
+                  </div>
                 </sc-for>
                 <sc-for list="{{ reportPins }}" as="rp" hint-placeholder-count="1">
-                  <g><circle cx="{{ rp.x }}" cy="{{ rp.y }}" r="13" fill="{{ rp.color }}" stroke="#fff" stroke-width="3"></circle><text x="{{ rp.x }}" y="{{ rp.ty }}" text-anchor="middle" font-family="Manrope, Helvetica, Arial, sans-serif" font-size="12" font-weight="800" fill="#fff">{{ rp.n }}</text></g>
+                  <span aria-hidden="true" style="position:absolute;left:{{ rp.left }};top:{{ rp.top }};transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:{{ rp.color }};border:2px solid #fff;color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center">{{ rp.n }}</span>
                 </sc-for>
-              </svg>
+              </div>
             </section>
 
             <section aria-labelledby="limTitle" style="display:flex;flex-direction:column;gap:12px;break-inside:avoid">
@@ -622,7 +675,7 @@ h1,h2,h3,h4,p{margin:0}
                 <li><strong>Thermal coverage:</strong> thermal capture exists for the hallway, living, kitchen, bathroom and laundry only.</li>
                 <li><strong>Standing:</strong> this is a concept prototype. It does not replace a licensed building inspection where one is required.</li>
               </ul>
-              <p style="font-size:13px;color:#5E6670;padding-top:12px;border-top:1px solid #E4DFD7">TwinInspect is a concept prototype. The demo property, readings and detections are fictional and illustrative. It does not replace a licensed building inspection.</p>
+              <p style="font-size:13px;color:#5E6670;padding-top:12px;border-top:1px solid #E4DFD7">TwinInspect is a concept prototype. The demo property, readings and pre-set flags are fictional and illustrative. It does not replace a licensed building inspection.</p>
             </section>
           </div>
         </article>
@@ -632,17 +685,30 @@ h1,h2,h3,h4,p{margin:0}
 </sc-if>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{}">
+// Severity is text-first (Low / Medium / High) — colour is secondary.
 const SEV = [
-  { id: 'Safety hazard', color: '#C2410C', icon: '!' }, { id: 'Major', color: '#D97706', icon: '▲' }, { id: 'Moderate', color: '#CA8A04', icon: '◆' }, { id: 'Minor/Monitor', color: '#4B7BA8', icon: '●' },
+  { id: 'High', color: '#C2410C', icon: '!' },
+  { id: 'Medium', color: '#D97706', icon: '◆' },
+  { id: 'Low', color: '#4B7BA8', icon: '●' },
 ];
-const sevMeta = id => SEV.find(s => s.id === id) || SEV[2];
+const sevMeta = id => SEV.find(s => s.id === id) || SEV[1];
+// Map older plant copy onto the three labels used in the form and report.
+const mapSeverity = s => {
+  if (s === 'High' || s === 'Medium' || s === 'Low') return s;
+  if (s === 'Safety hazard' || s === 'Major') return 'High';
+  if (s === 'Minor/Monitor') return 'Low';
+  return 'Medium';
+};
 const fmtTime = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
 const PX = (x, z) => [(x + 7) * 40, (z + 5.5) * 40];
 const PCT = (x, z) => [((x + 7) / 16.5 * 100).toFixed(2) + '%', ((z + 5.5) / 14 * 100).toFixed(2) + '%'];
+const boxPct = (x, y, w, h) => ({ left: (x / 660 * 100).toFixed(2) + '%', top: (y / 560 * 100).toFixed(2) + '%', widthPct: (w / 660 * 100).toFixed(2) + '%', heightPct: (h / 560 * 100).toFixed(2) + '%' });
+const HATCH = 'repeating-linear-gradient(45deg,#fff 0 3px,#B9B2A6 3px 5px)';
+const STORE_KEY = 'xr-twininspect-findings';
 const ROOM_FALLBACK = [{ id: 'hall', name: 'Entry hallway', x1: 2.8, z1: -1.6, x2: 4.0, z2: 4.5 }, { id: 'living', name: 'Living', x1: -2.6, z1: -1.0, x2: 2.8, z2: 4.5 }, { id: 'kitchen', name: 'Kitchen', x1: -2.6, z1: -4.5, x2: 2.8, z2: -1.0 }, { id: 'bath', name: 'Bathroom', x1: 4.0, z1: -1.6, x2: 6, z2: 0.8 }, { id: 'bed1', name: 'Bedroom 1', x1: -6, z1: -4.5, x2: -2.6, z2: 0 }, { id: 'bed2', name: 'Bedroom 2', x1: 2.8, z1: -4.5, x2: 6, z2: -1.6 }, { id: 'bed3', name: 'Bedroom 3', x1: -6, z1: 0, x2: -2.6, z2: 4.5 }, { id: 'laundry', name: 'Laundry', x1: 4.0, z1: 0.8, x2: 6, z2: 4.5 }, { id: 'exterior', name: 'Exterior', x1: 6, z1: -4.5, x2: 8.5, z2: 8 }];
 
 class Component extends DCLogic {
-  state = { simOpen: false, phase: 'intro', view: '3d', tool: 'navigate', layers: { thermal: false, moisture: false, capture: true }, layersOpen: false, visited: [], point: null, findings: [], flags: {}, measures: [], draft: null, form: null, decoy: null, dismiss: null, tab: 'flags', startedAt: 0, finishedAt: 0, now: 0, toast: '', xr: false, pano: null, reportFocus: null, narrow: false, reduced: false, webgl: true, dollThumb: null, panelOpen: false, dataReady: false };
+  state = { simOpen: false, phase: 'intro', view: '3d', tool: 'navigate', layers: { thermal: false, moisture: false, capture: true }, layersOpen: false, visited: [], point: null, roomId: 'hall', findings: [], flags: {}, measures: [], draft: null, form: null, decoy: null, dismiss: null, tab: 'flags', startedAt: 0, finishedAt: 0, now: 0, toast: '', xr: false, pano: null, reportFocus: null, narrow: false, reduced: false, webgl: true, dollThumb: null, panelOpen: false, roomsListOpen: false, dataReady: false };
   heroRef = React.createRef(); pageStageRef = React.createRef(); fsStageRef = React.createRef(); miniRef = React.createRef(); formRef = React.createRef(); introRef = React.createRef(); decoyRef = React.createRef(); dismissRef = React.createRef(); hoverRef = React.createRef(); planRef = React.createRef(); miniPosRef = React.createRef();
   seq = 0;
 
@@ -653,21 +719,25 @@ class Component extends DCLogic {
     this.mqN = matchMedia('(max-width: 900px)'); this.mqR = matchMedia('(prefers-reduced-motion: reduce)');
     const sync = () => { this.setState({ narrow: this.mqN.matches, reduced: this.mqR.matches }); if (this.simView) { this.simView.setReduced(this.mqR.matches); this.heroView.setReduced(this.mqR.matches); } };
     this.mqN.addEventListener('change', sync); this.mqR.addEventListener('change', sync);
-    this.setState({ narrow: this.mqN.matches, reduced: this.mqR.matches, view: this.mqN.matches ? '2d' : '3d' });
+    // Restore findings from the last demo session in this browser (optional memory only).
+    let stored = [];
+    try { stored = JSON.parse(sessionStorage.getItem(STORE_KEY) || '[]'); if (!Array.isArray(stored)) stored = []; } catch (_) { stored = []; }
+    this.setState({ narrow: this.mqN.matches, reduced: this.mqR.matches, view: this.mqN.matches ? '2d' : '3d', findings: stored.map(f => ({ ...f, severity: mapSeverity(f.severity) })) });
     this.onKey = e => this.keydown(e); document.addEventListener('keydown', this.onKey);
     this.timer = setInterval(() => { if (this.state.phase === 'inspect' && this.state.simOpen) this.setState({ now: Date.now() }); }, 1000);
     const init = () => this.initViews(); if (window.TwinHome) init(); else window.addEventListener('twinhome-ready', init, { once: true });
     this.readyTimeout = setTimeout(() => { if (!this.simView) this.setState({ webgl: false, view: '2d' }); }, 12000);
   }
+  persistFindings(list) { try { sessionStorage.setItem(STORE_KEY, JSON.stringify(list)); } catch (_) { /* storage full or blocked */ } }
   componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.readyTimeout); document.removeEventListener('keydown', this.onKey); document.body.style.overflow = ''; }
   initViews() {
     const W = window.TwinHome; this.setState({ dataReady: true });
-    this.heroView = W.createView({ ariaLabel: 'Live rotating dollhouse view of the demo home' }); this.simView = W.createView({ ariaLabel: 'Interactive 3D home. Drag to look, scroll to zoom, click floor discs to move, arrow keys rotate.' });
+    this.heroView = W.createView({ ariaLabel: 'Rotating dollhouse view of the demo home' }); this.simView = W.createView({ ariaLabel: 'Interactive 3D home. Drag to look, scroll to zoom, click floor discs to move, arrow keys rotate.' });
     if (!this.heroView || !this.simView) { this.setState({ webgl: false, view: '2d' }); return; }
     clearTimeout(this.readyTimeout); this.heroView.setReduced(this.state.reduced); this.simView.setReduced(this.state.reduced);
     this.heroView.cam.auto = .07; this.heroView.canvas.tabIndex = -1; this.simView.cam.auto = .05;
     this.simView.onClick = h => this.sceneClick(h);
-    this.simView.onHover = h => { const el = this.hoverRef.current; if (!el) return; if (!h || this.state.tool === 'measure' && h.kind === 'surface') { el.style.display = 'none'; return; } let txt = ''; if (h.kind === 'disc') { const p = W.POINTS.find(p => p.id === h.id); txt = 'Go to ' + (p ? p.label : h.id); } else if (h.kind === 'flag') txt = 'Flag — review'; else if (h.kind === 'surface') txt = (this.state.tool === 'pin' ? 'Pin · ' : '') + this.roomName(h.room) + ' · ' + h.surface; if (!txt) { el.style.display = 'none'; return; } el.textContent = txt; el.style.display = 'block'; const r = this.simView.canvas.getBoundingClientRect(); el.style.left = (this.lastPtr ? this.lastPtr[0] - r.left : 0) + 'px'; el.style.top = (this.lastPtr ? this.lastPtr[1] - r.top : 0) + 'px'; };
+    this.simView.onHover = h => { const el = this.hoverRef.current; if (!el) return; if (!h || this.state.tool === 'measure' && h.kind === 'surface') { el.style.display = 'none'; return; } let txt = ''; if (h.kind === 'disc') { const p = W.POINTS.find(p => p.id === h.id); txt = 'Go to ' + (p ? p.label : h.id); } else if (h.kind === 'flag') txt = 'Pre-flagged area (scripted, illustrative)'; else if (h.kind === 'surface') txt = (this.state.tool === 'pin' ? 'Pin · ' : '') + this.roomName(h.room) + ' · ' + h.surface; if (!txt) { el.style.display = 'none'; return; } el.textContent = txt; el.style.display = 'block'; const r = this.simView.canvas.getBoundingClientRect(); el.style.left = (this.lastPtr ? this.lastPtr[0] - r.left : 0) + 'px'; el.style.top = (this.lastPtr ? this.lastPtr[1] - r.top : 0) + 'px'; };
     this.simView.canvas.addEventListener('pointermove', e => { this.lastPtr = [e.clientX, e.clientY]; const el = this.hoverRef.current; if (el && el.style.display === 'block') { const r = this.simView.canvas.getBoundingClientRect(); el.style.left = (e.clientX - r.left) + 'px'; el.style.top = (e.clientY - r.top) + 'px'; } });
     this.simView.frameCb = f => { const g = this.miniPosRef.current; if (!g) return; const [x, y] = PX(f.x, f.z); if (f.yaw == null) { g.setAttribute('transform', `translate(${x} ${y}) scale(0)`); return; } const deg = -(f.yaw * 180 / Math.PI) + 180; g.setAttribute('transform', `translate(${x} ${y}) rotate(${deg}) scale(${(f.fov / 70).toFixed(2)})`); };
     this.simView.xrSupported().then(xr => this.setState({ xr }));
@@ -699,14 +769,42 @@ class Component extends DCLogic {
     const d = this.activeDialog(); const s = this.state;
     if (d) { if (e.key === 'Escape') { e.preventDefault(); if (s.form) this.closeForm(); else if (s.decoy) this.closeDecoy(); else if (s.dismiss) this.closeDismiss(); else this.exitSim(); return; } if (e.key !== 'Tab') return; const f = [...d.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"]),input,select,textarea')].filter(el => el.offsetParent !== null); if (!f.length) return; const first = f[0], last = f[f.length - 1]; if (e.shiftKey && (document.activeElement === first || document.activeElement === d)) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } return; }
     if (!s.simOpen || s.phase !== 'inspect') return; const tag = (document.activeElement && document.activeElement.tagName) || ''; if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
-    const k = e.key.toLowerCase(); if (k === 'n') this.setTool('navigate'); else if (k === 'p') this.setTool('pin'); else if (k === 'm') this.setTool('measure'); else if (k === 'l') this.setState(st => ({ layersOpen: !st.layersOpen })); else if (k === 'd') this.toggleDollhouse(); else if (k === 'escape') { if (s.layersOpen) this.setState({ layersOpen: false }); else if (s.draft) this.setDraft(null); } else return; e.preventDefault();
+    const k = e.key.toLowerCase();
+    if (k === 'n') this.setTool('navigate');
+    else if (k === 'p') this.setTool('pin');
+    else if (k === 'm') this.setTool('measure');
+    else if (k === 'l') this.setState(st => ({ layersOpen: !st.layersOpen }));
+    else if (k === 'd') this.toggleDollhouse();
+    else if (e.key === 'ArrowLeft' && e.altKey) { e.preventDefault(); this.gotoRoomOffset(-1); return; }
+    else if (e.key === 'ArrowRight' && e.altKey) { e.preventDefault(); this.gotoRoomOffset(1); return; }
+    else if (k === 'escape') { if (s.layersOpen) this.setState({ layersOpen: false }); else if (s.draft) this.setDraft(null); }
+    else return;
+    e.preventDefault();
+  }
+  // Ordered rooms for list / previous / next (excludes exterior as a walkthrough stop).
+  roomOrder() { return this.D.ROOMS.filter(r => r.id !== 'exterior'); }
+  gotoRoom(roomId) {
+    const pts = this.D.POINTS.filter(p => p.room === roomId);
+    const point = pts[0] || this.D.POINTS.find(p => p.room === 'hall') || this.D.POINTS[0];
+    if (!point) return;
+    // Collapse the narrow room picker after a choice so the bar stays compact.
+    this.setState({ roomId, roomsListOpen: false });
+    this.visit(point.id);
+    if (this.state.view === '3d' && this.simView) this.simView.goTo(point.id);
+    else this.openPano(point.id);
+  }
+  gotoRoomOffset(delta) {
+    const list = this.roomOrder();
+    const i = Math.max(0, list.findIndex(r => r.id === this.state.roomId));
+    const next = list[(i + delta + list.length) % list.length];
+    if (next) this.gotoRoom(next.id);
   }
   // ---- session ----
   openSim = e => { this.lastLaunch = e && e.currentTarget; const s = this.state; this.setState({ simOpen: true }); this.after(() => { if (this.simView && s.phase === 'intro') { this.simView.setDollhouse(true); this.simView.cam.setOrbit({ target: this.simView.cam.orbit.target, theta: .55, phi: .78, r: 18 }); } if (s.phase === 'intro') this.focusInto(this.introRef); else if (s.view === '3d' && this.simView) this.simView.canvas.focus(); }); };
   exitSim = () => { this.setState({ simOpen: false, form: null, decoy: null, dismiss: null, layersOpen: false }); this.after(() => { if (this.lastLaunch && this.lastLaunch.isConnected) this.lastLaunch.focus(); }); };
   begin(view) { const now = Date.now(); this.setState({ phase: 'inspect', view, startedAt: this.state.startedAt || now, now, tab: 'flags' }); if (view === '3d' && this.simView) this.after(() => { this.visit('entry'); this.simView.goTo('entry', 2800).then(() => this.simView.canvas.focus()); }); else this.after(() => { const b = document.querySelector('[data-screen-label="Floor plan"] button'); if (b) b.focus(); }); }
   switchView = () => { if (!this.state.webgl) return; const to = this.state.view === '3d' ? '2d' : '3d'; this.setState({ view: to, pano: null, draft: null, layersOpen: false }); if (to === '3d' && this.simView) this.after(() => { const p = this.state.point || 'entry'; if (this.simView.cam.mode !== 'fp') this.simView.goTo(p, 1800).then(() => this.simView.canvas.focus()); else this.simView.canvas.focus(); }); };
-  visit(pointId) { const p = this.D.POINTS.find(p => p.id === pointId); if (!p) return; this.setState(s => ({ point: pointId, visited: s.visited.includes(p.room) ? s.visited : [...s.visited, p.room] })); }
+  visit(pointId) { const p = this.D.POINTS.find(p => p.id === pointId); if (!p) return; this.setState(s => ({ point: pointId, roomId: p.room, visited: s.visited.includes(p.room) ? s.visited : [...s.visited, p.room] })); }
   setTool(t) { this.setState(s => ({ tool: t, draft: t === 'measure' ? s.draft : null, layersOpen: false })); if (this.simView) { this.simView.setTool(t); if (t !== 'measure') this.simView.setDraftPoint(null); } }
   toggleDollhouse = () => { const v = this.simView; if (!v || this.state.view !== '3d') return; if (v.cam.mode === 'orbit') { v.goTo(this.state.point || 'entry', 2000); } else v.toDollhouse(1600); this.setState({ layersOpen: false }); };
   setDraft(p) { this.setState({ draft: p }); if (this.simView) this.simView.setDraftPoint(p); }
@@ -728,8 +826,34 @@ class Component extends DCLogic {
     const already = plant && !plant.decoy && this.state.findings.find(f => f.plant === h.plant); if (already) { this.toast(`Already recorded as finding ${already.n}.`); return; }
     const pre = plant && !plant.decoy ? plant : null;
     this.lastTrigger = trigger;
-    this.setState({ form: { pos: h.point, normal: h.normal, room: h.room, surface: h.surface, plant: pre ? h.plant : null, source: opts.source || 'inspector', flagId: opts.flagId || null, title: pre ? pre.title : '', category: pre ? pre.category : 'Other', severity: pre ? pre.severity : 'Moderate', notes: pre ? pre.notes : '', action: pre ? pre.action : '', measureId: '', fromPlan: !!opts.fromPlan } });
+    this.setState({ form: { editId: null, pos: h.point, normal: h.normal, room: h.room, surface: h.surface, plant: pre ? h.plant : null, source: opts.source || 'inspector', flagId: opts.flagId || null, title: pre ? pre.title : '', category: pre ? pre.category : 'Other', severity: mapSeverity(pre ? pre.severity : 'Medium'), notes: pre ? pre.notes : '', action: pre ? pre.action : '', measureId: '', fromPlan: !!opts.fromPlan } });
     this.focusInto(this.formRef);
+  }
+  // Open the form to edit an existing finding (same fields as new).
+  editFinding(id, e) {
+    const fd = this.state.findings.find(f => f.id === id); if (!fd) return;
+    this.lastTrigger = e && e.currentTarget;
+    this.setState({ form: { editId: fd.id, pos: fd.pos, normal: fd.normal, room: fd.room, surface: fd.surface, plant: fd.plant, source: fd.source, flagId: fd.flagId, title: fd.title, category: fd.category, severity: mapSeverity(fd.severity), notes: fd.notes || '', action: fd.action || '', measureId: fd.measureId || '', fromPlan: true }, tab: 'findings', panelOpen: true });
+    this.focusInto(this.formRef);
+  }
+  deleteFinding(id) {
+    const list = this.state.findings;
+    const idx = list.findIndex(f => f.id === id);
+    const next = list.filter(f => f.id !== id).map((f, i) => ({ ...f, n: i + 1 }));
+    // Prefer the finding that slid into this slot; otherwise the previous one.
+    const focusId = next[idx] ? next[idx].id : (next[idx - 1] ? next[idx - 1].id : null);
+    this.persistFindings(next);
+    this.setState({ findings: next, form: null, tab: 'findings', panelOpen: true, reportFocus: this.state.reportFocus === id ? null : this.state.reportFocus });
+    if (this.simView && this.simView.removePin) this.simView.removePin(id);
+    this.toast('Finding removed.');
+    this.after(() => {
+      if (focusId) {
+        const card = document.querySelector(`[data-finding-id="${focusId}"]`);
+        if (card) { card.focus(); return; }
+      }
+      const empty = document.querySelector('[data-no-findings]');
+      if (empty) empty.focus();
+    });
   }
   closeDecoy = () => { this.setState({ decoy: null }); this.after(() => this.returnFocus()); };
   decoyPinAnyway = () => { const d = this.state.decoy; this.setState({ decoy: null }); this.startPin(d.hit, this.lastTrigger, { force: true }); };
@@ -737,12 +861,28 @@ class Component extends DCLogic {
   field(k) { return this[`_f_${k}`] || (this[`_f_${k}`] = e => { const v = e.target.value; this.setState(s => ({ form: { ...s.form, [k]: v } })); }); }
   closeForm = () => { this.setState({ form: null }); this.after(() => this.returnFocus()); };
   saveForm = () => {
-    const f = this.state.form; if (!f || !f.title.trim()) return; const v = this.simView; let snapshot = null;
-    if (v) { try { if (this.state.view === '3d' && v.cam.mode === 'fp' && !f.fromPlan) snapshot = v.snapshot(); else { const near = this.nearestPoint(f.pos); if (near) snapshot = v.snapshotAt([near.x, 1.6, near.z], f.pos); } } catch (_) { } }
-    const n = this.state.findings.length + 1; const meta = sevMeta(f.severity);
-    const fd = { id: 'f' + (++this.seq), n, title: f.title.trim(), category: f.category, severity: f.severity, notes: f.notes.trim(), action: f.action.trim(), room: f.room, surface: f.surface, pos: f.pos, normal: f.normal, plant: f.plant, source: f.source, flagId: f.flagId, measureId: f.measureId, snapshot, color: meta.color };
+    const f = this.state.form; if (!f || !f.title.trim()) return;
+    const severity = mapSeverity(f.severity); const meta = sevMeta(severity);
+    const v = this.simView; let snapshot = null;
+    if (v && !f.editId) { try { if (this.state.view === '3d' && v.cam.mode === 'fp' && !f.fromPlan) snapshot = v.snapshot(); else { const near = this.nearestPoint(f.pos); if (near) snapshot = v.snapshotAt([near.x, 1.6, near.z], f.pos); } } catch (_) { } }
+    if (f.editId) {
+      const next = this.state.findings.map(old => {
+        if (old.id !== f.editId) return old;
+        const fd = { ...old, title: f.title.trim(), category: f.category, severity, notes: f.notes.trim(), action: f.action.trim(), measureId: f.measureId, color: meta.color };
+        fd.evidence = this.evidenceFor(fd);
+        return fd;
+      });
+      this.persistFindings(next);
+      this.setState({ findings: next, form: null, tab: 'findings' });
+      this.toast('Finding updated.'); this.after(() => this.returnFocus());
+      return;
+    }
+    const n = this.state.findings.length + 1;
+    const fd = { id: 'f' + (++this.seq), n, title: f.title.trim(), category: f.category, severity, notes: f.notes.trim(), action: f.action.trim() || 'Review on site and decide next steps.', room: f.room, surface: f.surface, pos: f.pos, normal: f.normal, plant: f.plant, source: f.source, flagId: f.flagId, measureId: f.measureId, snapshot, color: meta.color };
     fd.evidence = this.evidenceFor(fd);
-    this.setState(s => ({ findings: [...s.findings, fd], form: null, flags: f.flagId ? { ...s.flags, [f.flagId]: { status: 'confirmed', findingId: fd.id } } : s.flags, tab: 'findings' }));
+    const next = [...this.state.findings, fd];
+    this.persistFindings(next);
+    this.setState(s => ({ findings: next, form: null, flags: f.flagId ? { ...s.flags, [f.flagId]: { status: 'confirmed', findingId: fd.id } } : s.flags, tab: 'findings' }));
     if (v) v.addPin({ id: fd.id, pos: fd.pos, normal: fd.normal, title: `${n}. ${fd.title}`, color: meta.color });
     this.toast(`Finding ${n} saved${snapshot ? ' with snapshot' : ''}.`); this.after(() => this.returnFocus());
   };
@@ -762,7 +902,19 @@ class Component extends DCLogic {
   pinRoom(roomId, e) { const r = this.D.ROOMS.find(r => r.id === roomId); const x = (r.x1 + r.x2) / 2, z = (r.z1 + r.z2) / 2; this.startPin({ point: [x, 1.2, z], normal: [0, 1, 0], room: roomId, surface: 'floor plan position', plant: null }, e.currentTarget, { fromPlan: true }); }
   openPano(id) { this.visit(id); let url = null; if (this.simView) { try { url = this.simView.panorama(id); } catch (_) { } } const p = this.D.POINTS.find(p => p.id === id); this.setState({ pano: { id, url, label: p ? p.label : id } }); }
   // ---- report ----
-  finish = () => { let thumb = null; if (this.simView) { try { thumb = this.simView.snapshotDollhouse(); } catch (_) { } } this.setState({ phase: 'report', finishedAt: Date.now(), form: null, decoy: null, dismiss: null, layersOpen: false, reportFocus: null, dollThumb: thumb }); this.after(() => { const h = document.querySelector('[data-screen-label="Report"] [data-autofocus]'); if (h) h.focus(); }); };
+  // Only keep a real image data URL — empty/invalid values cause ERR_INVALID_URL in css url().
+  isRealImageUrl(u) { return !!(u && typeof u === 'string' && u.length > 32 && (u.startsWith('data:image/') || u.startsWith('blob:') || /^https?:\/\//.test(u))); }
+  finish = () => {
+    let thumb = null;
+    if (this.simView) {
+      try {
+        const snap = this.simView.snapshotDollhouse();
+        if (this.isRealImageUrl(snap)) thumb = snap;
+      } catch (_) { /* leave thumb null → placeholder */ }
+    }
+    this.setState({ phase: 'report', finishedAt: Date.now(), form: null, decoy: null, dismiss: null, layersOpen: false, reportFocus: null, dollThumb: thumb });
+    this.after(() => { const h = document.querySelector('[data-screen-label="Report"] [data-autofocus]'); if (h) h.focus(); });
+  };
   backToInspection = () => { this.setState({ phase: 'inspect', finishedAt: 0, reportFocus: null, now: Date.now() }); this.after(() => { if (this.state.view === '3d' && this.simView) { const v = this.simView; if (v.cam.mode !== 'fp') v.goTo(this.state.point || 'entry', 1500); v.canvas.focus(); } }); };
   viewFinding(f) { this.setState({ reportFocus: f.id }); this.after(() => { if (this.simView) { this.simView.flyTo(f.pos); } }); }
   printReport = () => { window.print(); };
@@ -774,43 +926,57 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state, D = this.D, P = D.PLANTS; const webgl = s.webgl; const view3d = s.view === '3d' && webgl, view2d = !view3d;
     const elapsed = s.startedAt ? (s.finishedAt || s.now || Date.now()) - s.startedAt : 0;
-    const planRooms = D.ROOMS.map(r => { const [x, y] = PX(r.x1, r.z1); const [x2, y2] = PX(r.x2, r.z2); const vis = s.visited.includes(r.id); const ext = r.id === 'exterior'; return { id: r.id, name: r.name, x, y, w: x2 - x, h: y2 - y, cx: (x + x2) / 2, cy: (y + y2) / 2 + (ext ? -8 : -2), cy2: (y + y2) / 2 + 16, dims: `${(r.x2 - r.x1).toFixed(1)} × ${(r.z2 - r.z1).toFixed(1)} m`, fill: ext ? 'rgba(207,230,220,0)' : vis ? '#CFE6DC' : '#fff', miniFill: vis ? 'rgba(143,211,191,.6)' : 'rgba(255,255,255,.12)', reportFill: vis ? '#CFE6DC' : 'url(#hatch)' }; }).filter(r => r.id !== 'exterior').concat(D.ROOMS.filter(r => r.id === 'exterior').map(r => { const [x, y] = PX(r.x1, r.z1); const [x2, y2] = PX(r.x2, r.z2); const vis = s.visited.includes(r.id); return { id: r.id, name: 'Exterior', x: x + 2, y, w: x2 - x - 4, h: y2 - y, cx: (x + x2) / 2, cy: y2 - 30, cy2: y2 - 14, dims: 'side + front', fill: vis ? 'rgba(207,230,220,.7)' : 'rgba(255,255,255,0)', miniFill: vis ? 'rgba(143,211,191,.5)' : 'rgba(255,255,255,0)', reportFill: vis ? '#CFE6DC' : 'url(#hatch)' }; }));
+    const planRooms = D.ROOMS.map(r => {
+      const [x, y] = PX(r.x1, r.z1); const [x2, y2] = PX(r.x2, r.z2); const w = x2 - x, h = y2 - y;
+      const vis = s.visited.includes(r.id); const ext = r.id === 'exterior';
+      const box = boxPct(ext ? x + 2 : x, y, ext ? w - 4 : w, h);
+      return {
+        id: r.id, name: ext ? 'Exterior' : r.name, ...box,
+        dims: ext ? 'side + front' : `${(r.x2 - r.x1).toFixed(1)} × ${(r.z2 - r.z1).toFixed(1)} m`,
+        fill: ext ? (vis ? 'rgba(207,230,220,.7)' : 'rgba(255,255,255,0)') : (vis ? '#CFE6DC' : '#fff'),
+        miniFill: vis ? (ext ? 'rgba(143,211,191,.5)' : 'rgba(143,211,191,.6)') : (ext ? 'rgba(255,255,255,0)' : 'rgba(255,255,255,.12)'),
+        reportFill: vis ? '#CFE6DC' : HATCH,
+        current: s.roomId === r.id,
+      };
+    });
     const tools = [['navigate', 'Navigate', 'N', '✥'], ['pin', 'Pin', 'P', '◉'], ['measure', 'Measure', 'M', '⟷'], ['layers', 'Layers', 'L', '◧'], ['dollhouse', 'Dollhouse', 'D', '⌂']].map(([id, label, key, glyph]) => { const on = id === 'layers' ? s.layersOpen : id === 'dollhouse' ? false : s.tool === id; const disabled = id === 'dollhouse' && !view3d; return { id, label, key, glyph, pressed: on ? 'true' : 'false', aria: `${label} (${key})`, bg: on ? '#1F6F5C' : 'transparent', fg: '#fff', opacity: disabled ? .4 : 1, disabled, select: () => { if (id === 'layers') this.setState(st => ({ layersOpen: !st.layersOpen })); else if (id === 'dollhouse') this.toggleDollhouse(); else this.setTool(id); } }; });
     const layerToggles = [['thermal', 'Thermal'], ['moisture', 'Moisture readings'], ['capture', 'Capture points']].map(([k, label]) => ({ label, on: s.layers[k] ? 'true' : 'false', trackBg: s.layers[k] ? '#1F6F5C' : 'rgba(255,255,255,.25)', knobLeft: s.layers[k] ? '19px' : '3px', toggle: () => this.setState(st => ({ layers: { ...st.layers, [k]: !st.layers[k] } })) }));
-    const flagCards = D.AI_FLAGS.map(id => { const pl = P[id]; const st = s.flags[id]; const status = st ? st.status : 'open'; const mo = D.MOISTURE.find(m => Math.hypot(m.pos[0] - pl.pos[0], m.pos[2] - pl.pos[2]) < 1.0); const ev = ['Visual'].concat(pl.thermal ? ['Thermal: cool patch'] : id === 'touchup' ? ['Thermal: normal'] : []).concat(mo ? [`Moisture: ${mo.value}%`] : []); return { id, title: pl.title, where: `${this.roomName(pl.room)} · ${pl.surface}`, severity: pl.severity, evidence: ev.join(' · '), status: status === 'open' ? 'Needs review' : status === 'confirmed' ? 'Confirmed' : 'Dismissed', statusBg: status === 'open' ? 'rgba(47,111,237,.25)' : status === 'confirmed' ? 'rgba(31,111,92,.35)' : 'rgba(255,255,255,.15)', statusFg: '#fff', border: s.flagFocus === id && status === 'open' ? '#2F6FED' : 'rgba(255,255,255,.1)', isOpen: status === 'open', hasReason: status === 'dismissed', reason: st && st.reason, go: () => this.flagGo(id), confirm: e => this.flagConfirm(id, e), dismiss: e => this.flagDismiss(id, e) }; });
-    const sorted = [...s.findings].sort((a, b) => SEV.findIndex(x => x.id === a.severity) - SEV.findIndex(x => x.id === b.severity));
-    const findingGroups = SEV.map(sv => ({ label: sv.id, color: sv.color, icon: sv.icon, items: sorted.filter(f => f.severity === sv.id).map(f => ({ n: f.n, title: f.title, color: sv.color, where: this.roomName(f.room), source: f.source === 'ai' ? 'Pre-set flag, confirmed' : 'Inspector-found', go: () => { if (view3d && this.simView) { this.visit(this.nearestPoint(f.pos).id); this.simView.flyTo(f.pos); } else this.openPano(this.nearestPoint(f.pos).id); } })) })).filter(g => g.items.length).map(g => ({ ...g, count: g.items.length }));
+    const flagCards = D.AI_FLAGS.map(id => { const pl = P[id]; const st = s.flags[id]; const status = st ? st.status : 'open'; const mo = D.MOISTURE.find(m => Math.hypot(m.pos[0] - pl.pos[0], m.pos[2] - pl.pos[2]) < 1.0); const ev = ['Visual'].concat(pl.thermal ? ['Thermal: cool patch'] : id === 'touchup' ? ['Thermal: normal'] : []).concat(mo ? [`Moisture: ${mo.value}%`] : []); return { id, title: pl.title, where: `${this.roomName(pl.room)} · ${pl.surface}`, severity: mapSeverity(pl.severity), badge: 'Pre-flagged area (scripted, illustrative)', evidence: ev.join(' · '), status: status === 'open' ? 'Needs review' : status === 'confirmed' ? 'Confirmed' : 'Dismissed', statusBg: status === 'open' ? 'rgba(47,111,237,.25)' : status === 'confirmed' ? 'rgba(31,111,92,.35)' : 'rgba(255,255,255,.15)', statusFg: '#fff', border: s.flagFocus === id && status === 'open' ? '#2F6FED' : 'rgba(255,255,255,.1)', isOpen: status === 'open', hasReason: status === 'dismissed', reason: st && st.reason, go: () => this.flagGo(id), confirm: e => this.flagConfirm(id, e), dismiss: e => this.flagDismiss(id, e) }; });
+    const sorted = [...s.findings].sort((a, b) => SEV.findIndex(x => x.id === mapSeverity(a.severity)) - SEV.findIndex(x => x.id === mapSeverity(b.severity)));
+    const findingGroups = SEV.map(sv => ({ label: sv.id, color: sv.color, icon: sv.icon, items: sorted.filter(f => mapSeverity(f.severity) === sv.id).map(f => ({ id: f.id, n: f.n, title: f.title, color: sv.color, severityLabel: mapSeverity(f.severity), where: this.roomName(f.room), source: f.source === 'ai' ? 'Pre-flagged, confirmed' : 'Inspector-found', go: () => { if (view3d && this.simView) { this.visit(this.nearestPoint(f.pos).id); this.simView.flyTo(f.pos); } else this.openPano(this.nearestPoint(f.pos).id); }, edit: e => this.editFinding(f.id, e), remove: () => this.deleteFinding(f.id) })) })).filter(g => g.items.length).map(g => ({ ...g, count: g.items.length }));
     const openFlags = D.AI_FLAGS.filter(id => !s.flags[id]).length;
     // 2D markers
     const planMarkers = [];
     D.POINTS.forEach(p => { const [l, t] = PCT(p.x, p.z); planMarkers.push({ id: 'pt' + p.id, left: l, top: t, size: '26px', bg: s.point === p.id ? '#1F6F5C' : '#fff', border: '#1F6F5C', fg: s.point === p.id ? '#fff' : '#1F6F5C', glyph: '◎', z: 2, anim: 'none', title: `Capture point: ${p.label}`, aria: `Capture point, ${p.label}${s.visited.includes(p.room) ? ', visited' : ''}. Opens a 360° view.`, open: () => this.openPano(p.id) }); });
-    D.AI_FLAGS.forEach(id => { if (s.flags[id]) return; const pl = P[id]; const [l, t] = PCT(pl.pos[0], pl.pos[2]); planMarkers.push({ id: 'fl' + id, left: l, top: t, size: '28px', bg: '#2F6FED', border: '#fff', fg: '#fff', glyph: '!', z: 4, anim: 'pulse 2s ease-out infinite', title: `Review flag: ${pl.title}`, aria: `Review flag: ${pl.title}, ${this.roomName(pl.room)}`, open: () => this.setState({ tab: 'flags', panelOpen: true, flagFocus: id }) }); });
+    D.AI_FLAGS.forEach(id => { if (s.flags[id]) return; const pl = P[id]; const [l, t] = PCT(pl.pos[0], pl.pos[2]); planMarkers.push({ id: 'fl' + id, left: l, top: t, size: '28px', bg: '#2F6FED', border: '#fff', fg: '#fff', glyph: '!', z: 4, anim: 'pulse 2s ease-out infinite', title: `Pre-flagged area (scripted, illustrative): ${pl.title}`, aria: `Pre-flagged area, ${pl.title}, ${this.roomName(pl.room)}`, open: () => this.setState({ tab: 'flags', panelOpen: true, flagFocus: id }) }); });
     if (s.layers.moisture) D.MOISTURE.forEach(m => { const [l, t] = PCT(m.pos[0], m.pos[2]); const col = m.value >= 25 ? '#C2410C' : m.value >= 17 ? '#D97706' : '#1F6F5C'; planMarkers.push({ id: m.id, left: l, top: t, size: '34px', bg: col, border: '#fff', fg: '#fff', glyph: `${m.value}%`, z: 3, anim: 'none', title: `Moisture reading ${m.value}%`, aria: `Moisture reading ${m.value} percent, ${this.roomName(m.room)}`, open: () => this.toast(`Moisture ${m.value}% · ${this.roomName(m.room)} · ${m.value >= 25 ? 'wet' : m.value >= 17 ? 'elevated' : 'dry'}`) }); });
     s.findings.forEach(f => { const [l, t] = PCT(f.pos[0], f.pos[2]); planMarkers.push({ id: f.id, left: l, top: t, size: '28px', bg: f.color, border: '#fff', fg: '#fff', glyph: String(f.n), z: 5, anim: 'none', title: `Finding ${f.n}: ${f.title}`, aria: `Finding ${f.n}, ${f.title}, ${f.severity}`, open: () => this.toast(`Finding ${f.n}: ${f.title} (${f.severity})`) }); });
     if (!view3d) { // planted non-AI objects discoverable from plan when inspecting
       ['alarm', 'crack', 'cord', 'rug', 'door'].forEach(id => { const pl = P[id]; if (!pl || s.findings.find(f => f.plant === id)) return; const [l, t] = PCT(pl.pos[0], pl.pos[2]); planMarkers.push({ id: 'pl' + id, left: l, top: t, size: '18px', bg: '#fff', border: '#5E6670', fg: '#5E6670', glyph: '·', z: 1, anim: 'none', title: 'Captured detail — inspect', aria: `Captured detail in ${this.roomName(pl.room)}, ${pl.surface}. Inspect with the pin tool.`, open: e => { if (s.tool === 'pin') this.startPin({ point: pl.pos, normal: [0, 1, 0], room: pl.room, surface: pl.surface, plant: id }, e.currentTarget, { fromPlan: true }); else this.toast('Select the Pin tool (P) to inspect this detail.'); } }); });
     }
-    const f = s.form; const severityOptions = SEV.map(sv => ({ label: sv.id, color: sv.color, icon: sv.icon, checked: f && f.severity === sv.id ? 'true' : 'false', border: f && f.severity === sv.id ? sv.color : '#E4DFD7', bg: f && f.severity === sv.id ? sv.color + '14' : '#fff', select: () => this.setState(st => ({ form: { ...st.form, severity: sv.id } })) }));
+    const f = s.form; const severityOptions = SEV.map(sv => ({ label: sv.id, color: sv.color, icon: sv.icon, checked: f && mapSeverity(f.severity) === sv.id ? 'true' : 'false', border: f && mapSeverity(f.severity) === sv.id ? sv.color : '#E4DFD7', bg: f && mapSeverity(f.severity) === sv.id ? sv.color + '14' : '#fff', select: () => this.setState(st => ({ form: { ...st.form, severity: sv.id } })) }));
     const formEvidence = f ? this.evidenceFor({ pos: f.pos, plant: f.plant, measureId: f.measureId }) : [];
     // report
-    const bySev = SEV.map(sv => ({ label: sv.id, color: sv.color, icon: sv.icon, count: s.findings.filter(x => x.severity === sv.id).length }));
-    const hazards = bySev[0].count; const mins = Math.max(1, Math.round(elapsed / 60000));
+    const bySev = SEV.map(sv => ({ label: sv.id, color: sv.color, icon: sv.icon, count: s.findings.filter(x => mapSeverity(x.severity) === sv.id).length }));
+    const mins = Math.max(1, Math.round(elapsed / 60000));
     const confirmed = D.AI_FLAGS.filter(id => s.flags[id] && s.flags[id].status === 'confirmed').length, dismissed = D.AI_FLAGS.filter(id => s.flags[id] && s.flags[id].status === 'dismissed').length, inspectorFound = s.findings.filter(x => x.source === 'inspector').length;
     const unreviewed = D.AI_FLAGS.filter(id => !s.flags[id]);
     const dismissals = D.AI_FLAGS.filter(id => s.flags[id] && s.flags[id].status === 'dismissed').map(id => ({ title: P[id].title, reason: s.flags[id].reason }));
     const f1 = s.findings.find(x => x.plant === 'stain'), f2 = s.findings.find(x => x.plant === 'grout');
-    const reportCards = sorted.map(x => { const sv = sevMeta(x.severity); return { n: x.n, title: x.title, severity: x.severity, color: sv.color, icon: sv.icon, where: `${this.roomName(x.room)} · ${x.surface}`, category: x.category, evidence: x.evidence, notes: x.notes || '—', action: x.action || '—', source: x.source === 'ai' ? 'Pre-set flag, confirmed by inspector' : 'Inspector-found', sourceColor: x.source === 'ai' ? '#2F6FED' : '#1F6F5C', hasImage: !!x.snapshot, noImage: !x.snapshot, image: x.snapshot, pressed: s.reportFocus === x.id ? 'true' : 'false', viewLabel: s.reportFocus === x.id ? 'Showing in 3D' : 'View in 3D', view: () => this.viewFinding(x) }; });
+    const reportCards = sorted.map(x => { const sev = mapSeverity(x.severity); const sv = sevMeta(sev); return { n: x.n, title: x.title, severity: sev, color: sv.color, icon: sv.icon, where: `${this.roomName(x.room)} · ${x.surface}`, category: x.category, evidence: x.evidence, notes: x.notes || '—', action: x.action || '—', source: x.source === 'ai' ? 'Pre-flagged, confirmed by inspector' : 'Inspector-found', sourceColor: x.source === 'ai' ? '#2F6FED' : '#1F6F5C', hasImage: !!x.snapshot, noImage: !x.snapshot, image: x.snapshot, pressed: s.reportFocus === x.id ? 'true' : 'false', viewLabel: s.reportFocus === x.id ? 'Showing in 3D' : 'View in 3D', view: () => this.viewFinding(x) }; });
     const focusF = s.findings.find(x => x.id === s.reportFocus);
     const unvisited = D.ROOMS.filter(r => !s.visited.includes(r.id)).map(r => r.name);
-    const reportPins = s.findings.map(x => { const [px, py] = PX(x.pos[0], x.pos[2]); return { x: px, y: py, ty: py + 4, n: x.n, color: x.color }; });
+    const reportPins = s.findings.map(x => { const [px, py] = PX(x.pos[0], x.pos[2]); return { left: (px / 660 * 100).toFixed(2) + '%', top: (py / 560 * 100).toFixed(2) + '%', n: x.n, color: x.color || sevMeta(mapSeverity(x.severity)).color }; });
     const draft2d = s.draft ? PCT(s.draft[0], s.draft[2]) : null;
     const intro3D = webgl && !s.narrow;
+    const roomNav = this.roomOrder().map(r => ({ id: r.id, name: r.name, current: s.roomId === r.id ? 'true' : 'false', aria: s.roomId === r.id ? `${r.name}, current room` : `Go to ${r.name}`, bg: s.roomId === r.id ? '#1F6F5C' : 'transparent', border: s.roomId === r.id ? '#1F6F5C' : 'rgba(255,255,255,.2)', select: () => this.gotoRoom(r.id) }));
+    const roomName = this.roomName(s.roomId);
     return {
-      openSim: this.openSim, exitSim: this.exitSim, heroMove: this.heroMove, heroLeave: this.heroLeave, switchView: this.switchView, finish: this.finish, backToInspection: this.backToInspection, printReport: this.printReport, copyLink: this.copyLink, enterVR: this.enterVR, closeForm: this.closeForm, saveForm: this.saveForm, closeDecoy: this.closeDecoy, decoyPinAnyway: this.decoyPinAnyway, closeDismiss: this.closeDismiss, confirmDismiss: this.confirmDismiss, setDismissReason: this.setDismissReason, useSuggestedReason: this.useSuggestedReason, planClick: this.planClick,
-      togglePanel: () => this.setState(st => ({ panelOpen: !st.panelOpen })), tabFlags: () => this.setState({ tab: 'flags' }), tabFindings: () => this.setState({ tab: 'findings' }), closePano: () => this.setState({ pano: null }),
+      openSim: this.openSim, exitSim: this.exitSim, heroMove: this.heroMove, heroLeave: this.heroLeave, switchView: this.switchView, finish: this.finish, backToInspection: this.backToInspection, printReport: this.printReport, copyLink: this.copyLink, enterVR: this.enterVR, closeForm: this.closeForm, saveForm: this.saveForm, closeDecoy: this.closeDecoy, decoyPinAnyway: this.decoyPinAnyway, closeDismiss: this.closeDismiss, confirmDismiss: this.confirmDismiss, setDismissReason: this.setDismissReason, useSuggestedReason: this.useSuggestedReason, planClick: this.planClick, prevRoom: () => this.gotoRoomOffset(-1), nextRoom: () => this.gotoRoomOffset(1),
+      togglePanel: () => this.setState(st => ({ panelOpen: !st.panelOpen })), toggleRoomsList: () => this.setState(st => ({ roomsListOpen: !st.roomsListOpen })), tabFlags: () => this.setState({ tab: 'flags' }), tabFindings: () => this.setState({ tab: 'findings' }), closePano: () => this.setState({ pano: null }),
       setTitle: this.field('title'), setCategory: this.field('category'), setNotes: this.field('notes'), setAction: this.field('action'), setMeasure: this.field('measureId'),
       heroRef: this.heroRef, pageStageRef: this.pageStageRef, fsStageRef: this.fsStageRef, miniRef: this.miniRef, formRef: this.formRef, introRef: this.introRef, decoyRef: this.decoyRef, dismissRef: this.dismissRef, hoverRef: this.hoverRef, planRef: this.planRef, miniPosRef: this.miniPosRef,
-      simOpen: s.simOpen, phaseIntro: s.phase === 'intro', phaseInspect: s.phase === 'inspect', phaseReport: s.phase === 'report', webglMissing: !webgl, view3d, view2d, canSwitch: webgl, switchLabel: view3d ? '2D plan' : '3D twin', switchGlyph: view3d ? '▦' : '⬡', narrow: s.narrow,
+      simOpen: s.simOpen, phaseIntro: s.phase === 'intro', phaseInspect: s.phase === 'inspect', phaseReport: s.phase === 'report', webglMissing: !webgl, view3d, view2d, canSwitch: webgl, switchLabel: view3d ? '2D plan' : '3D twin', switchGlyph: view3d ? '▦' : '⬡', narrow: s.narrow, roomsWide: !s.narrow, roomsListOpen: s.roomsListOpen, roomsListExpanded: s.roomsListOpen ? 'true' : 'false',
       introPrimaryLabel: intro3D ? 'Start Inspection' : 'Use 2D Floor Plan', introPrimary: () => this.begin(intro3D ? '3d' : '2d'), showIntroSecondary: webgl, introSecondaryLabel: intro3D ? 'Use 2D Floor Plan' : 'Try 3D', introSecondary: () => this.begin(intro3D ? '2d' : '3d'),
       visitedCount: s.visited.length, coverageOffset: (88 * (1 - s.visited.length / 9)).toFixed(1), timeStr: fmtTime(elapsed), findingsCount: s.findings.length, openFlagsCount: openFlags,
       tools, layersOpen: s.layersOpen, layerToggles, thermalOn: s.layers.thermal, moistureOn: s.layers.moisture, vrDisabled: !s.xr || !view3d, vrOpacity: s.xr && view3d ? 1 : .45, vrTitle: s.xr ? 'View in Headset' : 'Connect a WebXR headset to view in VR',
@@ -818,11 +984,12 @@ class Component extends DCLogic {
       planPadRight: s.narrow ? '16px' : '392px', planRooms, planMarkers, planCursor: s.tool === 'navigate' ? 'default' : 'crosshair', hasDraft2d: !!draft2d && view2d, draftLeft: draft2d ? draft2d[0] : '0%', draftTop: draft2d ? draft2d[1] : '0%', toolPin2d: s.tool === 'pin' && view2d, roomPinButtons: D.ROOMS.map(r => ({ name: r.name, pin: e => this.pinRoom(r.id, e) })),
       panoOpen: !!s.pano, panoLabel: s.pano ? s.pano.label : '', panoHasImage: !!(s.pano && s.pano.url), panoNoImage: !!(s.pano && !s.pano.url), panoUrl: s.pano ? s.pano.url : '', panoWidth: '880px',
       panelVisible: !s.narrow || s.panelOpen, tabIsFlags: s.tab === 'flags', tabIsFindings: s.tab === 'findings', tabFlagsSel: s.tab === 'flags' ? 'true' : 'false', tabFindSel: s.tab === 'findings' ? 'true' : 'false', tabFlagsBg: s.tab === 'flags' ? 'rgba(255,255,255,.14)' : 'transparent', tabFindBg: s.tab === 'findings' ? 'rgba(255,255,255,.14)' : 'transparent', flagCards, findingGroups, noFindings: s.findings.length === 0,
-      formOpen: !!f, formEyebrow: f && f.source === 'ai' ? 'Confirm flag' : 'New finding', formHeading: f && f.plant && !f.fromPlan && f.source !== 'ai' ? 'Pin finding — detail recognised' : 'Pin finding', formWhere: f ? `${this.roomName(f.room)} · ${f.surface} · ${f.pos.map(v => v.toFixed(2)).join(', ')} m` : '', formTitleVal: f ? f.title : '', formCategory: f ? f.category : 'Other', formMeasure: f ? f.measureId : '', formNotes: f ? f.notes : '', formAction: f ? f.action : '', measureOptions: s.measures.map(m => ({ id: m.id, label: `${m.label} · ${this.roomName(m.room)}` })), severityOptions, formEvidence, saveDisabled: !f || !f.title.trim(), saveOpacity: f && f.title.trim() ? 1 : .55,
+      roomNav, roomName, roomShort: roomName, roomNavLabel: `Room: ${roomName}`,
+      formOpen: !!f, formEyebrow: f && f.editId ? 'Edit finding' : (f && f.source === 'ai' ? 'Confirm pre-flagged area' : 'New finding'), formHeading: f && f.editId ? 'Edit finding' : (f && f.plant && !f.fromPlan && f.source !== 'ai' ? 'Pin finding — detail recognised' : 'Pin finding'), formWhere: f ? `${this.roomName(f.room)} · ${f.surface}` : '', formTitleVal: f ? f.title : '', formCategory: f ? f.category : 'Other', formMeasure: f ? f.measureId : '', formNotes: f ? f.notes : '', formAction: f ? f.action : '', measureOptions: s.measures.map(m => ({ id: m.id, label: `${m.label} · ${this.roomName(m.room)}` })), severityOptions, formEvidence, saveDisabled: !f || !f.title.trim(), saveOpacity: f && f.title.trim() ? 1 : .55, saveLabel: f && f.editId ? 'Save changes' : 'Save finding',
       decoyOpen: !!s.decoy, decoyText: s.decoy ? s.decoy.text : '', dismissOpen: !!s.dismiss, dismissFlagTitle: s.dismiss ? P[s.dismiss.id].title : '', dismissReason: s.dismiss ? s.dismiss.reason : '', suggestedReason: s.dismiss ? this.suggestedReason(s.dismiss.id) : '', dismissDisabled: !s.dismiss || !s.dismiss.reason.trim(), dismissOpacity: s.dismiss && s.dismiss.reason.trim() ? 1 : .55,
       toastOpen: !!s.toast, toast: s.toast,
-      reportDate: new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }), hasDollThumb: !!s.dollThumb, noDollThumb: !s.dollThumb, dollThumb: s.dollThumb || '',
-      summaryLine: `${s.findings.length} finding${s.findings.length === 1 ? '' : 's'} · ${hazards} safety hazard${hazards === 1 ? '' : 's'} · reviewed in ${mins} min`, severityChips: bySev,
+      reportDate: new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }), hasDollThumb: this.isRealImageUrl(s.dollThumb), noDollThumb: !this.isRealImageUrl(s.dollThumb), dollThumb: this.isRealImageUrl(s.dollThumb) ? s.dollThumb : '',
+      summaryLine: `${s.findings.length} finding${s.findings.length === 1 ? '' : 's'} · reviewed in ${mins} min (demo session)`, severityChips: bySev,
       aiTotal: D.AI_FLAGS.length, aiConfirmed: confirmed, aiDismissed: dismissed, inspectorFound, hasUnreviewedFlags: unreviewed.length > 0, unreviewedFlagsLine: `${unreviewed.length} review flag${unreviewed.length === 1 ? '' : 's'} not reviewed in this session: ${unreviewed.map(id => P[id].title).join(', ')}.`, hasDismissals: dismissals.length > 0, dismissals,
       reportCards, hasLinked: !!(f1 && f2), linkedLine: f1 && f2 ? `Findings ${f1.n} and ${f2.n} are both in the wet area and may share a cause. Investigate together.` : '', canView3d: webgl, showMini: webgl && s.findings.length > 0, miniCaption: focusF ? `Viewing finding ${focusF.n}: ${focusF.title}` : 'Select “View in 3D” on a finding to fly the camera to its pin.',
       coverageLine: `${s.visited.length} of 9 areas reviewed in this session.`, hasUnvisited: unvisited.length > 0, unvisitedRooms: unvisited, reportPins,

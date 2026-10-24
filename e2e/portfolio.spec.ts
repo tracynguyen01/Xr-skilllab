@@ -36,7 +36,7 @@ const lessons = [
   { title: 'Oil & Gas', heading: /learn by doing/i },
   { title: 'Mining', heading: /learn by doing/i },
   { title: 'Chemical processing', heading: /learn by doing/i },
-  { title: /TwinInspect/, heading: /inspect any home/i },
+  { title: /TwinInspect/, heading: /concept for inspecting a home remotely/i },
 ]
 
 test('carousel advances and the fields menu reaches every lesson', async ({ page }) => {

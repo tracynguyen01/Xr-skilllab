@@ -93,7 +93,7 @@ test('TwinInspect 390px: pointer Finish and finding add/edit/delete', async ({ p
   await form.getByRole('button', { name: /Save changes|Save finding/i }).click()
   await expect(form).toBeHidden()
 
-  await page.getByRole('button', { name: /Report \(/i }).click()
+  // Edit already opened the findings panel — do not toggle Report closed.
   await page.getByRole('tab', { name: /Findings/i }).click()
   await expect(page.getByText(/Narrow damp note \(edited\)/)).toBeVisible()
   await page.getByRole('button', { name: /Delete Narrow damp/i }).click()

@@ -74,17 +74,7 @@ test.describe('route baseline', () => {
       expect(errors, errors.join('\n')).toEqual([])
     }
 
-    if (route === '/samples/twininspect/') {
-      // Bug: TwinInspect's floor-plan SVG is still in the document with
-      // unreplaced Mustache tokens (`{{ r.x }}`, `{{ r.y }}`, `{{ r.w }}`,
-      // `{{ r.h }}`, `{{ r.cx }}`, `{{ r.cy }}`, `{{ r.cy2 }}`, `{{ rp.x }}`,
-      // `{{ rp.y }}`, `{{ rp.ty }}`). Chromium logs a console error for each
-      // attribute ("Expected length, …") while parsing that SVG. These are
-      // not WebGL or headless warnings.
-      test.fixme(title, body)
-    } else {
-      test(title, body)
-    }
+    test(title, body)
   }
 
   // Home is where "Back to all demos" lands, so this check covers sample routes.

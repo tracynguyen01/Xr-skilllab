@@ -1,3 +1,6 @@
+// Chemical Processing lesson data and scoring.
+// Same shape as mining/content.js so unit tests can share one pattern.
+
 export const hazards = [
   {
     id: 'incompatible',
@@ -41,26 +44,78 @@ export const hazards = [
   },
 ]
 
+// Ids only for scoring tests — display names live on `equipment` / `hotspots`.
+// Decoy `context` is unused in the UI (Info cards use `equipment`); kept for the shared content shape.
 export const decoys = {
-  segregated: { title: 'Segregated drums', context: 'A bay of matching blue drums with a divider.', note: 'Like drums, separated from the mixed bay. Not a hazard in this illustration.' },
-  clearshower: { title: 'Clear safety shower', context: 'A shower and eyewash with nothing in front of them.', note: 'The approach is clear. The blocked shower is the other one.' },
-  reactor: { title: 'Batch reactor', context: 'A closed reactor with its agitator and a small sample point.', note: 'Drawn as operating inside the illustration. Nothing here asks for a response.' },
-  bund: { title: 'Bunded tanks', context: 'Two tanks standing inside a bund that is holding liquid.', note: 'The bund is doing the job the scene drew it for. The drums outside it are a separate question.' },
-  sds: { title: 'Information board', context: 'A board on the wall, clear to read.', note: 'Scenery. Inspecting it does not change the score.' },
+  segregated: { title: 'Drum bay (north)', context: 'A drum bay on the north-west side of the plant floor.' },
+  clearshower: { title: 'Safety shower (south)', context: 'A safety shower on the east wall, south of the other shower.' },
+  reactor: { title: 'Batch reactor', context: 'A batch reactor in the centre of the plant floor.' },
+  bund: { title: 'Storage tanks', context: 'Two tanks inside a low bund on the south floor.' },
+  sds: { title: 'Wall board', context: 'A wall board on the east wall.' },
+}
+
+// Neutral Info-card copy — location only; no cues about whether an object is a scored hazard.
+export const equipment = {
+  incompatible: {
+    name: 'Drum bay (south)',
+    purpose: 'A drum storage bay in this fictional batch plant.',
+    relevance: 'This bay sits on the south-west side of the plant floor.',
+  },
+  eyewash: {
+    name: 'Safety shower (north)',
+    purpose: 'A wall-mounted safety shower in this teaching scene.',
+    relevance: 'This shower sits on the east wall, north of the other shower.',
+  },
+  vapour: {
+    name: 'Valve manifold',
+    purpose: 'A process valve manifold in this fictional plant.',
+    relevance: 'The manifold sits between the reactor and the east wall.',
+  },
+  relief: {
+    name: 'Relief header',
+    purpose: 'A relief header and bypass line in this illustration.',
+    relevance: 'The header stands north of the reactor on the plant floor.',
+  },
+  segregated: {
+    name: 'Drum bay (north)',
+    purpose: 'A drum storage bay in this fictional batch plant.',
+    relevance: 'This bay sits on the north-west side of the plant floor.',
+  },
+  clearshower: {
+    name: 'Safety shower (south)',
+    purpose: 'A wall-mounted safety shower in this teaching scene.',
+    relevance: 'This shower sits on the east wall, south of the other shower.',
+  },
+  reactor: {
+    name: 'Batch reactor',
+    purpose: 'A closed batch reactor drawn in this teaching scene.',
+    relevance: 'The reactor sits near the centre of the plant floor.',
+  },
+  bund: {
+    name: 'Storage tanks',
+    purpose: 'Two process tanks inside a low bund in this illustration.',
+    relevance: 'The tanks sit on the south side of the plant floor.',
+  },
+  sds: {
+    name: 'Wall board',
+    purpose: 'A wall-mounted information board in this fictional plant.',
+    relevance: 'The board hangs on the east wall near the south-east corner.',
+  },
 }
 
 export const hotspots = [
-  { id: 'segregated', l: 18, t: 24, label: 'Segregated drums' },
+  { id: 'segregated', l: 18, t: 24, label: 'Drum bay (north)' },
   { id: 'reactor', l: 40, t: 32, label: 'Batch reactor' },
-  { id: 'relief', l: 62, t: 28, label: 'Relief and bypass' },
-  { id: 'eyewash', l: 78, t: 30, label: 'Blocked shower' },
+  { id: 'relief', l: 62, t: 28, label: 'Relief header' },
+  { id: 'eyewash', l: 78, t: 30, label: 'Safety shower (north)' },
   { id: 'vapour', l: 56, t: 48, label: 'Valve manifold' },
-  { id: 'clearshower', l: 80, t: 52, label: 'Clear shower' },
-  { id: 'incompatible', l: 18, t: 68, label: 'Mixed drums' },
-  { id: 'bund', l: 48, t: 74, label: 'Bunded tanks' },
-  { id: 'sds', l: 84, t: 80, label: 'Information board' },
+  { id: 'clearshower', l: 80, t: 52, label: 'Safety shower (south)' },
+  { id: 'incompatible', l: 18, t: 68, label: 'Drum bay (south)' },
+  { id: 'bund', l: 48, t: 74, label: 'Storage tanks' },
+  { id: 'sds', l: 84, t: 80, label: 'Wall board' },
 ]
 
+// 15 for finding a hazard, 10 for the preferred response (max 100).
 export function score(answers) {
   let found = 0
   let correct = 0
@@ -82,6 +137,6 @@ export function tip(ids) {
 }
 
 if (typeof window !== 'undefined') {
-  window.LESSON = { hazards, decoys, hotspots, accent: '#8B7CFF', score, tip }
+  window.LESSON = { hazards, decoys, equipment, hotspots, accent: '#8B7CFF', score, tip }
   window.dispatchEvent(new Event('lesson-ready'))
 }

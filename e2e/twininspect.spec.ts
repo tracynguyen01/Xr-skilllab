@@ -5,9 +5,10 @@ test('TwinInspect room nav, finding lifecycle, report, and no raw templates', as
   await page.setViewportSize({ width: 1280, height: 900 })
   await page.goto('/samples/twininspect/')
   await page.getByRole('button', { name: /Start the demo/i }).first().click()
-  await expect(page.getByRole('heading', { name: /12 Wattle Lane/i })).toBeVisible({ timeout: 20000 })
+  const intro = page.getByRole('dialog', { name: /12 Wattle Lane/i })
+  await expect(intro).toBeVisible({ timeout: 20000 })
   // Always take the 2D path so keyboard pinning is reliable.
-  await page.getByRole('button', { name: /Use 2D Floor Plan/i }).click()
+  await intro.getByRole('button', { name: /Use 2D Floor Plan/i }).click()
 
   const rooms = page.getByRole('navigation', { name: 'Rooms' })
   await expect(rooms).toBeVisible({ timeout: 15000 })

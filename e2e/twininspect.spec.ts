@@ -47,7 +47,7 @@ test('TwinInspect room nav, finding lifecycle, report, and no raw templates', as
   await rooms.getByRole('button', { name: 'Next room' }).click()
   await expect(rooms.getByRole('button', { name: /current room/i })).toBeVisible()
   const plan = page.locator('[data-screen-label="Floor plan"]')
-  await expect(plan.getByText(/360° view/i)).toBeVisible({ timeout: 10000 })
+  await expect(plan.getByRole('button', { name: /Close 360 view/i })).toBeVisible({ timeout: 10000 })
   await page.waitForTimeout(500)
   expect(consoleErrors, `room-switch console errors: ${consoleErrors.join(' | ')}`).toEqual([])
 

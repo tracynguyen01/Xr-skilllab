@@ -105,8 +105,12 @@ test('TwinInspect 390px: pointer Finish and finding add/edit/delete', async ({ p
   await report.getByRole('button', { name: 'Back to inspection' }).click()
 
   const form = await pinLivingFinding(page, 'Narrow damp note')
-  // Narrow UI hides the side panel until Report is opened.
-  await page.getByRole('button', { name: /Report \(/i }).click()
+  // saveForm already opens the panel — only tap Report if it is still closed.
+  const panel = page.getByRole('complementary', { name: 'Report panel' })
+  if (!(await panel.isVisible())) {
+    await page.getByRole('button', { name: /Report \(/i }).click()
+  }
+  await expect(panel).toBeVisible()
   await page.getByRole('tab', { name: /Findings/i }).click()
   await page.getByRole('button', { name: /Edit Narrow damp/i }).click()
   await expect(form).toBeVisible({ timeout: 10000 })

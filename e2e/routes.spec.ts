@@ -6,7 +6,7 @@ type Sample = { slug: string; title: string; href: string }
 const samples = JSON.parse(readFileSync(new URL('../site/samples.json', import.meta.url), 'utf8')) as Sample[]
 
 const routes = ['/', ...samples.map((sample) => `/${sample.href}`)]
-const widths = [320, 390, 768, 1440] as const
+const widths = [320, 390, 768, 1024, 1440] as const
 
 // Playwright starts Chromium with SwiftShader (`--use-angle=swiftshader`).
 // Only the renderer notices below are ignored. Each one is a headless WebGL
@@ -120,7 +120,7 @@ test.describe('route baseline', () => {
   }
 
   for (const route of routes) {
-    test(`${route} has no horizontal overflow at 320, 390, 768 and 1440`, async ({ page }) => {
+    test(`${route} has no horizontal overflow at 320, 390, 768, 1024 and 1440`, async ({ page }) => {
       test.setTimeout(60000)
       await page.setViewportSize({ width: widths[0], height: 900 })
       const response = await gotoRoute(page, route)

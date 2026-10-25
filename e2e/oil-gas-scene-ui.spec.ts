@@ -89,6 +89,29 @@ test('Oil & Gas hazard and decoy show the same inspected status', async ({ page 
   expect(await sepStatus.innerText()).toBe(await flareStatus.innerText())
 })
 
+test('Oil & Gas status drawer collapses after info Close at 390px', async ({ page }) => {
+  test.setTimeout(90000)
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/samples/oil-gas/')
+  await page.evaluate(() => sessionStorage.setItem('xr-scene-briefing:oil-gas', '1'))
+  await page.getByRole('button', { name: 'Start the Simulation' }).click()
+  await expect(page.getByRole('heading', { name: 'Gas Pad Challenge' })).toBeVisible({ timeout: 20000 })
+  await page.getByRole('button', { name: /Use 2D Inspector|Begin in 2D/i }).click()
+
+  const list = page.locator('[data-screen-label="2D Inspector"]')
+  await expect(list.getByRole('heading', { name: '2D Inspector' })).toBeVisible({ timeout: 10000 })
+  const status = page.locator('.scene-status')
+  await expect(status).toBeVisible()
+
+  // Open a decoy so the info card expands the drawer, then Close must collapse it again.
+  const objectList = list.getByRole('heading', { name: 'Objects to inspect' }).locator('..').getByRole('list')
+  await objectList.getByRole('listitem').filter({ hasText: 'Flare stack' }).getByRole('button').click()
+  await expect(status.getByRole('button', { name: 'Close' })).toBeVisible()
+  await expect(status).toHaveAttribute('data-collapsed', 'false')
+  await status.getByRole('button', { name: 'Close' }).click()
+  await expect(status).toHaveAttribute('data-collapsed', 'true')
+})
+
 test('Oil & Gas status panel collapses as a drawer at 390px', async ({ page }) => {
   test.setTimeout(90000)
   await page.setViewportSize({ width: 390, height: 844 })

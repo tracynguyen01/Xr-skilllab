@@ -307,6 +307,11 @@
   .scene-status[data-collapsed="true"] {
     max-height: none;
   }
+
+  /* Wrapped Finish / Instructions row is taller than the desktop 120px pad. */
+  [data-screen-label="2D Inspector"] {
+    padding-top: 200px !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

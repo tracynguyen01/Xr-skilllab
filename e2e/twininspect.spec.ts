@@ -29,6 +29,14 @@ async function pinLivingFinding(page: import('@playwright/test').Page, title: st
 test('TwinInspect room nav, finding lifecycle, report, and no raw templates', async ({ page }) => {
   test.setTimeout(120000)
   await page.setViewportSize({ width: 1280, height: 900 })
+  // Catch empty data:image CSS urls that used to log net::ERR_INVALID_URL on the report.
+  const consoleErrors: string[] = []
+  page.on('console', (message) => {
+    if (message.type() === 'error') consoleErrors.push(message.text())
+  })
+  page.on('pageerror', (error) => {
+    consoleErrors.push(error.message)
+  })
   await startTwinInspect2d(page)
 
   const rooms = page.getByRole('navigation', { name: 'Rooms' })
@@ -45,6 +53,7 @@ test('TwinInspect room nav, finding lifecycle, report, and no raw templates', as
   await form.getByRole('button', { name: /Save changes|Save finding/i }).click()
   await expect(form).toBeHidden()
 
+  consoleErrors.length = 0
   await page.getByRole('button', { name: /Finish.*Report/i }).click()
   const report = page.locator('[data-screen-label="Report"]')
   await expect(report.getByText('Fictional property, not a real inspection')).toBeVisible({ timeout: 10000 })
@@ -52,6 +61,7 @@ test('TwinInspect room nav, finding lifecycle, report, and no raw templates', as
   await expect(report.getByText(/Severity:\s*Medium/)).toBeVisible()
   await expect(report.getByText(/Evidence note:/)).toBeVisible()
   await expect(report.locator('text={{')).toHaveCount(0)
+  expect(consoleErrors, `report console errors: ${consoleErrors.join(' | ')}`).toEqual([])
 
   await report.getByRole('button', { name: 'Back to inspection' }).click()
   await page.getByRole('tab', { name: /Findings/i }).click()

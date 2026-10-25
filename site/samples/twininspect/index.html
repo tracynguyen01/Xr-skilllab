@@ -67,7 +67,7 @@ h1,h2,h3,h4,p{margin:0}
       <div style="display:flex;flex-direction:column;gap:22px">
         <p style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#1F6F5C">Concept · Digital Twin + XR Inspection</p>
         <h1 id="heroTitle" style="font-size:clamp(38px,5.6vw,66px);font-weight:800;line-height:1.04;letter-spacing:-.03em;text-wrap:pretty">A concept for inspecting a home remotely.</h1>
-        <p style="font-size:18px;color:#5E6670;max-width:560px;text-wrap:pretty">In this concept, walk a precise 3D twin of the property, check thermal and moisture evidence, pin findings in place, and deliver the report before you've finished your coffee.</p>
+        <p style="font-size:18px;color:#5E6670;max-width:560px;text-wrap:pretty">In this concept, walk a 3D model of the property, review illustrative evidence layers, pin findings and build a report.</p>
         <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">
           <button type="button" onClick="{{ openSim }}" style="display:inline-flex;align-items:center;height:50px;padding:0 24px;border-radius:12px;border:0;background:#1F6F5C;color:#fff;font-size:16px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .2s,transform .2s" style-hover="background:#185A4B" style-active="transform:scale(.98)">Start the demo</button>
           <a href="#how" style="display:inline-flex;align-items:center;height:50px;padding:0 22px;border-radius:12px;border:1px solid #E4DFD7;background:#fff;color:#1A1D21;font-size:16px;font-weight:600;white-space:nowrap;transition:border-color .2s" style-hover="border-color:#2F6FED;color:#1A1D21;text-decoration:none">How It Works</a>
@@ -330,16 +330,16 @@ h1,h2,h3,h4,p{margin:0}
           <p style="font-size:11px;color:rgba(255,255,255,.55)">Alt+← / Alt+→ also move between rooms.</p>
         </nav>
       </sc-if>
-      <!-- Narrow: left-only compact bar (not full-width) so Finish / Report stay clickable. -->
+      <!-- Narrow: start right of the tool bar (z above tools) so expanded names stay visible/tappable. -->
       <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
-        <nav aria-label="Rooms" style="position:absolute;left:12px;top:120px;z-index:10;display:flex;flex-direction:column;gap:6px;width:min(260px,calc(100% - 96px))">
+        <nav aria-label="Rooms" style="position:absolute;left:96px;top:120px;z-index:13;display:flex;flex-direction:column;gap:6px;width:min(240px,calc(100% - 108px))">
           <div style="display:flex;align-items:center;gap:4px;height:44px;padding:4px;border-radius:12px;background:rgba(26,29,33,.9);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.14);color:#fff">
             <button type="button" onClick="{{ prevRoom }}" aria-label="Previous room" style="flex:none;width:40px;height:36px;border-radius:8px;border:0;background:transparent;color:#fff;font-size:16px;font-weight:700;cursor:pointer" style-hover="background:rgba(255,255,255,.12)">◀</button>
             <button type="button" onClick="{{ toggleRoomsList }}" aria-expanded="{{ roomsListExpanded }}" aria-controls="twin-room-list" style="flex:1;min-width:0;height:36px;padding:0 8px;border-radius:8px;border:0;background:transparent;color:#fff;font-size:13px;font-weight:700;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" style-hover="background:rgba(255,255,255,.12)">Room: {{ roomShort }} <span aria-hidden="true" style="opacity:.7">▾</span></button>
             <button type="button" onClick="{{ nextRoom }}" aria-label="Next room" style="flex:none;width:40px;height:36px;border-radius:8px;border:0;background:transparent;color:#fff;font-size:16px;font-weight:700;cursor:pointer" style-hover="background:rgba(255,255,255,.12)">▶</button>
           </div>
           <sc-if value="{{ roomsListOpen }}" hint-placeholder-val="{{ false }}">
-            <ul id="twin-room-list" style="list-style:none;margin:0;padding:8px;max-height:min(42vh,280px);overflow:auto;display:flex;flex-direction:column;gap:4px;border-radius:12px;background:rgba(26,29,33,.94);border:1px solid rgba(255,255,255,.14)">
+            <ul id="twin-room-list" style="list-style:none;margin:0;padding:8px;max-height:min(42vh,280px);overflow:auto;display:flex;flex-direction:column;gap:4px;border-radius:12px;background:rgba(26,29,33,.94);border:1px solid rgba(255,255,255,.14);z-index:13;position:relative">
               <sc-for list="{{ roomNav }}" as="rn" hint-placeholder-count="8">
                 <li><button type="button" onClick="{{ rn.select }}" aria-current="{{ rn.current }}" aria-label="{{ rn.aria }}" style="width:100%;min-height:40px;padding:8px 10px;border-radius:10px;border:1px solid {{ rn.border }};background:{{ rn.bg }};color:#fff;font-size:13px;font-weight:600;text-align:left;cursor:pointer">{{ rn.name }}</button></li>
               </sc-for>
@@ -864,7 +864,15 @@ class Component extends DCLogic {
     const f = this.state.form; if (!f || !f.title.trim()) return;
     const severity = mapSeverity(f.severity); const meta = sevMeta(severity);
     const v = this.simView; let snapshot = null;
-    if (v && !f.editId) { try { if (this.state.view === '3d' && v.cam.mode === 'fp' && !f.fromPlan) snapshot = v.snapshot(); else { const near = this.nearestPoint(f.pos); if (near) snapshot = v.snapshotAt([near.x, 1.6, near.z], f.pos); } } catch (_) { } }
+    // Drop empty/invalid data URLs so the report never sets background-image:url(...).
+    if (v && !f.editId) {
+      try {
+        let snap = null;
+        if (this.state.view === '3d' && v.cam.mode === 'fp' && !f.fromPlan) snap = v.snapshot();
+        else { const near = this.nearestPoint(f.pos); if (near) snap = v.snapshotAt([near.x, 1.6, near.z], f.pos); }
+        if (this.isRealImageUrl(snap)) snapshot = snap;
+      } catch (_) { /* leave snapshot null */ }
+    }
     if (f.editId) {
       const next = this.state.findings.map(old => {
         if (old.id !== f.editId) return old;
@@ -902,8 +910,15 @@ class Component extends DCLogic {
   pinRoom(roomId, e) { const r = this.D.ROOMS.find(r => r.id === roomId); const x = (r.x1 + r.x2) / 2, z = (r.z1 + r.z2) / 2; this.startPin({ point: [x, 1.2, z], normal: [0, 1, 0], room: roomId, surface: 'floor plan position', plant: null }, e.currentTarget, { fromPlan: true }); }
   openPano(id) { this.visit(id); let url = null; if (this.simView) { try { url = this.simView.panorama(id); } catch (_) { } } const p = this.D.POINTS.find(p => p.id === id); this.setState({ pano: { id, url, label: p ? p.label : id } }); }
   // ---- report ----
-  // Only keep a real image data URL — empty/invalid values cause ERR_INVALID_URL in css url().
-  isRealImageUrl(u) { return !!(u && typeof u === 'string' && u.length > 32 && (u.startsWith('data:image/') || u.startsWith('blob:') || /^https?:\/\//.test(u))); }
+  // Only keep a real image URL — empty data:image/jpeg (no payload) causes ERR_INVALID_URL in css url().
+  isRealImageUrl(u) {
+    if (!u || typeof u !== 'string') return false;
+    if (u.startsWith('blob:') || /^https?:\/\//.test(u)) return u.length > 8;
+    if (!u.startsWith('data:image/')) return false;
+    const comma = u.indexOf(',');
+    if (comma < 0) return false;
+    return u.slice(comma + 1).trim().length > 16;
+  }
   finish = () => {
     let thumb = null;
     if (this.simView) {
@@ -963,7 +978,11 @@ class Component extends DCLogic {
     const unreviewed = D.AI_FLAGS.filter(id => !s.flags[id]);
     const dismissals = D.AI_FLAGS.filter(id => s.flags[id] && s.flags[id].status === 'dismissed').map(id => ({ title: P[id].title, reason: s.flags[id].reason }));
     const f1 = s.findings.find(x => x.plant === 'stain'), f2 = s.findings.find(x => x.plant === 'grout');
-    const reportCards = sorted.map(x => { const sev = mapSeverity(x.severity); const sv = sevMeta(sev); return { n: x.n, title: x.title, severity: sev, color: sv.color, icon: sv.icon, where: `${this.roomName(x.room)} · ${x.surface}`, category: x.category, evidence: x.evidence, notes: x.notes || '—', action: x.action || '—', source: x.source === 'ai' ? 'Pre-flagged, confirmed by inspector' : 'Inspector-found', sourceColor: x.source === 'ai' ? '#2F6FED' : '#1F6F5C', hasImage: !!x.snapshot, noImage: !x.snapshot, image: x.snapshot, pressed: s.reportFocus === x.id ? 'true' : 'false', viewLabel: s.reportFocus === x.id ? 'Showing in 3D' : 'View in 3D', view: () => this.viewFinding(x) }; });
+    const reportCards = sorted.map(x => {
+      const sev = mapSeverity(x.severity); const sv = sevMeta(sev);
+      const imgOk = this.isRealImageUrl(x.snapshot);
+      return { n: x.n, title: x.title, severity: sev, color: sv.color, icon: sv.icon, where: `${this.roomName(x.room)} · ${x.surface}`, category: x.category, evidence: x.evidence, notes: x.notes || '—', action: x.action || '—', source: x.source === 'ai' ? 'Pre-flagged, confirmed by inspector' : 'Inspector-found', sourceColor: x.source === 'ai' ? '#2F6FED' : '#1F6F5C', hasImage: imgOk, noImage: !imgOk, image: imgOk ? x.snapshot : '', pressed: s.reportFocus === x.id ? 'true' : 'false', viewLabel: s.reportFocus === x.id ? 'Showing in 3D' : 'View in 3D', view: () => this.viewFinding(x) };
+    });
     const focusF = s.findings.find(x => x.id === s.reportFocus);
     const unvisited = D.ROOMS.filter(r => !s.visited.includes(r.id)).map(r => r.name);
     const reportPins = s.findings.map(x => { const [px, py] = PX(x.pos[0], x.pos[2]); return { left: (px / 660 * 100).toFixed(2) + '%', top: (py / 560 * 100).toFixed(2) + '%', n: x.n, color: x.color || sevMeta(mapSeverity(x.severity)).color }; });

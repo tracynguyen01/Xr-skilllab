@@ -580,8 +580,8 @@ h1,h2,h3,h4,p{margin:0}
                 <p style="display:inline-flex;align-self:flex-start;padding:8px 12px;border:2px solid #C2410C;color:#C2410C;border-radius:6px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;transform:rotate(-2deg)">Concept prototype — not a licensed inspection</p>
               </div>
               <div style="aspect-ratio:4/3;border-radius:8px;overflow:hidden;border:1px solid #E4DFD7;background:#E8EEF2;display:grid;place-items:center">
-                <!-- img src (not style url) — data:image/jpeg;base64,… must not sit in a style attr (`;` truncates). -->
-                <sc-if value="{{ hasDollThumb }}" hint-placeholder-val="{{ false }}"><img src="{{ dollThumb }}" alt="Dollhouse view of the demo home" style="width:100%;height:100%;object-fit:cover;display:block"></sc-if>
+                <!-- data-report-img + JS src: avoid style url() (`;` truncates) and avoid src="{{ … }}" before hydrate (404). -->
+                <sc-if value="{{ hasDollThumb }}" hint-placeholder-val="{{ false }}"><img data-report-img="{{ dollThumb }}" alt="Dollhouse view of the demo home" style="width:100%;height:100%;object-fit:cover;display:block"></sc-if>
                 <sc-if value="{{ noDollThumb }}" hint-placeholder-val="{{ true }}"><p style="font-size:13px;color:#5E6670;padding:16px;text-align:center">Dollhouse thumbnail unavailable on this device</p></sc-if>
               </div>
             </header>
@@ -618,7 +618,7 @@ h1,h2,h3,h4,p{margin:0}
                 <div style="display:flex;flex-direction:column;gap:16px">
                   <sc-for list="{{ reportCards }}" as="rc" hint-placeholder-count="2">
                     <div style="border:1px solid #E4DFD7;border-radius:12px;overflow:hidden;break-inside:avoid;page-break-inside:avoid">
-                      <sc-if value="{{ rc.hasImage }}" hint-placeholder-val="{{ false }}"><img src="{{ rc.image }}" alt="Snapshot of the finding location" style="width:100%;aspect-ratio:16/10;object-fit:cover;display:block;background:#E8EEF2"></sc-if>
+                      <sc-if value="{{ rc.hasImage }}" hint-placeholder-val="{{ false }}"><img data-report-img="{{ rc.image }}" alt="Snapshot of the finding location" style="width:100%;aspect-ratio:16/10;object-fit:cover;display:block;background:#E8EEF2"></sc-if>
                       <sc-if value="{{ rc.noImage }}" hint-placeholder-val="{{ true }}"><div style="aspect-ratio:16/6;background:#F6F4F0;display:grid;place-items:center;color:#5E6670;font-size:13px">Placed on the floor plan · no 3D snapshot</div></sc-if>
                       <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
                         <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
@@ -761,7 +761,18 @@ class Component extends DCLogic {
   }
   componentDidUpdate() { this.syncAll(); }
   setState(u, cb) { super.setState(u, cb); this.after(() => this.syncAll()); }
-  syncAll() { this.syncViews(); document.body.style.overflow = this.state.simOpen ? 'hidden' : ''; }
+  syncAll() { this.syncViews(); this.syncReportImages(); document.body.style.overflow = this.state.simOpen ? 'hidden' : ''; }
+  // Apply real image URLs to img[src] in JS — HTML style attrs truncate at ';' in data:image/jpeg;base64,…
+  syncReportImages() {
+    document.querySelectorAll('[data-report-img]').forEach(img => {
+      const u = img.getAttribute('data-report-img');
+      if (this.isRealImageUrl(u)) {
+        if (img.getAttribute('src') !== u) img.setAttribute('src', u);
+      } else if (img.hasAttribute('src')) {
+        img.removeAttribute('src');
+      }
+    });
+  }
   after(fn) { requestAnimationFrame(() => requestAnimationFrame(fn)); }
   focusInto(ref) { this.after(() => { const el = ref && ref.current; if (!el) return; (el.querySelector('[data-autofocus]') || el).focus(); }); }
   returnFocus() { const t = this.lastTrigger; this.lastTrigger = null; if (t && t.isConnected) t.focus(); else if (this.simView && this.state.view === '3d' && this.state.simOpen) this.simView.canvas.focus(); }

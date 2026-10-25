@@ -376,10 +376,11 @@ h1,h2,h3,h4,p{margin:0}
               <div style="margin-bottom:12px;background:#fff;border:1px solid #E4DFD7;border-radius:14px;overflow:hidden">
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #E4DFD7"><p style="font-weight:700;font-size:14px">360° view · {{ panoLabel }}</p><button type="button" onClick="{{ closePano }}" aria-label="Close 360 view" style="width:36px;height:36px;border-radius:8px;border:0;background:transparent;font-size:20px;cursor:pointer;color:#5E6670" style-hover="background:#F6F4F0">×</button></div>
                 <sc-if value="{{ panoHasImage }}" hint-placeholder-val="{{ false }}">
-                  <div style="overflow-x:auto;background:#1A1D21"><div role="img" aria-label="Rendered 360 view from this capture point" style="height:220px;width:{{ panoWidth }};background-image:url({{ panoUrl }});background-size:auto 100%;background-repeat:no-repeat"></div></div>
+                  <!-- Same data-report-img pattern as the report — never CSS url() for data URLs. -->
+                  <div style="overflow-x:auto;background:#1A1D21"><img data-report-img="{{ panoUrl }}" alt="Rendered 360 view from this capture point" style="height:220px;width:{{ panoWidth }};object-fit:fill;display:block"></div>
                   <p style="padding:8px 14px;font-size:12px;color:#5E6670">Scroll sideways to look around. Rendered from the twin at this capture point.</p>
                 </sc-if>
-                <sc-if value="{{ panoNoImage }}" hint-placeholder-val="{{ false }}">
+                <sc-if value="{{ panoNoImage }}" hint-placeholder-val="{{ true }}">
                   <p style="padding:16px 14px;color:#5E6670">Photo view isn't available on this device. The room is marked as visited.</p>
                 </sc-if>
               </div>
@@ -762,7 +763,7 @@ class Component extends DCLogic {
   componentDidUpdate() { this.syncAll(); }
   setState(u, cb) { super.setState(u, cb); this.after(() => this.syncAll()); }
   syncAll() { this.syncViews(); this.syncReportImages(); document.body.style.overflow = this.state.simOpen ? 'hidden' : ''; }
-  // Apply real image URLs to img[src] in JS — HTML style attrs truncate at ';' in data:image/jpeg;base64,…
+  // Shared helper for report + 360° pane: set img[src] in JS (style url() truncates data URLs at ';').
   syncReportImages() {
     document.querySelectorAll('[data-report-img]').forEach(img => {
       const u = img.getAttribute('data-report-img');
@@ -920,7 +921,18 @@ class Component extends DCLogic {
   planXZ(e) { const el = this.planRef.current; if (!el) return null; const r = el.getBoundingClientRect(); const u = (e.clientX - r.left) / r.width, v = (e.clientY - r.top) / r.height; return [u * 16.5 - 7, v * 14 - 5.5]; }
   planClick = e => { if (e.target.closest('button')) return; const s = this.state; const xz = this.planXZ(e); if (!xz) return; const room = this.D.roomAt(xz[0], xz[1]); if (s.tool === 'measure') { this.measureClick([xz[0], 1.0, xz[1]]); return; } if (s.tool === 'pin') this.startPin({ point: [xz[0], 1.2, xz[1]], normal: [0, 1, 0], room, surface: 'floor plan position', plant: null }, e.currentTarget, { fromPlan: true }); };
   pinRoom(roomId, e) { const r = this.D.ROOMS.find(r => r.id === roomId); const x = (r.x1 + r.x2) / 2, z = (r.z1 + r.z2) / 2; this.startPin({ point: [x, 1.2, z], normal: [0, 1, 0], room: roomId, surface: 'floor plan position', plant: null }, e.currentTarget, { fromPlan: true }); }
-  openPano(id) { this.visit(id); let url = null; if (this.simView) { try { url = this.simView.panorama(id); } catch (_) { } } const p = this.D.POINTS.find(p => p.id === id); this.setState({ pano: { id, url, label: p ? p.label : id } }); }
+  openPano(id) {
+    this.visit(id);
+    let url = null;
+    if (this.simView) {
+      try {
+        const snap = this.simView.panorama(id);
+        if (this.isRealImageUrl(snap)) url = snap;
+      } catch (_) { /* leave url null → placeholder */ }
+    }
+    const p = this.D.POINTS.find(p => p.id === id);
+    this.setState({ pano: { id, url, label: p ? p.label : id } });
+  }
   // ---- report ----
   // Only keep a real image URL — empty data:image/jpeg (no payload) causes ERR_INVALID_URL in css url().
   isRealImageUrl(u) {
@@ -1013,7 +1025,7 @@ class Component extends DCLogic {
       tools, layersOpen: s.layersOpen, layerToggles, thermalOn: s.layers.thermal, moistureOn: s.layers.moisture, vrDisabled: !s.xr || !view3d, vrOpacity: s.xr && view3d ? 1 : .45, vrTitle: s.xr ? 'View in Headset' : 'Connect a WebXR headset to view in VR',
       hintLine: s.tool === 'pin' ? (view3d ? 'Click any surface to drop a pin at that exact point.' : 'Click the plan, a captured detail, or use the room buttons to place a pin.') : s.tool === 'measure' ? (s.draft ? 'Click the second point to finish the measurement.' : 'Click two points to measure the distance in metres.') : (view3d ? 'Click a floor disc to move · drag to look · scroll to zoom' : 'Select a capture point for a 360° view. Tab moves between markers.'),
       planPadRight: s.narrow ? '16px' : '392px', planRooms, planMarkers, planCursor: s.tool === 'navigate' ? 'default' : 'crosshair', hasDraft2d: !!draft2d && view2d, draftLeft: draft2d ? draft2d[0] : '0%', draftTop: draft2d ? draft2d[1] : '0%', toolPin2d: s.tool === 'pin' && view2d, roomPinButtons: D.ROOMS.map(r => ({ name: r.name, pin: e => this.pinRoom(r.id, e) })),
-      panoOpen: !!s.pano, panoLabel: s.pano ? s.pano.label : '', panoHasImage: !!(s.pano && s.pano.url), panoNoImage: !!(s.pano && !s.pano.url), panoUrl: s.pano ? s.pano.url : '', panoWidth: '880px',
+      panoOpen: !!s.pano, panoLabel: s.pano ? s.pano.label : '', panoHasImage: !!(s.pano && this.isRealImageUrl(s.pano.url)), panoNoImage: !!(s.pano && !this.isRealImageUrl(s.pano.url)), panoUrl: s.pano && this.isRealImageUrl(s.pano.url) ? s.pano.url : '', panoWidth: '880px',
       panelVisible: !s.narrow || s.panelOpen, tabIsFlags: s.tab === 'flags', tabIsFindings: s.tab === 'findings', tabFlagsSel: s.tab === 'flags' ? 'true' : 'false', tabFindSel: s.tab === 'findings' ? 'true' : 'false', tabFlagsBg: s.tab === 'flags' ? 'rgba(255,255,255,.14)' : 'transparent', tabFindBg: s.tab === 'findings' ? 'rgba(255,255,255,.14)' : 'transparent', flagCards, findingGroups, noFindings: s.findings.length === 0,
       roomNav, roomName, roomShort: roomName, roomNavLabel: `Room: ${roomName}`,
       formOpen: !!f, formEyebrow: f && f.editId ? 'Edit finding' : (f && f.source === 'ai' ? 'Confirm pre-flagged area' : 'New finding'), formHeading: f && f.editId ? 'Edit finding' : (f && f.plant && !f.fromPlan && f.source !== 'ai' ? 'Pin finding — detail recognised' : 'Pin finding'), formWhere: f ? `${this.roomName(f.room)} · ${f.surface}` : '', formTitleVal: f ? f.title : '', formCategory: f ? f.category : 'Other', formMeasure: f ? f.measureId : '', formNotes: f ? f.notes : '', formAction: f ? f.action : '', measureOptions: s.measures.map(m => ({ id: m.id, label: `${m.label} · ${this.roomName(m.room)}` })), severityOptions, formEvidence, saveDisabled: !f || !f.title.trim(), saveOpacity: f && f.title.trim() ? 1 : .55, saveLabel: f && f.editId ? 'Save changes' : 'Save finding',

@@ -41,8 +41,15 @@ test('TwinInspect room nav, finding lifecycle, report, and no raw templates', as
 
   const rooms = page.getByRole('navigation', { name: 'Rooms' })
   await expect(rooms).toBeVisible({ timeout: 15000 })
+
+  // 2D room switch opens the 360° pane — must not log ERR_INVALID_URL from CSS data URLs.
+  consoleErrors.length = 0
   await rooms.getByRole('button', { name: 'Next room' }).click()
   await expect(rooms.getByRole('button', { name: /current room/i })).toBeVisible()
+  const plan = page.locator('[data-screen-label="Floor plan"]')
+  await expect(plan.getByText(/360° view/i)).toBeVisible({ timeout: 10000 })
+  await page.waitForTimeout(500)
+  expect(consoleErrors, `room-switch console errors: ${consoleErrors.join(' | ')}`).toEqual([])
 
   const form = await pinLivingFinding(page, 'Damp patch near skirting')
 
@@ -63,7 +70,12 @@ test('TwinInspect room nav, finding lifecycle, report, and no raw templates', as
   await expect(report.locator('text={{')).toHaveCount(0)
   expect(consoleErrors, `report console errors: ${consoleErrors.join(' | ')}`).toEqual([])
 
+  consoleErrors.length = 0
   await report.getByRole('button', { name: 'Back to inspection' }).click()
+  await expect(page.getByRole('navigation', { name: 'Rooms' })).toBeVisible({ timeout: 10000 })
+  await page.waitForTimeout(500)
+  expect(consoleErrors, `back-to-inspection console errors: ${consoleErrors.join(' | ')}`).toEqual([])
+
   await page.getByRole('tab', { name: /Findings/i }).click()
   await page.getByRole('button', { name: /Delete Damp patch/i }).click()
   await expect(page.getByText(/No findings yet/i).first()).toBeVisible()

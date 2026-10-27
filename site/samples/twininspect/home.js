@@ -227,7 +227,7 @@ class Cam {
     if (this.tween) { const tw = this.tween, k = ease(Math.min(1, (performance.now() - tw.start) / tw.ms)); const pos = tw.from.pos.clone().lerp(tw.to.pos, k); pos.y += Math.sin(k * Math.PI) * tw.arc; const look = tw.from.look.clone().lerp(tw.to.look, k); this.apply({ pos, look, fov: tw.from.fov + (tw.to.fov - tw.from.fov) * k }); if (k >= 1) { this.tween = null; tw.res(); } return; }
     const a = 1 - Math.pow(.002, dt); this.par.x += (this.parGoal.x - this.par.x) * a; this.par.y += (this.parGoal.y - this.par.y) * a;
     if (this.mode === 'fp') { const f = this.fp; f.yaw += (f.gyaw - f.yaw) * a; f.pitch += (f.gpitch - f.pitch) * a; f.fov += (f.gfov - f.fov) * a; }
-    else { const o = this.orbit; if (this.auto) o.gtheta += this.auto * dt; o.theta += (o.gtheta - o.theta) * a; o.phi += (o.gphi - o.phi) * a; o.r += (o.gr - o.r) * a; }
+    else { const o = this.orbit; if (this.auto && !this.reduced) o.gtheta += this.auto * dt; o.theta += (o.gtheta - o.theta) * a; o.phi += (o.gphi - o.phi) * a; o.r += (o.gr - o.r) * a; }
     this.apply(this.pose());
   }
   drag(dx, dy) { if (!this.enabled || this.tween) return; if (this.mode === 'fp') { this.fp.gyaw += dx * .0045; this.fp.gpitch = Math.min(1.2, Math.max(-1.2, this.fp.gpitch + dy * .0035)); } else { this.orbit.gtheta -= dx * .005; this.orbit.gphi = Math.min(1.35, Math.max(.2, this.orbit.gphi - dy * .004)); } }

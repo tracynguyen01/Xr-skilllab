@@ -60,7 +60,7 @@ class Orbit {
   }
   update(dt) {
     if (this.tween) { const tw = this.tween, k = ease(Math.min(1, (performance.now() - tw.start) / tw.ms)); this.cur.theta = tw.from.theta + (tw.to.theta - tw.from.theta) * k; this.cur.phi = tw.from.phi + (tw.to.phi - tw.from.phi) * k; this.cur.r = tw.from.r + (tw.to.r - tw.from.r) * k; this.target.lerpVectors(tw.from.t, tw.to.t, k); this.goal = { ...this.cur }; this.goalTarget.copy(this.target); if (k >= 1) { this.tween = null; tw.res(); } }
-    else { if (this.auto) this.goal.theta += this.auto * dt; const a = 1 - Math.pow(.002, dt); this.par.x += (this.parGoal.x - this.par.x) * a; this.par.y += (this.parGoal.y - this.par.y) * a; this.cur.theta += (this.goal.theta - this.cur.theta) * a; this.cur.phi += (this.goal.phi - this.cur.phi) * a; this.cur.r += (this.goal.r - this.cur.r) * a; this.target.lerp(this.goalTarget, a); }
+    else { if (this.auto && !this.reduced) this.goal.theta += this.auto * dt; const a = 1 - Math.pow(.002, dt); this.par.x += (this.parGoal.x - this.par.x) * a; this.par.y += (this.parGoal.y - this.par.y) * a; this.cur.theta += (this.goal.theta - this.cur.theta) * a; this.cur.phi += (this.goal.phi - this.cur.phi) * a; this.cur.r += (this.goal.r - this.cur.r) * a; this.target.lerp(this.goalTarget, a); }
     this.apply();
   }
   apply() { const { theta, phi, r } = this.cur, t = this.target, th = theta + this.par.x, ph = this.clampPhi(phi + this.par.y); this.cam.position.set(t.x + r * Math.sin(ph) * Math.sin(th), t.y + r * Math.cos(ph), t.z + r * Math.sin(ph) * Math.cos(th)); this.cam.lookAt(t); }

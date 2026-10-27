@@ -127,25 +127,39 @@ async function expectFocusRingOn(
   expect(ring, `${label}: no focus-only ring`).toBe(true)
 }
 
-/** Hook createView so tests can read controls.reduced / camera pose. */
+/** Hook XRWarehouse / TwinHome createView so tests can read camera pose. */
 async function installXrViewProbe(page: Page) {
   await page.addInitScript(() => {
-    const hook = () => {
-      const api = (window as unknown as { XRWarehouse?: { createView: Function; __hooked?: boolean } }).XRWarehouse
-      if (!api?.createView || api.__hooked) return
+    type Api = { createView: (opts: unknown) => unknown; __hooked?: boolean }
+    const w = window as unknown as Window & {
+      XRWarehouse?: Api
+      TwinHome?: Api
+      __xrViews?: unknown[]
+    }
+    const wrap = (api: Api) => {
+      if (!api?.createView || api.__hooked) return api
       const orig = api.createView.bind(api)
       api.createView = (opts: unknown) => {
         const view = orig(opts)
-        if (view) {
-          const w = window as unknown as { __xrViews?: unknown[] }
-          ;(w.__xrViews ||= []).push(view)
-        }
+        if (view) (w.__xrViews ||= []).push(view)
         return view
       }
       api.__hooked = true
+      return api
     }
-    setInterval(hook, 30)
-    window.addEventListener('xrwarehouse-ready', hook)
+    // Intercept assignment so we wrap before the lesson calls createView.
+    for (const key of ['XRWarehouse', 'TwinHome'] as const) {
+      let cur: Api | undefined
+      Object.defineProperty(w, key, {
+        configurable: true,
+        get() {
+          return cur
+        },
+        set(v: Api) {
+          cur = wrap(v)
+        },
+      })
+    }
   })
 }
 
@@ -158,33 +172,120 @@ type CamSnap = {
   x: number
   y: number
   z: number
+  settling: boolean
+  label: string
 }
 
-async function readInteractiveCam(page: Page): Promise<(CamSnap & { settling: boolean }) | null> {
-  return page.evaluate(() => {
-    const views = (window as unknown as { __xrViews?: Array<{
+/** Read orbit pose from a warehouse-style (controls) or TwinInspect (cam) view. */
+async function readViewCam(
+  page: Page,
+  prefer: 'hero' | 'interactive',
+): Promise<CamSnap | null> {
+  return page.evaluate((which) => {
+    type Orbit = {
+      reduced: boolean
+      auto: number
+      tween: unknown
+      cur?: { theta: number; phi: number; r: number }
+      goal?: { theta: number; phi: number; r: number }
+      orbit?: { theta: number; phi: number; r: number; gtheta: number; gphi: number; gr: number }
+    }
+    type View = {
+      active?: boolean
       canvas: HTMLCanvasElement
-      controls: {
-        reduced: boolean
-        auto: number
-        tween: unknown
-        cur: { theta: number; phi: number; r: number }
-        goal: { theta: number; phi: number; r: number }
-      }
+      controls?: Orbit
+      cam?: Orbit
       camera: { position: { x: number; y: number; z: number } }
-    }> }).__xrViews
+    }
+    const views = (window as unknown as { __xrViews?: View[] }).__xrViews
     if (!views?.length) return null
-    const v = views.find((view) => /Interactive 3D/i.test(view.canvas?.getAttribute('aria-label') || '')) || views[views.length - 1]
-    const { theta, phi, r } = v.controls.cur
-    const g = v.controls.goal
+
+    const labelOf = (v: View) => v.canvas?.getAttribute('aria-label') || ''
+    const isHero = (v: View) =>
+      /preview|Live 3D|Rotating dollhouse|hero/i.test(labelOf(v)) ||
+      (!/Interactive 3D/i.test(labelOf(v)) && !!v.active)
+    const isInteractive = (v: View) => /Interactive 3D/i.test(labelOf(v))
+
+    let v: View | undefined
+    if (which === 'hero') {
+      v = views.find(isHero) || views.find((view) => view.active) || views[0]
+    } else {
+      v = views.find(isInteractive) || views[views.length - 1]
+    }
+    if (!v) return null
+
+    const orbit = v.controls || v.cam
+    if (!orbit) return null
     const { x, y, z } = v.camera.position
+
+    // TwinInspect Cam uses orbit.theta / gtheta; warehouse Orbit uses cur/goal.
+    if (orbit.orbit) {
+      const o = orbit.orbit
+      const settling =
+        !!orbit.tween ||
+        Math.abs(o.theta - o.gtheta) > 1e-4 ||
+        Math.abs(o.phi - o.gphi) > 1e-4 ||
+        Math.abs(o.r - o.gr) > 1e-4
+      return {
+        reduced: orbit.reduced,
+        auto: orbit.auto,
+        theta: o.theta,
+        phi: o.phi,
+        r: o.r,
+        x,
+        y,
+        z,
+        settling,
+        label: labelOf(v).slice(0, 48),
+      }
+    }
+
+    if (!orbit.cur || !orbit.goal) return null
+    const { theta, phi, r } = orbit.cur
+    const g = orbit.goal
     const settling =
-      !!v.controls.tween ||
+      !!orbit.tween ||
       Math.abs(theta - g.theta) > 1e-4 ||
       Math.abs(phi - g.phi) > 1e-4 ||
       Math.abs(r - g.r) > 1e-4
-    return { reduced: v.controls.reduced, auto: v.controls.auto, theta, phi, r, x, y, z, settling }
-  })
+    return {
+      reduced: orbit.reduced,
+      auto: orbit.auto,
+      theta,
+      phi,
+      r,
+      x,
+      y,
+      z,
+      settling,
+      label: labelOf(v).slice(0, 48),
+    }
+  }, prefer)
+}
+
+async function expectCamFrozen(page: Page, prefer: 'hero' | 'interactive', label: string) {
+  await expect
+    .poll(async () => {
+      const snap = await readViewCam(page, prefer)
+      return !!(snap && snap.reduced === true && !snap.settling)
+    }, { timeout: 20000, message: `${label}: waiting for reduced + settled camera` })
+    .toBeTruthy()
+
+  const first = await readViewCam(page, prefer)
+  expect(first, `${label}: camera view missing`).toBeTruthy()
+  expect(first!.reduced, `${label}: controls/cam.reduced should be true`).toBe(true)
+
+  await page.waitForTimeout(2000)
+
+  const second = await readViewCam(page, prefer)
+  expect(second!.reduced).toBe(true)
+  expect(second!.settling, `${label}: still settling after wait`).toBe(false)
+  expect(Math.abs(second!.theta - first!.theta), `${label}: theta moved`).toBeLessThan(1e-4)
+  expect(Math.abs(second!.phi - first!.phi), `${label}: phi moved`).toBeLessThan(1e-4)
+  expect(Math.abs(second!.r - first!.r), `${label}: r moved`).toBeLessThan(1e-4)
+  expect(Math.abs(second!.x - first!.x), `${label}: x moved`).toBeLessThan(1e-3)
+  expect(Math.abs(second!.y - first!.y), `${label}: y moved`).toBeLessThan(1e-3)
+  expect(Math.abs(second!.z - first!.z), `${label}: z moved`).toBeLessThan(1e-3)
 }
 
 test.describe('a11y and responsive — all samples', () => {
@@ -213,16 +314,15 @@ test.describe('a11y and responsive — all samples', () => {
       await page.waitForTimeout(300)
       await expectFocusRingOn(page, beginName, `${sample.title} Begin in 2D`)
 
-      // Finish only appears once play has started — check it when present.
+      // Finish must appear once play/inspect has started — fail if missing.
       await page.getByRole('button', { name: beginName }).first().click()
       const finish = page.getByRole('button', { name: /Finish/i }).first()
-      if (await finish.isVisible({ timeout: 8000 }).catch(() => false)) {
-        // TwinInspect has many plan markers in the Tab order; still require a focus ring.
-        await expectFocusRingOn(page, /Finish/i, `${sample.title} Finish`, {
-          requireTab: sample.slug !== 'twininspect',
-          maxTabs: 64,
-        })
-      }
+      await expect(finish, `${sample.title}: Finish missing after Start`).toBeVisible({ timeout: 15000 })
+      // TwinInspect has many plan markers — allow a longer Tab walk, but still require Tab.
+      await expectFocusRingOn(page, /Finish/i, `${sample.title} Finish`, {
+        requireTab: true,
+        maxTabs: sample.slug === 'twininspect' ? 120 : 64,
+      })
     })
 
     test(`${sample.title}: icon-only buttons have accessible names`, async ({ page }) => {
@@ -278,7 +378,30 @@ test.describe('reduced motion', () => {
     await expect(carousel.locator('.slide.is-active').getByRole('heading', { level: 3, name: 'Warehouse Safety' })).toBeVisible()
   })
 
-  test('Oil & Gas 3D camera stays still under reduced motion', async ({ page }) => {
+  // Intro/hero auto-turn must freeze under reduced motion (before Start/play).
+  for (const sample of samples) {
+    test(`${sample.title}: hero camera stays still under reduced motion`, async ({ page }) => {
+      test.setTimeout(90000)
+      await installXrViewProbe(page)
+      await page.emulateMedia({ reducedMotion: 'reduce' })
+      await page.setViewportSize({ width: 1280, height: 900 })
+      await page.goto(`/${sample.href}`)
+      await expect(page.getByRole('button', { name: 'Menu' })).toBeVisible({ timeout: 20000 })
+      expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(true)
+
+      // Do not click Start — the landing hero must already be frozen.
+      await expect
+        .poll(async () => {
+          const snap = await readViewCam(page, 'hero')
+          return !!(snap && snap.reduced === true)
+        }, { timeout: 20000, message: `${sample.title}: hero view not ready` })
+        .toBeTruthy()
+
+      await expectCamFrozen(page, 'hero', `${sample.title} hero`)
+    })
+  }
+
+  test('Oil & Gas play camera stays still under reduced motion', async ({ page }) => {
     test.setTimeout(90000)
     await installXrViewProbe(page)
     await page.emulateMedia({ reducedMotion: 'reduce' })
@@ -287,40 +410,22 @@ test.describe('reduced motion', () => {
     await page.evaluate(() => sessionStorage.setItem('xr-scene-briefing:oil-gas', '1'))
 
     await expect(page.getByRole('button', { name: 'Menu' })).toBeVisible({ timeout: 20000 })
-    expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(true)
-
     await page.getByRole('button', { name: 'Start the Simulation' }).click()
     await expect(page.getByRole('heading', { name: 'Gas Pad Challenge' })).toBeVisible({ timeout: 20000 })
-    // 3D path: reduced mode should snap the glide and leave auto-turn off in play.
     await page.getByRole('button', { name: 'Begin in 3D' }).click()
 
-    // Wait until glideIn has snapped to the inspection pose and the orbit has settled.
-    await expect.poll(async () => {
-      const snap = await readInteractiveCam(page)
-      if (!snap || !snap.reduced || snap.auto !== 0 || snap.settling) return false
-      // inspection preset theta is 0.4 — avoid sampling the pre-glide hero pose (0.55).
-      return Math.abs(snap.theta - 0.4) < 0.02 && Math.abs(snap.r - 16) < 0.5
-    }, { timeout: 15000 }).toBeTruthy()
+    // Wait until glideIn has snapped to the inspection pose.
+    await expect
+      .poll(async () => {
+        const snap = await readViewCam(page, 'interactive')
+        if (!snap || !snap.reduced || snap.auto !== 0 || snap.settling) return false
+        return Math.abs(snap.theta - 0.4) < 0.02 && Math.abs(snap.r - 16) < 0.5
+      }, { timeout: 15000 })
+      .toBeTruthy()
 
-    const first = await readInteractiveCam(page)
-    expect(first, 'interactive 3D view missing').toBeTruthy()
-    expect(first!.reduced, 'controls.reduced should follow prefers-reduced-motion').toBe(true)
-    // Play clears auto; the engine also skips auto turns while reduced is on.
+    const first = await readViewCam(page, 'interactive')
     expect(first!.auto, 'play mode must not add an auto sideways turn').toBe(0)
-
-    await page.waitForTimeout(2000)
-
-    const second = await readInteractiveCam(page)
-    expect(second!.reduced).toBe(true)
-    expect(second!.auto).toBe(0)
-    expect(second!.settling).toBe(false)
-    // Angle + position should be frozen (allow tiny float noise only).
-    expect(Math.abs(second!.theta - first!.theta)).toBeLessThan(1e-4)
-    expect(Math.abs(second!.phi - first!.phi)).toBeLessThan(1e-4)
-    expect(Math.abs(second!.r - first!.r)).toBeLessThan(1e-4)
-    expect(Math.abs(second!.x - first!.x)).toBeLessThan(1e-3)
-    expect(Math.abs(second!.y - first!.y)).toBeLessThan(1e-3)
-    expect(Math.abs(second!.z - first!.z)).toBeLessThan(1e-3)
+    await expectCamFrozen(page, 'interactive', 'Oil & Gas play')
   })
 })
 

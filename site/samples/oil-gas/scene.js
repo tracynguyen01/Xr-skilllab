@@ -275,7 +275,7 @@ function buildScene() {
   stageMarker('3  Pipe rack', 0.2, 3.85, -0.15, 1.85);
   stageMarker('4  Transfer pumps', 0.6, 2.55, 4.5, 1.85);
   stageMarker('5  Flare', 8.6, 9.4, -6.2, 1.7);
-  stageMarker('5  Export', 9.6, 1.55, 5.5, 1.55);
+  stageMarker('5  Export', 10.3, 1.35, 4.5, 1.55);
 
   // Subtle ground ribbon + chevrons along the main process path
   // Path on pad: wellhead → separator → rack mid → pumps → split (flare / export)

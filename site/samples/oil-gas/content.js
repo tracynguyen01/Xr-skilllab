@@ -56,48 +56,48 @@ export const decoys = {
 export const equipment = {
   flange: {
     name: 'Separator',
-    purpose: 'Separates gas and liquids on this fictional pad before they move on.',
-    relevance: 'Flanges and detectors sit on the separator vessels in this scene.',
+    purpose: 'Stage 2 of this fictional chain: separates gas and liquids before they move to the rack.',
+    relevance: 'Sits after the wellhead inlet and feeds the pipe rack in this illustration.',
   },
   hotwork: {
     name: 'Pipe rack',
-    purpose: 'Carries process pipework across the pad in this illustration.',
-    relevance: 'Pipe runs cross the pad on this steel rack.',
+    purpose: 'Stage 3 of this fictional chain: carries process pipework across the pad.',
+    relevance: 'Receives flow from the separator train and routes it toward pumps and relief.',
   },
   pump: {
     name: 'Transfer pump',
-    purpose: 'Moves product between vessels in this teaching scene.',
-    relevance: 'This unit sits beside a second pump on the same pad skid.',
+    purpose: 'Stage 4 of this fictional chain: moves product onward in this teaching scene.',
+    relevance: 'Sits after the pipe rack on the pad skid, before the export stub.',
   },
   lockedpump: {
     name: 'Second pump',
-    purpose: 'A second pump on the pad skid in this teaching scene.',
-    relevance: 'This unit sits beside the transfer pump on the same pad skid.',
+    purpose: 'A second pump on the same stage-4 skid in this teaching scene.',
+    relevance: 'Sits beside the transfer pump on the process path toward export.',
   },
   muster: {
     name: 'Muster gate',
     purpose: 'A signed exit through the pad fence in this illustration.',
-    relevance: 'The gate opens through the fence line at the edge of the pad.',
+    relevance: 'Off the process chain — fence-line egress at the edge of the pad.',
   },
   flare: {
     name: 'Flare stack',
-    purpose: 'Burns relief gas in this fictional layout.',
-    relevance: 'The stack stands at the edge of the pad as the relief path.',
+    purpose: 'Stage 5 of this fictional chain: burns relief gas in this layout.',
+    relevance: 'Takes the gas branch from the pipe rack as the illustrated relief path.',
   },
   shelter: {
     name: 'Control shelter',
     purpose: 'A small shelter for local controls in this illustration.',
-    relevance: 'The shelter marks a local control point on the pad layout.',
+    relevance: 'Off the process chain — a local control point on the pad layout.',
   },
   wellhead: {
     name: 'Wellhead',
-    purpose: 'A fenced well tree on this fictional pad.',
-    relevance: 'The tree sits inside a small fence on one corner of the pad.',
+    purpose: 'Stage 1 of this fictional chain: the illustrated inlet to the pad.',
+    relevance: 'Feeds the separator train at the start of the process path.',
   },
   extinguisher: {
     name: 'Fire extinguisher',
     purpose: 'A portable extinguisher kept on the pad in this illustration.',
-    relevance: 'The extinguisher stands beside the walkway near the shelter.',
+    relevance: 'Off the process chain — beside the walkway near the shelter.',
   },
 }
 

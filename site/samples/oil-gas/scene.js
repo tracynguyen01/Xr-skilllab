@@ -16,6 +16,35 @@ const PRESETS = {
   extinguisher: { t: [6.2, 1.2, 3.2], theta: -1.4, phi: 1.3, r: 5 },
 };
 
+/** Calm world-space stage marker — not selectable, not a hazard hint. */
+function stageLabelTex(text) {
+  const c = document.createElement('canvas');
+  c.width = 512; c.height = 128;
+  const g = c.getContext('2d');
+  g.clearRect(0, 0, 512, 128);
+  g.fillStyle = 'rgba(11,18,32,.78)';
+  roundRect(g, 12, 28, 488, 72, 18); g.fill();
+  g.strokeStyle = 'rgba(182,196,214,.35)'; g.lineWidth = 3;
+  roundRect(g, 12, 28, 488, 72, 18); g.stroke();
+  g.fillStyle = '#F5F8FC';
+  g.font = '600 42px Manrope, Helvetica, Arial, sans-serif';
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(text, 256, 64);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+function roundRect(g, x, y, w, h, r) {
+  g.beginPath();
+  g.moveTo(x + r, y);
+  g.arcTo(x + w, y, x + w, y + h, r);
+  g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r);
+  g.arcTo(x, y, x + w, y, r);
+  g.closePath();
+}
+
 function buildScene() {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xb7c6d4);
@@ -157,6 +186,158 @@ function buildScene() {
   box(.22, .05, .05, M.dark, .05, .98, 0, ext);
   box(.04, .5, .5, M.white, -.16, 1.15, 0, ext);
   register(ext, 'extinguisher', 'Fire extinguisher', [0, 1.7, 0]);
+
+  // ---------------------------------------------------------------------------
+  // Illustrative process chain (fictional pad only): inlet → separator → rack →
+  // pumps → flare / export. Connecting runs + calm stage labels; not selectable.
+  // ---------------------------------------------------------------------------
+  const flow = new THREE.Group(); scene.add(flow);
+  const Mflow = std({ color: 0x6f8496, roughness: .42, metalness: .5 });
+  const MflowGas = std({ color: 0xa8b4c0, roughness: .4, metalness: .45 });
+  const Mribbon = new THREE.MeshBasicMaterial({ color: 0xf2b544, transparent: true, opacity: .22, depthWrite: false });
+  const Mchev = new THREE.MeshBasicMaterial({ color: 0xf2b544, transparent: true, opacity: .55, depthWrite: false });
+
+  function pipeBetween(ax, ay, az, bx, by, bz, mat = Mflow, r = .11) {
+    const a = new THREE.Vector3(ax, ay, az);
+    const b = new THREE.Vector3(bx, by, bz);
+    const dir = b.clone().sub(a);
+    const len = dir.length();
+    if (len < .01) return null;
+    const mid = a.clone().add(b).multiplyScalar(.5);
+    const m = cyl(r, r, len, mat, mid.x, mid.y, mid.z, flow);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize());
+    m.castShadow = true;
+    return m;
+  }
+  function elbow(x, y, z, mat = Mflow, r = .13) {
+    return mesh(new THREE.SphereGeometry(r, 12, 12), mat, x, y, z, flow);
+  }
+  function stageMarker(text, x, y, z, scale = 1.9) {
+    const tx = stageLabelTex(text);
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tx, transparent: true, depthTest: true, opacity: .94 }));
+    const aspect = tx.image.width / tx.image.height;
+    s.scale.set(scale * aspect * .42, scale * .42, 1);
+    s.position.set(x, y, z);
+    s.renderOrder = 6;
+    flow.add(s);
+    return s;
+  }
+
+  // Wellhead / inlet → separator train (west side of vessels)
+  pipeBetween(-7.5, 1.15, 5.2, -7.5, 1.15, 2.4);
+  elbow(-7.5, 1.15, 2.4);
+  pipeBetween(-7.5, 1.15, 2.4, -7.5, 1.15, -2.2);
+  elbow(-7.5, 1.15, -2.2);
+  pipeBetween(-7.5, 1.15, -2.2, -7.7, 1.35, -2.2);
+  elbow(-7.7, 1.35, -2.2);
+  pipeBetween(-7.7, 1.35, -2.2, -6.9, 1.35, -2.2);
+
+  // Separator train → pipe rack (east of vessels, up into rack run)
+  pipeBetween(-4.05, 1.35, -2.2, -3.2, 1.35, -2.2);
+  elbow(-3.2, 1.35, -2.2);
+  pipeBetween(-3.2, 1.35, -2.2, -3.2, 2.25, -2.2);
+  elbow(-3.2, 2.25, -2.2);
+  pipeBetween(-3.2, 2.25, -2.2, -3.2, 2.25, 0);
+  elbow(-3.2, 2.25, 0);
+  pipeBetween(-3.2, 2.25, 0, -1.4, 2.25, 0);
+
+  // Rack → transfer pumps (drop south from rack)
+  elbow(-1.4, 2.25, 0);
+  pipeBetween(-1.4, 2.25, 0, -1.4, 2.25, 2.4);
+  elbow(-1.4, 2.25, 2.4);
+  pipeBetween(-1.4, 2.25, 2.4, -1.4, .85, 2.4);
+  elbow(-1.4, .85, 2.4);
+  pipeBetween(-1.4, .85, 2.4, -1.4, .85, 3.2);
+
+  // Branch along skid toward second pump (illustrative continuity)
+  pipeBetween(-.6, .55, 3.8, 2.0, .55, 4.2, Mflow, .09);
+
+  // Rack east → flare (gas relief path) — thinner, lighter pipe
+  pipeBetween(4.2, 2.25, 0, 6.4, 2.25, 0, MflowGas, .1);
+  elbow(6.4, 2.25, 0, MflowGas, .12);
+  pipeBetween(6.4, 2.25, 0, 6.4, 2.25, -3.2, MflowGas, .1);
+  elbow(6.4, 2.25, -3.2, MflowGas, .12);
+  pipeBetween(6.4, 2.25, -3.2, 8.2, 3.2, -5.4, MflowGas, .1);
+  elbow(8.2, 3.2, -5.4, MflowGas, .12);
+  pipeBetween(8.2, 3.2, -5.4, 8.6, 4.0, -6.0, MflowGas, .1);
+
+  // Export stub from pumps toward pad edge (decorative; not selectable)
+  pipeBetween(2.8, .55, 4.4, 5.2, .55, 4.6, Mflow, .1);
+  elbow(5.2, .55, 4.6);
+  pipeBetween(5.2, .55, 4.6, 9.4, .55, 4.8, Mflow, .1);
+  // Export flange / end marker
+  cyl(.22, .22, .14, M.yellow, 9.55, .55, 4.82, flow).rotation.z = Math.PI / 2;
+  box(.5, .08, .35, M.dark, 9.85, .25, 4.82, flow);
+
+  // Calm stage labels (no hazard wording)
+  stageMarker('1  Inlet', -8.2, 3.0, 5.2, 1.7);
+  stageMarker('2  Separator', -6.2, 3.6, -3.4, 1.85);
+  stageMarker('3  Pipe rack', 0.2, 3.85, -0.15, 1.85);
+  stageMarker('4  Transfer pumps', 0.6, 2.55, 4.5, 1.85);
+  stageMarker('5  Flare', 8.6, 9.4, -6.2, 1.7);
+  stageMarker('5  Export', 9.6, 1.55, 5.5, 1.55);
+
+  // Subtle ground ribbon + chevrons along the main process path
+  // Path on pad: wellhead → separator → rack mid → pumps → split (flare / export)
+  const ribbonPts = [
+    [-8.0, 5.0], [-7.4, 2.2], [-7.4, -1.6], [-5.0, -1.8],
+    [-3.0, -0.6], [-1.4, 0.4], [-1.4, 2.6], [0.4, 3.8],
+  ];
+  for (let i = 0; i < ribbonPts.length - 1; i++) {
+    const [x0, z0] = ribbonPts[i];
+    const [x1, z1] = ribbonPts[i + 1];
+    const dx = x1 - x0, dz = z1 - z0;
+    const len = Math.hypot(dx, dz);
+    const midX = (x0 + x1) / 2, midZ = (z0 + z1) / 2;
+    const strip = mesh(new THREE.PlaneGeometry(len, .38), Mribbon, midX, .04, midZ, flow);
+    strip.rotation.x = -Math.PI / 2;
+    strip.rotation.z = -Math.atan2(dz, dx);
+    strip.receiveShadow = false; strip.castShadow = false;
+  }
+  // Flare branch ribbon (lighter)
+  {
+    const strip = mesh(new THREE.PlaneGeometry(7.2, .28), Mribbon, 5.2, .04, -2.8, flow);
+    strip.rotation.x = -Math.PI / 2;
+    strip.rotation.z = -Math.atan2(-5.2, 3.4);
+    strip.material = Mribbon.clone();
+    strip.material.opacity = .16;
+    strip.receiveShadow = false; strip.castShadow = false;
+  }
+  // Export branch ribbon
+  {
+    const strip = mesh(new THREE.PlaneGeometry(6.5, .28), Mribbon, 6.0, .04, 4.6, flow);
+    strip.rotation.x = -Math.PI / 2;
+    strip.receiveShadow = false; strip.castShadow = false;
+  }
+
+  const chevrons = [];
+  const chevronSpots = [
+    [-7.6, 3.6, Math.PI], [-7.5, 0.2, Math.PI], [-5.6, -1.7, -Math.PI / 2],
+    [-3.4, -0.9, -0.4], [-1.5, 1.4, 0], [0.2, 3.6, -1.2],
+    [4.0, -1.0, -0.9], [7.2, 4.55, -1.55],
+  ];
+  chevronSpots.forEach(([x, z, yaw]) => {
+    const g = new THREE.Group(); flow.add(g); g.position.set(x, .05, z); g.rotation.y = yaw;
+    const mat = Mchev.clone();
+    const a = mesh(new THREE.PlaneGeometry(.32, .1), mat, -.08, 0, 0, g);
+    a.rotation.x = -Math.PI / 2; a.rotation.z = .45;
+    const b = mesh(new THREE.PlaneGeometry(.32, .1), mat, .08, 0, 0, g);
+    b.rotation.x = -Math.PI / 2; b.rotation.z = -.45;
+    a.receiveShadow = false; a.castShadow = false;
+    b.receiveShadow = false; b.castShadow = false;
+    chevrons.push({ g, mat });
+  });
+  // Soft pulse only when motion is allowed — static under prefers-reduced-motion.
+  anim.push((t, reduced) => {
+    if (reduced) {
+      chevrons.forEach(({ mat }) => { mat.opacity = .5; });
+      return;
+    }
+    chevrons.forEach(({ mat }, i) => {
+      const phase = (Math.sin(t * 1.4 - i * .45) + 1) * .5;
+      mat.opacity = .32 + phase * .38;
+    });
+  });
 
   // yellow walkway and a few bollards so the pad reads as a place
   const line = mesh(new THREE.PlaneGeometry(14, .12), M.yellow, 0, .03, 2.2); line.rotation.x = -Math.PI / 2; line.receiveShadow = true;

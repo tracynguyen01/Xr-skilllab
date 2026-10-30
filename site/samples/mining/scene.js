@@ -17,6 +17,35 @@ const PRESETS = {
   refuge: { t: [-8.5, 1.4, 4], theta: 1.1, phi: 1.25, r: 7 },
 };
 
+/** Calm world-space stage marker — not selectable, not a hazard hint. */
+function stageLabelTex(text) {
+  const c = document.createElement('canvas');
+  c.width = 512; c.height = 128;
+  const g = c.getContext('2d');
+  g.clearRect(0, 0, 512, 128);
+  g.fillStyle = 'rgba(44,41,38,.82)';
+  roundRect(g, 12, 28, 488, 72, 18); g.fill();
+  g.strokeStyle = 'rgba(242,193,78,.4)'; g.lineWidth = 3;
+  roundRect(g, 12, 28, 488, 72, 18); g.stroke();
+  g.fillStyle = '#F5F1EA';
+  g.font = '600 42px Manrope, Helvetica, Arial, sans-serif';
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(text, 256, 64);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+function roundRect(g, x, y, w, h, r) {
+  g.beginPath();
+  g.moveTo(x + r, y);
+  g.arcTo(x + w, y, x + w, y + h, r);
+  g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r);
+  g.arcTo(x, y, x + w, y, r);
+  g.closePath();
+}
+
 function buildScene() {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xd7c3a2);
@@ -155,6 +184,130 @@ function buildScene() {
   box(.7, 1.3, .08, M.green, 0, .7, .92, refuge);
   box(.5, .3, .06, M.yellow, .7, 1.5, .92, refuge);
   register(refuge, 'refuge', 'Refuge chamber', [0, 2.5, 0]);
+
+  // ---------------------------------------------------------------------------
+  // Illustrative material flow (fictional pit only): dig face → load & haul →
+  // crusher → conveyor → stockpile / product out. Decorative only — existing
+  // selectable ids and world positions stay unchanged.
+  // ---------------------------------------------------------------------------
+  const flow = new THREE.Group(); scene.add(flow);
+  const Msteel2 = std({ color: 0x8a929a, roughness: .42, metalness: .5 });
+  const Mbelt = std({ color: 0xd48a3a, roughness: .55, metalness: .1 });
+  const Mstock = std({ map: rock, roughness: .92, color: 0xb8966e });
+  const Mribbon = new THREE.MeshBasicMaterial({ color: 0xf2c14e, transparent: true, opacity: .24, depthWrite: false });
+  const Mchev = new THREE.MeshBasicMaterial({ color: 0xf2c14e, transparent: true, opacity: .55, depthWrite: false });
+
+  function stageMarker(text, x, y, z, scale = 1.9) {
+    const tx = stageLabelTex(text);
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tx, transparent: true, depthTest: true, opacity: .94 }));
+    const aspect = tx.image.width / tx.image.height;
+    s.scale.set(scale * aspect * .42, scale * .42, 1);
+    s.position.set(x, y, z);
+    s.renderOrder = 6;
+    flow.add(s);
+    return s;
+  }
+
+  // Dig-face apron → haul road (short load-out pad at the toe)
+  const apron = mesh(new THREE.PlaneGeometry(3.2, 4.5), std({ color: 0x5a5148, roughness: .94 }), -5.2, .035, -1.2, flow);
+  apron.rotation.x = -Math.PI / 2;
+  // Low windrows so the dig-to-road link reads without moving the highwall group
+  for (let i = 0; i < 3; i++) {
+    box(.9, .35, .9, M.wall, -5.8 + i * .55, .18, -2.4 + i * .35, flow);
+  }
+
+  // Haul spur toward the crusher dump (extends the existing road silhouette east-south)
+  const spur = mesh(new THREE.PlaneGeometry(5.5, 3.2), M.road, 4.2, .032, 4.4, flow);
+  spur.rotation.x = -Math.PI / 2;
+  spur.rotation.z = -.35;
+  const spurRoute = mesh(new THREE.PlaneGeometry(2.0, 4.2), std({ color: 0x6a5f54, roughness: .95 }), 4.4, .042, 4.3, flow);
+  spurRoute.rotation.x = -Math.PI / 2;
+  spurRoute.rotation.z = -.35;
+  // Short berm stubs along the spur (decorative; main berm id unchanged)
+  ;[[2.6, 3.2], [3.8, 4.0], [5.0, 4.8]].forEach(([x, z]) => {
+    box(.7, .45, .7, M.wall, x, .22, z, flow);
+  });
+
+  // Crusher → south conveyor: short elevated transfer belt
+  box(.14, 1.2, .14, Msteel2, 6.9, .7, 3.6, flow);
+  box(.14, 1.2, .14, Msteel2, 6.9, .7, 2.4, flow);
+  box(.5, .08, 1.6, M.dark, 6.9, 1.45, 3.0, flow);
+  box(.36, .05, 1.45, Mbelt, 6.9, 1.52, 3.0, flow);
+  // Feed chute silhouette from crusher body toward the transfer
+  box(.55, .12, .9, Msteel2, 6.85, 1.55, 4.35, flow);
+  box(.12, .55, .12, Msteel2, 6.85, 1.25, 4.0, flow);
+
+  // South conveyor → north conveyor: linking belt run (ids/positions of both conveyors unchanged)
+  box(.14, 1.35, .14, Msteel2, 6.4, .75, -.4, flow);
+  box(.5, .08, 2.4, M.dark, 6.4, 1.48, -.4, flow);
+  box(.36, .05, 2.2, Mbelt, 6.4, 1.55, -.4, flow);
+
+  // Stockpile / product out at the north discharge of the conveyor line (decorative only)
+  const stock = new THREE.Group(); flow.add(stock); stock.position.set(8.6, 0, -4.6);
+  mesh(new THREE.ConeGeometry(1.8, 1.6, 10), Mstock, 0, .8, 0, stock);
+  mesh(new THREE.ConeGeometry(1.1, .9, 8), Mstock, .9, .45, .6, stock);
+  mesh(new THREE.ConeGeometry(.85, .7, 8), Mstock, -.7, .35, .5, stock);
+  // Discharge boom from north conveyor toward the pile
+  box(.12, .12, 2.4, Msteel2, 7.4, 1.55, -3.5, flow).rotation.y = .55;
+  box(1.6, .06, .42, Mbelt, 7.6, 1.62, -3.7, flow).rotation.y = .55;
+  box(.14, 1.1, .14, Msteel2, 8.0, .55, -4.0, flow);
+  // Small product-out pad marker
+  box(1.4, .08, .9, M.dark, 10.0, .04, -4.8, flow);
+  box(.9, .06, .55, M.yellow, 10.0, .09, -4.8, flow);
+
+  // Calm stage labels (no hazard wording)
+  stageMarker('1  Dig face', -8.0, 6.2, -3.6, 1.75);
+  stageMarker('2  Load & haul', 1.0, 4.2, 3.8, 1.85);
+  stageMarker('3  Crusher', 7.2, 4.4, 5.8, 1.75);
+  stageMarker('4  Conveyor', 6.4, 3.0, -.2, 1.75);
+  stageMarker('5  Stockpile', 9.2, 2.6, -5.4, 1.7);
+
+  // Subtle ground ribbon + chevrons along dig → haul → crusher → conveyor → stockpile
+  const ribbonPts = [
+    [-6.5, -2.4], [-4.0, -0.2], [-1.0, 1.5], [1.5, 2.6],
+    [3.5, 3.8], [5.5, 4.8], [6.6, 3.2], [6.5, 1.0],
+    [6.5, -1.5], [7.8, -3.6],
+  ];
+  for (let i = 0; i < ribbonPts.length - 1; i++) {
+    const [x0, z0] = ribbonPts[i];
+    const [x1, z1] = ribbonPts[i + 1];
+    const dx = x1 - x0, dz = z1 - z0;
+    const len = Math.hypot(dx, dz);
+    const midX = (x0 + x1) / 2, midZ = (z0 + z1) / 2;
+    const strip = mesh(new THREE.PlaneGeometry(len, .36), Mribbon, midX, .045, midZ, flow);
+    strip.rotation.x = -Math.PI / 2;
+    strip.rotation.z = -Math.atan2(dz, dx);
+    strip.receiveShadow = false; strip.castShadow = false;
+  }
+
+  const chevrons = [];
+  const chevronSpots = [
+    [-5.2, -1.4, -0.9], [-2.2, 0.8, -0.6], [0.6, 2.2, -0.4],
+    [3.2, 3.6, -0.5], [5.8, 4.4, 0.2], [6.55, 2.4, Math.PI],
+    [6.5, 0.2, Math.PI], [6.6, -2.0, Math.PI], [8.0, -3.8, -0.9],
+  ];
+  chevronSpots.forEach(([x, z, yaw]) => {
+    const g = new THREE.Group(); flow.add(g); g.position.set(x, .055, z); g.rotation.y = yaw;
+    const mat = Mchev.clone();
+    const a = mesh(new THREE.PlaneGeometry(.3, .09), mat, -.07, 0, 0, g);
+    a.rotation.x = -Math.PI / 2; a.rotation.z = .45;
+    const b = mesh(new THREE.PlaneGeometry(.3, .09), mat, .07, 0, 0, g);
+    b.rotation.x = -Math.PI / 2; b.rotation.z = -.45;
+    a.receiveShadow = false; a.castShadow = false;
+    b.receiveShadow = false; b.castShadow = false;
+    chevrons.push({ g, mat });
+  });
+  // Soft pulse only when motion is allowed — static under prefers-reduced-motion.
+  anim.push((t, reduced) => {
+    if (reduced) {
+      chevrons.forEach(({ mat }) => { mat.opacity = .5; });
+      return;
+    }
+    chevrons.forEach(({ mat }, i) => {
+      const phase = (Math.sin(t * 1.35 - i * .45) + 1) * .5;
+      mat.opacity = .32 + phase * .38;
+    });
+  });
 
   return { scene, insp, pick, anim };
 }

@@ -53,47 +53,47 @@ export const decoys = {
   refuge: { title: 'Refuge chamber', context: 'A refuge chamber in the pit.' },
 }
 
-// Neutral Info-card copy — location only; no cues about whether an object is a scored hazard.
+// Neutral Info-card copy — location + fictional chain role only; no hazard spoilers.
 export const equipment = {
   blindspot: {
     name: 'Haul truck',
-    purpose: 'A haul truck used to move rock in this fictional open-cut.',
-    relevance: 'The truck sits on the haul road in the centre of the pit.',
+    purpose: 'Stage 2 of this fictional chain: load-and-haul between the dig face and the crusher.',
+    relevance: 'Sits on the haul road in the centre of the pit, after the highwall and before the crusher.',
   },
   guarding: {
     name: 'Conveyor (north run)',
-    purpose: 'A conveyor run that carries material across this teaching scene.',
-    relevance: 'This run sits on the north side of the east wall layout.',
+    purpose: 'Stage 4 of this fictional chain: carries crushed material toward the stockpile.',
+    relevance: 'North run on the east wall, after the crusher transfer and before product out.',
   },
   ground: {
     name: 'Highwall toe',
-    purpose: 'The foot of the highwall face in this illustration.',
-    relevance: 'The toe sits on the west side of the pit near the berm.',
+    purpose: 'Stage 1 of this fictional chain: the dig face that starts the material path.',
+    relevance: 'West side of the pit; feeds the illustrated load-and-haul route.',
   },
   dust: {
     name: 'Crusher transfer',
-    purpose: 'A crusher transfer point in this fictional pit.',
-    relevance: 'The transfer sits at the south-east corner of the layout.',
+    purpose: 'Stage 3 of this fictional chain: receives haul loads before the conveyor.',
+    relevance: 'South-east corner — after the haul road and before the conveyor runs.',
   },
   guarded: {
     name: 'Conveyor (south run)',
-    purpose: 'A conveyor run that carries material across this teaching scene.',
-    relevance: 'This run sits on the south side of the east wall layout.',
+    purpose: 'Stage 4 of this fictional chain: the near run that takes feed from the crusher.',
+    relevance: 'South run on the east wall, linking crusher transfer toward the north discharge.',
   },
   water: {
     name: 'Water cart',
     purpose: 'A water cart used on haul roads in this illustration.',
-    relevance: 'The cart is parked south of the haul road near the refuge.',
+    relevance: 'Off the main material path — parked south of the haul road near the refuge.',
   },
   berm: {
     name: 'Road berm',
-    purpose: 'An earth berm drawn along the haul road in this scene.',
-    relevance: 'The berm runs beside the haul road on the west side of the pit.',
+    purpose: 'An earth berm drawn along the load-and-haul route in this scene.',
+    relevance: 'Runs beside the haul road on the west side, between dig face and crusher spur.',
   },
   refuge: {
     name: 'Refuge chamber',
     purpose: 'A marked refuge chamber in this fictional pit.',
-    relevance: 'The chamber sits south-west of the haul road.',
+    relevance: 'Off the material path — south-west of the haul road.',
   },
 }
 

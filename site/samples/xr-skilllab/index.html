@@ -39,6 +39,52 @@ h1,h2,h3,p{margin:0}
 @keyframes halo{0%,100%{box-shadow:0 0 0 0 rgba(66,221,197,0)}50%{box-shadow:0 0 0 26px rgba(66,221,197,.35)}}
 @media (max-width:760px){[data-navlinks]{display:none!important}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+#demo{scroll-margin-top:78px}
+.process-band{border-top:1px solid #2B3D55}
+.process-section{max-width:1200px;margin:0 auto;padding:48px 20px 36px}
+.process-kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#42DDC5;margin-bottom:12px}
+.process-section h2{font-size:clamp(28px,3.6vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.process-lede{margin-top:14px;max-width:740px;color:#B6C4D6;font-size:17px;text-wrap:pretty}
+.process-figure{margin:22px 0 0}
+.process-plate{width:min(100%,760px);margin:0 auto;aspect-ratio:1672/941;background:#0B1220;border:1px solid #2B3D55;border-radius:16px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 30px rgba(0,0,0,.3)}
+.process-plate picture,.process-plate img{display:block;width:100%;height:100%}
+.process-plate img{object-fit:contain;object-position:center}
+.process-caption{margin-top:10px;color:#B6C4D6;font-size:13px;text-align:center;text-wrap:pretty}
+.process-journey{--gap:10px;--cols:6;--num:36px;position:relative;list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:var(--gap);counter-reset:stage}
+.process-journey::before{content:"";position:absolute;z-index:0;top:calc(var(--num)/2 - 1px);left:calc(var(--num)/2);right:calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols) - var(--num) / 2);height:2px;background:#2B3D55;pointer-events:none}
+.process-stage{position:relative;min-width:0;display:flex;flex-direction:column;gap:10px;counter-increment:stage}
+.process-rail{position:relative;z-index:1;height:var(--num)}
+.process-num{position:relative;display:grid;place-items:center;width:var(--num);height:var(--num);border-radius:999px;background:#0B1220;border:1px solid #2B3D55;color:#42DDC5;font-size:14px;font-weight:800}
+.process-num::before{content:counter(stage)}
+.process-stage:not(:last-child)::after{content:"";position:absolute;z-index:1;top:calc(var(--num)/2 - 4px);left:calc(50% + var(--gap)/2 + var(--num)/2 - 4px);width:8px;height:8px;border-top:2px solid #42DDC5;border-right:2px solid #42DDC5;transform:rotate(45deg);pointer-events:none}
+.process-card{flex:1;min-width:0;background:#111C2E;border:1px solid #2B3D55;border-radius:16px;padding:12px 10px 14px;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 30px rgba(0,0,0,.3)}
+.process-card h3{font-size:13px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
+.process-card p{margin-top:6px;color:#B6C4D6;font-size:13px;line-height:1.45}
+.process-stage-live .process-num{background:#42DDC5;border-color:#42DDC5;color:#0B1220}
+.process-stage-live .process-card{border-color:rgba(66,221,197,.72);box-shadow:0 0 0 1px rgba(66,221,197,.22),0 10px 30px rgba(0,0,0,.3)}
+.process-badge{margin-top:10px;color:#42DDC5;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;line-height:1.35}
+.process-follow{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;justify-content:space-between;margin-top:22px}
+.process-scope{flex:1 1 280px;max-width:740px;margin:0;color:#B6C4D6;font-size:15px;text-wrap:pretty}
+.process-cta{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 22px;border-radius:12px;background:#42DDC5;color:#0B1220;font-size:16px;font-weight:700;text-align:center}
+.process-cta:hover,.process-cta:focus{background:#6CE7D3;color:#0B1220;text-decoration:none}
+@media (min-width:900px){.process-card h3{font-size:14px}}
+@media (min-width:1100px){.process-card h3{font-size:15px}.process-card p{font-size:14px}}
+@media (min-width:768px) and (max-width:899px){.process-card{padding:10px 8px 12px}.process-journey{--gap:8px}}
+@media (max-width:767px){
+  .process-journey{grid-template-columns:1fr;gap:12px}
+  .process-journey::before{display:none}
+  .process-stage{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;row-gap:0;align-items:start;background:#111C2E;border:1px solid #2B3D55;border-radius:16px;padding:14px;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 30px rgba(0,0,0,.3)}
+  .process-stage-live{border-color:rgba(66,221,197,.72);box-shadow:inset 3px 0 0 #42DDC5,0 10px 30px rgba(0,0,0,.3)}
+  .process-rail{grid-row:1 / span 3;grid-column:1;height:auto;align-self:start}
+  .process-card{display:contents}
+  .process-card h3,.process-card p{grid-column:2}
+  .process-card h3{font-size:17px;margin-top:4px}
+  .process-card p{font-size:15px}
+  .process-stage:not(:last-child)::after{top:auto;left:27px;bottom:-9px;border-top:0;border-right:2px solid #42DDC5;border-bottom:2px solid #42DDC5}
+}
+@media (prefers-reduced-motion:reduce){
+  .process-journey::before,.process-num::before,.process-stage::before,.process-stage::after,.process-num::after{animation:none!important;transition:none!important}
+}
 </style>
 </helmet>
 
@@ -123,6 +169,73 @@ h1,h2,h3,p{margin:0}
         </div>
         <h3 style="font-size:20px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px"><span style="color:#42DDC5;margin-right:8px">03</span>Improve</h3>
         <p style="color:#B6C4D6">Get a transparent score, a hazard-by-hazard review and coaching on what to practise next.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="process" class="process-band" aria-labelledby="processTitle">
+    <div class="process-section">
+      <p class="process-kicker">Where this scene sits</p>
+      <h2 id="processTitle">End-to-end process</h2>
+      <p class="process-lede">A fictional illustrative educational overview of how goods can move through a warehouse. It is not a real warehouse procedure, a certification, AI coaching, or a live digital twin.</p>
+      <figure class="process-figure">
+        <div class="process-plate">
+          <picture>
+            <source type="image/webp" srcSet="../../assets/process/01-warehouse-safety.webp">
+            <img src="../../assets/process/01-warehouse-safety.png" width="1672" height="941" alt="Fictional illustrative warehouse process overview: concept art of trucks, forklifts, storage racking, packing benches, and a dispatch dock. Stage names are in the text, not in the picture." loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <figcaption class="process-caption">Fictional concept art for this overview. It is not a real site, a layout drawing, or an operating diagram.</figcaption>
+      </figure>
+      <ol class="process-journey">
+        <li class="process-stage">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Receiving</h3>
+            <p>Goods arrive and are checked against delivery information.</p>
+          </div>
+        </li>
+        <li class="process-stage">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Inspection and check-in</h3>
+            <p>Loads and packaging are checked before entering storage.</p>
+          </div>
+        </li>
+        <li class="process-stage process-stage-live">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Put-away and storage</h3>
+            <p>Goods are moved into designated storage locations.</p>
+            <p class="process-badge">In this 3D scene</p>
+          </div>
+        </li>
+        <li class="process-stage process-stage-live">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Picking</h3>
+            <p>Items are retrieved to fulfil an order.</p>
+            <p class="process-badge">In this 3D scene</p>
+          </div>
+        </li>
+        <li class="process-stage">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Packing and consolidation</h3>
+            <p>Items are checked, packed, and prepared for dispatch.</p>
+          </div>
+        </li>
+        <li class="process-stage">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Dispatch</h3>
+            <p>Orders are staged, loaded, and sent to their destination.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="process-follow">
+        <p id="processScope" class="process-scope">The live 3D scene covers forklift and aisle safety during put-away and storage, and during picking. Receiving, inspection and check-in, packing, and dispatch are context only and are not playable stages.</p>
+        <a class="process-cta" href="#demo" aria-describedby="processScope">Explore this stage in 3D</a>
       </div>
     </div>
   </section>

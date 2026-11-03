@@ -39,6 +39,52 @@ h1,h2,h3,h4,p{margin:0}
 @media (max-width:760px){[data-navlinks]{display:none!important}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @media print{[data-print-hide]{display:none!important}[data-print-root]{position:static!important;inset:auto!important;overflow:visible!important;height:auto!important;background:#fff!important;animation:none!important}[data-print-page]{padding:0!important;max-width:none!important}body{background:#fff}}
+#demo{scroll-margin-top:78px}
+.process-band{border-top:1px solid #E4DFD7;border-bottom:1px solid #E4DFD7;background:#FBFAF8}
+.process-section{max-width:1200px;margin:0 auto;padding:48px 20px 36px}
+.process-kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#1F6F5C;margin-bottom:12px}
+.process-section h2{font-size:clamp(28px,3.6vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.process-lede{margin-top:14px;max-width:760px;color:#5E6670;font-size:17px;text-wrap:pretty}
+.process-figure{margin:22px 0 0}
+.process-plate{width:min(100%,760px);margin:0 auto;aspect-ratio:1983/793;background:#051526;border:1px solid #E4DFD7;border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(26,29,33,.06),0 16px 40px rgba(26,29,33,.10)}
+.process-plate picture,.process-plate img{display:block;width:100%;height:100%}
+.process-plate img{object-fit:contain;object-position:center}
+.process-caption{margin-top:10px;color:#5E6670;font-size:13px;text-align:center;text-wrap:pretty}
+.process-journey{--gap:10px;--cols:8;--num:36px;position:relative;list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:var(--gap);counter-reset:stage}
+.process-journey::before{content:"";position:absolute;z-index:0;top:calc(var(--num)/2 - 1px);left:calc(var(--num)/2);right:calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols) - var(--num) / 2);height:2px;background:#D9D3C8;pointer-events:none}
+.process-stage{position:relative;min-width:0;display:flex;flex-direction:column;gap:10px;counter-increment:stage}
+.process-rail{position:relative;z-index:1;height:var(--num)}
+.process-num{position:relative;display:grid;place-items:center;width:var(--num);height:var(--num);border-radius:999px;background:#fff;border:1px solid #E4DFD7;color:#1F6F5C;font-size:14px;font-weight:800}
+.process-num::before{content:counter(stage)}
+.process-stage:not(:last-child)::after{content:"";position:absolute;z-index:1;top:calc(var(--num)/2 - 4px);left:calc(50% + var(--gap)/2 + var(--num)/2 - 4px);width:8px;height:8px;border-top:2px solid #1F6F5C;border-right:2px solid #1F6F5C;transform:rotate(45deg);pointer-events:none}
+.process-card{flex:1;min-width:0;background:#fff;border:1px solid #E4DFD7;border-radius:16px;padding:12px 10px 14px;box-shadow:0 1px 2px rgba(26,29,33,.04),0 10px 30px rgba(26,29,33,.06)}
+.process-card h3,.process-card p{overflow-wrap:break-word}
+.process-card h3{font-size:13px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
+.process-card p{margin-top:6px;color:#5E6670;font-size:13px;line-height:1.45}
+.process-stage-live .process-num{background:#1F6F5C;border-color:#1F6F5C;color:#fff}
+.process-stage-live .process-card{border-color:rgba(31,111,92,.72);box-shadow:0 0 0 1px rgba(31,111,92,.18),0 10px 30px rgba(26,29,33,.06)}
+.process-badge{margin-top:10px;color:#1F6F5C;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;line-height:1.35}
+.process-follow{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;justify-content:space-between;margin-top:22px}
+.process-scope{flex:1 1 280px;max-width:760px;margin:0;color:#5E6670;font-size:15px;text-wrap:pretty}
+.process-cta{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 22px;border-radius:12px;background:#1F6F5C;color:#fff;font-size:16px;font-weight:700;text-align:center;max-width:100%}
+.process-cta:hover,.process-cta:focus{background:#185A4B;color:#fff;text-decoration:none}
+@media (min-width:1100px){.process-card h3{font-size:15px}.process-card p{font-size:14px}}
+@media (min-width:768px) and (max-width:1099px){.process-card{padding:10px 8px 12px}.process-card h3,.process-card p{font-size:12px}.process-journey{--gap:8px;--num:32px}.process-num{font-size:13px}}
+@media (max-width:767px){
+  .process-journey{grid-template-columns:1fr;gap:12px}
+  .process-journey::before{display:none}
+  .process-stage{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;row-gap:0;align-items:start;background:#fff;border:1px solid #E4DFD7;border-radius:16px;padding:14px;box-shadow:0 1px 2px rgba(26,29,33,.04),0 10px 30px rgba(26,29,33,.06)}
+  .process-stage-live{border-color:rgba(31,111,92,.72);box-shadow:inset 3px 0 0 #1F6F5C,0 10px 30px rgba(26,29,33,.06)}
+  .process-rail{grid-row:1 / span 3;grid-column:1;height:auto;align-self:start}
+  .process-card{display:contents}
+  .process-card h3,.process-card p{grid-column:2}
+  .process-card h3{font-size:17px;margin-top:4px}
+  .process-card p{font-size:15px}
+  .process-stage:not(:last-child)::after{top:auto;left:27px;bottom:-9px;border-top:0;border-right:2px solid #1F6F5C;border-bottom:2px solid #1F6F5C}
+}
+@media (prefers-reduced-motion:reduce){
+  .process-journey::before,.process-num::before,.process-stage::before,.process-stage::after,.process-num::after{animation:none!important;transition:none!important}
+}
 </style>
 </helmet>
 
@@ -128,6 +174,89 @@ h1,h2,h3,h4,p{margin:0}
         </div>
         <h3 style="font-size:20px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px"><span style="color:#1F6F5C;margin-right:8px">03</span>Report</h3>
         <p style="color:#5E6670">Every confirmed finding is pinned to its exact 3D location with evidence, and the report assembles itself as you work.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="process" class="process-band" lang="en" aria-labelledby="processTitle">
+    <div class="process-section">
+      <p class="process-kicker">Where this demo sits</p>
+      <h2 id="processTitle">End-to-end process</h2>
+      <p class="process-lede">A fictional illustrative educational overview of a residential house-inspection concept. It is not a certified inspection, AI coaching, a live digital twin, or a verified property record.</p>
+      <figure class="process-figure">
+        <div class="process-plate">
+          <picture>
+            <source type="image/webp" srcSet="../../assets/process/05-twininspect.webp">
+            <img src="../../assets/process/05-twininspect.png" width="1983" height="793" alt="Fictional illustrative overview of a residential house-inspection concept: concept art of a cutaway home, a person with a tablet, a drone, detail callouts, a blue wireframe house, and a checklist panel. Stage names are in the text, not in the picture." loading="lazy" decoding="async">
+          </picture>
+        </div>
+        <figcaption class="process-caption">Fictional concept art for this overview. It is not the demo house, a real property, a floor plan, or an inspection record. Numbers on the picture are decorative callouts; the stage list is the text below.</figcaption>
+      </figure>
+      <ol class="process-journey">
+        <li class="process-stage">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Define inspection scope</h3>
+            <p>Establish property areas and inspection questions.</p>
+          </div>
+        </li>
+        <li class="process-stage">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Capture property information</h3>
+            <p>Gather permitted photos, scans, and relevant records.</p>
+          </div>
+        </li>
+        <li class="process-stage process-stage-live">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Explore the property</h3>
+            <p>Review rooms and visible building elements.</p>
+            <p class="process-badge">In this demo</p>
+          </div>
+        </li>
+        <li class="process-stage process-stage-live">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Record observations</h3>
+            <p>Capture evidence and associate observations with locations.</p>
+            <p class="process-badge">In this demo</p>
+          </div>
+        </li>
+        <li class="process-stage">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Build or align the 3D model</h3>
+            <p>Organise captured information into a navigable visual representation.</p>
+          </div>
+        </li>
+        <li class="process-stage process-stage-live">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Review findings</h3>
+            <p>Assess observations and identify items requiring further attention.</p>
+            <p class="process-badge">In this demo</p>
+          </div>
+        </li>
+        <li class="process-stage process-stage-live">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Generate the report</h3>
+            <p>Produce a traceable summary with evidence and limitations.</p>
+            <p class="process-badge">In this demo</p>
+          </div>
+        </li>
+        <li class="process-stage">
+          <div class="process-rail" aria-hidden="true"><span class="process-num"></span></div>
+          <div class="process-card">
+            <h3>Plan follow-up</h3>
+            <p>Identify further investigation or maintenance actions as appropriate.</p>
+          </div>
+        </li>
+      </ol>
+      <div class="process-follow">
+        <p id="processScope" class="process-scope">The live demo walks a pre-built 3D property model of a fictional single-storey home — a digital-twin concept, with a 2D floor-plan fallback. You explore rooms and visible building elements, pin observations to a location, review scripted flags and confirm or dismiss them, and generate a session report with evidence and stated limits. Defining the inspection scope, capturing property information, and building or aligning the model are context only: the brief and the model are already loaded, and nothing is scanned in this demo. A finding can include an optional suggested-follow-up note; planning further investigation or maintenance is not a playable stage. This is not a certified inspection, a live sensor feed, automatic defect detection, or a verified property record.</p>
+        <a class="process-cta" href="#demo" aria-describedby="processScope">Explore this stage in 3D</a>
       </div>
     </div>
   </section>

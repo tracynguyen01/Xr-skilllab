@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
 <script type="module" src="./content.js"></script>
+<script type="module" src="./process-walk.js"></script>
 </head>
 <body>
 <style>
@@ -85,6 +86,29 @@ h1,h2,h3,p{margin:0}
 }
 @media (prefers-reduced-motion:reduce){
   .process-journey::before,.process-num::before,.process-stage::before,.process-stage::after,.process-num::after{animation:none!important;transition:none!important}
+}
+.og-walk-page{margin-top:14px;display:flex;flex-direction:column;gap:8px;max-width:100%}
+.og-sim-stack{position:absolute;left:10px;right:10px;bottom:12px;z-index:9;display:flex;flex-direction:column;align-items:stretch;gap:8px;pointer-events:none;max-width:calc(100% - 20px)}
+.og-stage{pointer-events:auto;align-self:flex-start;width:min(440px,100%);max-height:min(38vh,360px);overflow:auto;padding:14px 16px 16px;border-radius:16px;background:rgba(11,18,32,.94);border:1px solid rgba(242,181,68,.75);box-shadow:0 16px 40px rgba(0,0,0,.4);color:#F5F8FC}
+.og-stage h2{font-size:clamp(20px,2.4vw,26px);font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:4px 0 8px;color:#F5F8FC}
+.og-stage p{margin:0;color:#B6C4D6;font-size:14px;line-height:1.45}
+.og-stage p+p{margin-top:8px}
+.og-eye{margin:0;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:#F2B544}
+.og-walk-bar{pointer-events:auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px;width:100%;max-width:100%;padding:10px;border-radius:16px;background:rgba(17,28,46,.9);border:1px solid rgba(182,196,214,.18);box-shadow:0 10px 28px rgba(0,0,0,.28)}
+.og-walk-bar button,.og-stage-close{min-height:44px;padding:0 12px;border-radius:12px;border:1px solid #2B3D55;background:#0B1220;color:#F5F8FC;font-size:14px;font-weight:700;cursor:pointer}
+.og-walk-bar button[aria-current="step"]{background:#F2B544;border-color:#F2B544;color:#0B1220}
+.og-walk-bar button[aria-disabled="true"]{opacity:.45}
+.og-headset:disabled{opacity:.5;cursor:not-allowed}
+.og-status{flex:1 1 150px;min-width:0;margin:0;text-align:center;font-size:13px;font-weight:700;line-height:1.35;color:#F5F8FC}
+.og-chips{display:flex;flex-wrap:wrap;gap:6px;flex:1 1 100%;min-width:0}
+.og-chip{min-height:44px}
+.og-note{flex:1 1 100%;margin:0;color:#B6C4D6;font-size:12px;line-height:1.4}
+.og-stage-close{margin-top:12px}
+.og-hint{pointer-events:auto;margin:0;padding:10px 16px;border-radius:999px;background:rgba(17,28,46,.78);border:1px solid rgba(182,196,214,.16);font-size:clamp(12px,3.6vw,14px);font-weight:600;color:#F5F8FC;text-align:center;max-width:100%}
+.og-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:140;width:min(420px,calc(100% - 32px));padding:12px 16px;border-radius:12px;background:#111C2E;color:#F5F8FC;border:1px solid rgba(242,181,68,.45);font-weight:600;font-size:14px;line-height:1.4;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.45)}
+@media (max-width:430px){.og-sim-stack{bottom:68px}}
+@media (min-width:900px){
+  .og-sim-stack .og-stage{align-self:center;width:min(420px,calc(100% - 340px))}
 }
 </style>
 </helmet>
@@ -259,6 +283,33 @@ h1,h2,h3,p{margin:0}
         <button type="button" onClick="{{ openSim }}" style="display:inline-flex;align-items:center;height:44px;padding:0 18px;border-radius:12px;border:1px solid rgba(242,181,68,.5);background:rgba(242,181,68,.12);color:#F5F8FC;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s" style-hover="background:rgba(242,181,68,.24)">Launch full screen</button>
       </div>
     </div>
+    <sc-if value="{{ walkOnPage }}" hint-placeholder-val="{{ false }}">
+      <div class="og-walk-page" data-og-walk>
+        <sc-if value="{{ processOpen }}" hint-placeholder-val="{{ false }}">
+          <section class="og-stage" role="region" aria-label="Process stage" data-stage="{{ processId }}">
+            <p class="og-eye">{{ processEyebrow }}</p>
+            <h2>{{ processName }}</h2>
+            <p>{{ processPurpose }}</p>
+            <p>{{ processRelevance }}</p>
+            <p>{{ processDisclaimer }}</p>
+            <button type="button" class="og-stage-close" onClick="{{ closeProcess }}" aria-label="Close process stage">Close</button>
+          </section>
+        </sc-if>
+        <div class="og-walk-bar" role="group" aria-label="Process walk">
+          <button type="button" onClick="{{ walkProcess }}">Walk the process</button>
+          <button type="button" onClick="{{ processPrev }}" aria-label="Previous process stage" aria-disabled="{{ processPrevOff }}">Previous</button>
+          <p class="og-status" aria-live="polite">{{ processStatus }}</p>
+          <button type="button" onClick="{{ processNext }}" aria-label="Next process stage" aria-disabled="{{ processNextOff }}">Next</button>
+          <div class="og-chips" role="group" aria-label="Process stations">
+            <sc-for list="{{ processChips }}" as="chip" hint-placeholder-count="6">
+              <button type="button" class="og-chip" onClick="{{ chip.open }}" aria-label="{{ chip.aria }}" aria-current="{{ chip.current }}">{{ chip.label }}</button>
+            </sc-for>
+          </div>
+          <button type="button" class="og-headset" onClick="{{ enterVR }}" disabled="{{ vrDisabled }}" title="{{ vrTitle }}" aria-label="{{ vrTitle }}">Headset</button>
+          <p class="og-note">Fictional separation slice on this pad. Headset optional. Not a live twin, a certification, or AI coaching.</p>
+        </div>
+      </div>
+    </sc-if>
   </section>
 
   <section id="how" aria-labelledby="howTitle" style="border-top:1px solid #2B3D55;background:#0D1526">
@@ -358,17 +409,42 @@ h1,h2,h3,p{margin:0}
           <sc-if value="{{ canSwitch }}" hint-placeholder-val="{{ true }}">
             <button type="button" onClick="{{ switchView }}" style="height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(182,196,214,.16);background:rgba(17,28,46,.78);backdrop-filter:blur(16px);color:#F5F8FC;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap" style-hover="border-color:#84BFFF">{{ switchLabel }}</button>
           </sc-if>
+          <button type="button" class="og-headset" onClick="{{ enterVR }}" disabled="{{ vrDisabled }}" title="{{ vrTitle }}" aria-label="{{ vrTitle }}" style="height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(182,196,214,.16);background:rgba(17,28,46,.78);backdrop-filter:blur(16px);color:#F5F8FC;font-size:14px;font-weight:600;cursor:pointer;opacity:{{ vrOpacity }}" style-hover="border-color:#84BFFF">Headset</button>
           <button type="button" onClick="{{ askReset }}" style="height:44px;padding:0 14px;border-radius:12px;border:1px solid rgba(182,196,214,.16);background:rgba(17,28,46,.78);backdrop-filter:blur(16px);color:#F5F8FC;font-size:14px;font-weight:600;cursor:pointer" style-hover="border-color:#84BFFF">Reset</button>
           <button type="button" onClick="{{ finish }}" style="height:44px;padding:0 16px;border-radius:12px;border:0;background:#F2B544;color:#0B1220;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap" style-hover="background:#FFD27A">Finish Assessment</button>
           <button type="button" onClick="{{ exitSim }}" aria-label="Exit simulation" style="width:44px;height:44px;border-radius:12px;border:1px solid rgba(182,196,214,.16);background:rgba(17,28,46,.78);backdrop-filter:blur(16px);color:#F5F8FC;font-size:20px;cursor:pointer" style-hover="border-color:#84BFFF">×</button>
         </div>
       </div>
       <sc-if value="{{ view3d }}" hint-placeholder-val="{{ true }}">
-        <div style="position:absolute;left:0;right:0;bottom:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding:0 14px;pointer-events:none;z-index:10">
-          <p style="pointer-events:auto;padding:10px 16px;border-radius:999px;background:rgba(17,28,46,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(182,196,214,.16);font-size:clamp(12px,3.6vw,14px);font-weight:600;color:#F5F8FC;text-align:center;white-space:nowrap">{{ hintLine }}</p>
-          <sc-if value="{{ showHint }}" hint-placeholder-val="{{ false }}">
-            <button type="button" onClick="{{ useHint }}" style="pointer-events:auto;height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(242,181,68,.5);background:rgba(242,181,68,.14);backdrop-filter:blur(16px);color:#F5F8FC;font-size:14px;font-weight:700;cursor:pointer;animation:fadeUp .4s ease" style-hover="background:rgba(242,181,68,.26)">Need a hint?</button>
+        <div class="og-sim-stack" data-og-walk>
+          <sc-if value="{{ processOpen }}" hint-placeholder-val="{{ false }}">
+            <section class="og-stage" role="region" aria-label="Process stage" data-stage="{{ processId }}">
+              <p class="og-eye">{{ processEyebrow }}</p>
+              <h2>{{ processName }}</h2>
+              <p>{{ processPurpose }}</p>
+              <p>{{ processRelevance }}</p>
+              <p>{{ processDisclaimer }}</p>
+              <button type="button" class="og-stage-close" onClick="{{ closeProcess }}" aria-label="Close process stage">Close</button>
+            </section>
           </sc-if>
+          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;pointer-events:none">
+            <p class="og-hint">{{ hintLine }}</p>
+            <sc-if value="{{ showHint }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ useHint }}" style="pointer-events:auto;height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(242,181,68,.5);background:rgba(242,181,68,.14);backdrop-filter:blur(16px);color:#F5F8FC;font-size:14px;font-weight:700;cursor:pointer;animation:fadeUp .4s ease" style-hover="background:rgba(242,181,68,.26)">Need a hint?</button>
+            </sc-if>
+          </div>
+          <div class="og-walk-bar" role="group" aria-label="Process walk">
+            <button type="button" onClick="{{ walkProcess }}">Walk the process</button>
+            <button type="button" onClick="{{ processPrev }}" aria-label="Previous process stage" aria-disabled="{{ processPrevOff }}">Previous</button>
+            <p class="og-status" aria-live="polite">{{ processStatus }}</p>
+            <button type="button" onClick="{{ processNext }}" aria-label="Next process stage" aria-disabled="{{ processNextOff }}">Next</button>
+            <div class="og-chips" role="group" aria-label="Process stations">
+              <sc-for list="{{ processChips }}" as="chip" hint-placeholder-count="6">
+                <button type="button" class="og-chip" onClick="{{ chip.open }}" aria-label="{{ chip.aria }}" aria-current="{{ chip.current }}">{{ chip.label }}</button>
+              </sc-for>
+            </div>
+            <p class="og-note">Fictional separation slice on this pad. Headset optional. Not a live twin, a certification, or AI coaching.</p>
+          </div>
         </div>
       </sc-if>
 
@@ -477,6 +553,8 @@ h1,h2,h3,p{margin:0}
           <ul style="margin:16px 0 0;padding:0 0 0 18px;color:#F5F8FC;display:flex;flex-direction:column;gap:8px">
             <li>Find the four hazards and choose the best response for each. Each hazard can be answered once per attempt.</li>
             <li><strong>3D:</strong> drag to look around, scroll or pinch to zoom, arrow keys rotate. Click or tap anything to inspect it.</li>
+            <li><strong>Walk the process:</strong> step through inlet, separator, pipe rack, pumps, flare, and export. That walk is illustrative and is not scored.</li>
+            <li><strong>Headset:</strong> optional. It shows this same walk only when the browser can start a WebXR session.</li>
             <li><strong>2D:</strong> Tab between numbered objects and press Enter to inspect. Everything is keyboard operable.</li>
             <li>Inspecting a safe object costs nothing. Hints don't change your score. Time is recorded for information only.</li>
             <li>Finish Assessment whenever you're ready. Unanswered hazards are marked Not found.</li>
@@ -598,6 +676,9 @@ h1,h2,h3,p{margin:0}
     </sc-if>
   </div>
 </sc-if>
+<sc-if value="{{ toastOpen }}" hint-placeholder-val="{{ false }}">
+  <div role="status" class="og-toast">{{ toast }}</div>
+</sc-if>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{}">
 const lesson = () => window.LESSON;
@@ -606,7 +687,7 @@ AMBER = '#F2C46D', MUTED = '#B6C4D6';
 const fmtTime = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; };
 
 class Component extends DCLogic {
-  state = { simOpen: false, phase: 'intro', view: '3d', answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: 0, finishedAt: 0, now: 0, lastActivity: 0, panel: null, picked: -1, instructions: false, webgl: true, narrow: false, reduced: false, focusId: null, displayScore: 0, settled: false, confirmReset: false };
+  state = { simOpen: false, phase: 'intro', view: '3d', answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: 0, finishedAt: 0, now: 0, lastActivity: 0, panel: null, picked: -1, instructions: false, webgl: true, narrow: false, reduced: false, focusId: null, displayScore: 0, settled: false, confirmReset: false, processId: null, processOpen: false, xr: false, toast: '' };
   heroRef = React.createRef(); pageStageRef = React.createRef(); fsStageRef = React.createRef(); miniRef = React.createRef(); panelRef = React.createRef(); introRef = React.createRef(); instrRef = React.createRef(); hoverRef = React.createRef(); confirmRef = React.createRef();
 
   componentDidMount() {
@@ -616,13 +697,19 @@ class Component extends DCLogic {
     this.setState({ narrow: this.mqN.matches, reduced: this.mqR.matches, view: this.mqN.matches ? '2d' : '3d' });
     this.onKey = e => this.trapKey(e); document.addEventListener('keydown', this.onKey);
     this.timer = setInterval(() => { if (this.state.phase === 'play' && this.state.startedAt && this.state.simOpen) this.setState({ now: Date.now() }); }, 1000);
+    if (window.OG_PROCESS) window.OG_PROCESS.immersiveVrSupported().then(xr => { if (!this._gone) this.setState({ xr: !!xr }); });
+    const cta = document.querySelector('#process .process-cta');
+    if (cta && !cta.dataset.walkBound) {
+      cta.dataset.walkBound = '1';
+      cta.addEventListener('click', () => this.startProcessWalk('stage-separator'));
+    }
     const boot = () => { if (!window.XRWarehouse || !window.LESSON || this._booted) return; this._booted = true; this.initViews(); };
     window.addEventListener('xrwarehouse-ready', boot);
     window.addEventListener('lesson-ready', boot);
     boot();
     this.readyTimeout = setTimeout(() => { if (!this.simView) this.setState({ webgl: false, view: '2d' }); }, 12000);
   }
-  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.readyTimeout); document.removeEventListener('keydown', this.onKey); document.body.style.overflow = ''; }
+  componentWillUnmount() { this._gone = true; clearInterval(this.timer); clearTimeout(this.readyTimeout); clearTimeout(this.toastT); document.removeEventListener('keydown', this.onKey); document.body.style.overflow = ''; }
 
   initViews() {
     const W = window.XRWarehouse; if (!W) return;
@@ -633,14 +720,18 @@ class Component extends DCLogic {
     const red = this.state.reduced; this.heroView.setReduced(red); this.simView.setReduced(red);
     this.heroView.controls.auto = .06; this.heroView.canvas.tabIndex = -1;
     this.simView.setPreset('hero');
-    this.simView.onInspect = id => this.inspect(id, this.simView.canvas);
-    this.simView.onHover = h => {
-      const el = this.hoverRef.current;
-      if (!el) return;
-      if (!h) { el.style.display = 'none'; return; }
-      el.style.display = 'block';
-      el.textContent = 'Inspect · ' + h.label;
-      // Clamp inside the stage so the label is not cut off at the right or bottom edge.
+    // Equipment picks stay on the scored lesson. Station picks never enter inspect().
+    this.simView.onInspect = id => {
+      if (this.state.simOpen && this.state.phase === 'play') this.inspect(id, this.simView.canvas);
+    };
+    this.simView.onProcessStage = id => this.startProcessWalk(id);
+    this.simView.onWalkStep = d => {
+      const now = performance.now();
+      if (now - (this._xrStepAt || 0) < 400) return;
+      this._xrStepAt = now;
+      this.stepProcess(d);
+    };
+    const placeHover = (el, h) => {
       const parent = el.offsetParent || el.parentElement;
       const pad = 8;
       let left = h.x + 14;
@@ -656,6 +747,23 @@ class Component extends DCLogic {
       el.style.left = left + 'px';
       el.style.top = top + 'px';
     };
+    this.simView.onHover = h => {
+      const el = this.hoverRef.current;
+      if (!el) return;
+      if (!h) { if (!el.textContent.startsWith('Stage ·')) el.style.display = 'none'; return; }
+      el.style.display = 'block';
+      el.textContent = 'Inspect · ' + h.label;
+      placeHover(el, h);
+    };
+    this.simView.onProcessHover = h => {
+      const el = this.hoverRef.current;
+      if (!el) return;
+      if (!h) { if (el.textContent.startsWith('Stage ·')) el.style.display = 'none'; return; }
+      el.style.display = 'block';
+      el.textContent = 'Stage · ' + h.label;
+      placeHover(el, h);
+    };
+    if (this._pendingProcess) this._showProcess(this._pendingProcess);
     this.io = new IntersectionObserver(es => { es.forEach(e => { if (e.target === this.heroRef.current) this.heroVis = e.isIntersecting; if (e.target === this.pageStageRef.current) this.pageVis = e.isIntersecting; }); this.syncViews(); }, { threshold: .05 });
     if (this.heroRef.current) { this.heroView.mount(this.heroRef.current); this.io.observe(this.heroRef.current); }
     if (this.pageStageRef.current) this.io.observe(this.pageStageRef.current);
@@ -670,8 +778,9 @@ class Component extends DCLogic {
     if (s.simOpen && s.phase === 'results') host = this.miniRef.current;
     else if (s.simOpen && (s.phase === 'intro' || s.view === '3d')) host = this.fsStageRef.current;
     if (host && v.canvas.parentElement !== host) v.mount(host);
-    v.controls.enabled = s.simOpen && s.phase !== 'intro';
-    v.controls.auto = (!s.simOpen || s.phase === 'intro') ? .05 : 0;
+    const walkingPage = !s.simOpen && !!s.processId && s.webgl;
+    v.controls.enabled = (s.simOpen && s.phase !== 'intro') || walkingPage;
+    v.controls.auto = ((!s.simOpen && !s.processId) || (s.simOpen && s.phase === 'intro')) ? .05 : 0;
   }
   componentDidUpdate() { this.syncAll(); }
   setState(u, cb) { super.setState(u, cb); this.after(() => this.syncAll()); }
@@ -706,7 +815,7 @@ class Component extends DCLogic {
       siteName: 'A fictional onshore gas pad. Nothing here is a real plant or a site procedure.',
       objective: 'Find four hazards and choose the best response for each. You can finish when you are ready.',
       controls: {
-        mouse: 'Drag to look around, scroll to zoom, click an object to inspect it.',
+        mouse: 'Drag to look around, scroll to zoom, click an object to inspect it. Walk the process visits the six illustrated stations.',
         touch: 'Drag to look, pinch to zoom, tap an object to inspect it.',
         keyboard: 'Arrow keys rotate the view. In 2D, Tab between numbered objects and press Enter.',
       },
@@ -733,6 +842,7 @@ class Component extends DCLogic {
     const actions = [];
     if (eq) actions.push('Review this object');
     else actions.push(s.view === '3d' && s.webgl ? 'Click or tap an object to inspect it' : 'Select a numbered object in the 2D list');
+    if (s.view === '3d' && s.webgl) actions.push('Walk the process to visit each illustrated station');
     actions.push('Open ? for the briefing again');
     actions.push('Finish Assessment when you are ready');
     this.sceneUi.updateStatus({
@@ -760,6 +870,17 @@ class Component extends DCLogic {
   }
   trapKey(e) {
     const s = this.state;
+    const inWalk = e.target instanceof Element && e.target.closest('[data-og-walk]');
+    if (inWalk && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+      e.preventDefault();
+      this.stepProcess(e.key === 'ArrowRight' ? 1 : -1);
+      return;
+    }
+    if (e.key === 'Escape' && s.processOpen && !this.activeDialog()) {
+      e.preventDefault();
+      this.closeProcess();
+      return;
+    }
     if (e.key === 'Escape' && s.simOpen && s.confirmReset) {
       e.preventDefault();
       this.cancelReset();
@@ -798,8 +919,10 @@ class Component extends DCLogic {
       this.syncSceneUi();
       // First play in this tab: show the skippable briefing.
       this.sceneUi?.showBriefingIfNeeded();
-      if (view === '3d') this.glideIn();
-      else this.focus2D();
+      if (view === '3d') {
+        if (this.state.processId) this._showProcess(this.state.processId);
+        else this.glideIn();
+      } else this.focus2D();
     });
   }
   switchView = () => { if (!this.state.webgl) return; const to = this.state.view === '3d' ? '2d' : '3d'; this.setState({ view: to, panel: null }); if (to === '3d') this.after(() => { if (this.simView) this.simView.preset('inspection', 900).then(() => this.simView.canvas.focus()); }); else this.focus2D(); };
@@ -815,7 +938,7 @@ class Component extends DCLogic {
   cancelReset = () => { this.setState({ confirmReset: false }); this.after(() => this.returnFocus()); };
   confirmResetRun = () => { this.setState({ confirmReset: false }); this.resetRun(); };
   resetRun = () => { if (this.simView) this.simView.clearBadges(); const now = Date.now(); clearTimeout(this.hintTimer); const wasResults = this.state.phase === 'results'; this.setState({ answers: {}, inspected: [], hints: 0, hintZone: null, startedAt: now, finishedAt: 0, now, lastActivity: now, panel: null, picked: -1, focusId: null, displayScore: 0, settled: false, phase: 'play', confirmReset: false }); this.after(() => { this.syncSceneUi(); if (wasResults) { if (this.state.view === '3d' && this.state.webgl) this.glideIn(); else this.focus2D(); } }); };
-  finish = () => { this.setState({ phase: 'results', finishedAt: Date.now(), panel: null, instructions: false, focusId: null, displayScore: 0, settled: false, confirmReset: false }); this.after(() => { this.syncSceneUi(); this.animateGauge(); if (this.simView) { this.simView.focus(null); this.simView.preset('inspection', 1200); } const h = document.querySelector('[data-screen-label="Results"] [data-autofocus]'); if (h) h.focus(); }); };
+  finish = () => { if (this.simView && this.simView.setActiveStage) this.simView.setActiveStage(null); this.setState({ phase: 'results', finishedAt: Date.now(), panel: null, instructions: false, focusId: null, displayScore: 0, settled: false, confirmReset: false, processOpen: false, processId: null }); this.after(() => { this.syncSceneUi(); this.animateGauge(); if (this.simView) { this.simView.focus(null); this.simView.preset('inspection', 1200); } const h = document.querySelector('[data-screen-label="Results"] [data-autofocus]'); if (h) h.focus(); }); };
   openInstructions = e => { this.lastTrigger = e.currentTarget; this.setState({ instructions: true }); this.focusInto(this.instrRef); };
   closeInstructions = () => { this.setState({ instructions: false }); this.after(() => this.returnFocus()); };
   closePanel = () => {
@@ -861,6 +984,49 @@ class Component extends DCLogic {
   focusHazard(id) { this.setState({ focusId: id }); if (this.simView) { this.simView.focus(id); this.simView.preset(id, 1800); } }
   heroMove = e => { if (!this.heroView) return; const r = e.currentTarget.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; this.heroView.controls.parGoal = { x: -x * .14, y: y * .09 }; };
   heroLeave = () => { if (this.heroView) this.heroView.controls.parGoal = { x: 0, y: 0 }; };
+  toast(msg) { clearTimeout(this.toastT); this.setState({ toast: msg }); this.toastT = setTimeout(() => { if (!this._gone) this.setState({ toast: '' }); }, 3200); }
+  startProcessWalk = (id) => { const next = id || 'stage-inlet'; this._pendingProcess = next; this._showProcess(next); };
+  walkProcess = () => this.startProcessWalk('stage-inlet');
+  processPrev = () => this.stepProcess(-1);
+  processNext = () => this.stepProcess(1);
+  closeProcess = () => this.setState({ processOpen: false });
+  stepProcess = (delta) => {
+    const P = window.OG_PROCESS; if (!P) return;
+    if (!this.state.processId) { if (delta > 0) this.startProcessWalk(P.STAGES[0].id); return; }
+    const next = P.stepStage(P.STAGES, this.state.processId, delta);
+    if (!next || next.id === this.state.processId) return;
+    this.startProcessWalk(next.id);
+  };
+  _showProcess(id) {
+    const P = window.OG_PROCESS; if (!P) return;
+    const stage = P.stageById(id); if (!stage) return;
+    const v = this.simView;
+    if (v) {
+      if (v.setActiveStage) v.setActiveStage(stage.id);
+      if (v.setWalkCopy) v.setWalkCopy(stage);
+      if (v.positionWalkBoard) v.positionWalkBoard(P.boardPose(stage.stand));
+      const presenting = !!(v.renderer && v.renderer.xr && v.renderer.xr.isPresenting);
+      if (presenting) {
+        if (v.applyXrOffset) v.applyXrOffset(P.xrOffsetPose(stage.stand));
+        if (v.setPreset) v.setPreset(stage.preset);
+      } else if (v.preset) v.preset(stage.preset, this.state.reduced ? 0 : 1000);
+    }
+    this.setState({ processId: stage.id, processOpen: true });
+  }
+  enterVR = async () => {
+    const P = window.OG_PROCESS;
+    if (!this.simView || !this.state.xr || !P) return;
+    if (this.state.simOpen && this.state.view !== '3d') return;
+    const id = this.state.processId || 'stage-inlet';
+    const stage = P.stageById(id);
+    try {
+      // requestSession runs inside enterVR, on this click, not on page load.
+      await this.simView.enterVR(P.xrOffsetPose(stage.stand));
+      this._showProcess(id);
+    } catch (err) {
+      this.toast('Could not start the headset session.');
+    }
+  };
 
   renderVals() {
     const s = this.state, a = s.answers;
@@ -947,10 +1113,22 @@ class Component extends DCLogic {
     const inspTotal = s.inspected.length;
     const focusH = lesson().hazards.find(h => h.id === s.focusId);
     const intro3D = webgl && !s.narrow;
+    const proc = window.OG_PROCESS;
+    const stages = proc ? proc.STAGES : [];
+    const stage = proc && s.processId ? proc.stageById(s.processId) : null;
+    const processChips = stages.map(st => ({
+      label: st.n + ' ' + st.short,
+      aria: 'Inspect station ' + st.n + ': ' + st.name,
+      current: st.id === s.processId ? 'step' : 'false',
+      open: () => this.startProcessWalk(st.id),
+    }));
+    const vrDisabled = !s.xr || (s.simOpen && !(s.view === '3d' && webgl));
+    const vrTitle = !s.xr ? 'Connect a WebXR headset to view in VR' : (s.simOpen && s.view !== '3d' ? 'Switch to 3D to view in a headset' : 'View in Headset');
     return {
-      openSim: this.openSim, exitSim: this.exitSim, switchView: this.switchView, askReset: this.askReset, cancelReset: this.cancelReset, confirmResetRun: this.confirmResetRun, finish: this.finish, openInstructions: this.openInstructions, closeInstructions: this.closeInstructions, closePanel: this.closePanel, submit: this.submit, useHint: this.useHint, heroMove: this.heroMove, heroLeave: this.heroLeave,
+      openSim: this.openSim, exitSim: this.exitSim, switchView: this.switchView, askReset: this.askReset, cancelReset: this.cancelReset, confirmResetRun: this.confirmResetRun, finish: this.finish, openInstructions: this.openInstructions, closeInstructions: this.closeInstructions, closePanel: this.closePanel, submit: this.submit, useHint: this.useHint, heroMove: this.heroMove, heroLeave: this.heroLeave, walkProcess: this.walkProcess, processPrev: this.processPrev, processNext: this.processNext, closeProcess: this.closeProcess, enterVR: this.enterVR,
       heroRef: this.heroRef, pageStageRef: this.pageStageRef, fsStageRef: this.fsStageRef, miniRef: this.miniRef, panelRef: this.panelRef, introRef: this.introRef, instrRef: this.instrRef, hoverRef: this.hoverRef, confirmRef: this.confirmRef,
       simOpen: s.simOpen, phaseIntro: s.phase === 'intro', phasePlay: s.phase === 'play', phaseResults: s.phase === 'results', confirmReset: s.confirmReset, webglMissing: !webgl, view3d, view2d, canSwitch: webgl, switchLabel: s.view === '3d' ? 'Switch to 2D' : 'Switch to 3D',
+      walkOnPage: !s.simOpen && webgl, processOpen: !!s.processOpen && !!stage, processId: stage ? stage.id : '', processEyebrow: stage ? `Station ${stage.n} of 6 · not scored` : '', processName: stage ? stage.name : '', processPurpose: stage ? stage.purpose : '', processRelevance: stage ? stage.relevance : '', processDisclaimer: stage ? stage.disclaimer : '', processStatus: stage ? `Station ${stage.n} of 6 · ${stage.name}` : 'Six illustrated stations', processPrevOff: !stage || stage.index <= 0, processNextOff: !stage || stage.index >= stages.length - 1, processChips, vrDisabled, vrTitle, vrOpacity: vrDisabled ? .5 : 1, toastOpen: !!s.toast, toast: s.toast,
       introPrimaryLabel: intro3D ? 'Begin in 3D' : 'Begin in 2D', introPrimary: () => this.begin(intro3D ? '3d' : '2d'), showIntroSecondary: webgl, introSecondaryLabel: intro3D ? 'Use 2D Inspector' : 'Try 3D', introSecondary: () => this.begin(intro3D ? '2d' : '3d'),
       answeredCount: found, pips, showHint, hintLine: view3d ? 'Look around and select anything that looks unsafe.' : 'Select any numbered object to inspect it. Tab moves between objects.',
       hotspots, instructions: s.instructions,

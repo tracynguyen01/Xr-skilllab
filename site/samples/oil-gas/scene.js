@@ -1,5 +1,6 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { bootLesson, kit, noiseTexture } from './engine.js';
+import { STAGES } from './process-walk.js';
 
 const PRESETS = {
   hero: { t: [0, 2.2, 0], theta: 0.55, phi: 1.15, r: 24 },
@@ -14,22 +15,35 @@ const PRESETS = {
   shelter: { t: [7.2, 1.6, 5.2], theta: -1.2, phi: 1.2, r: 9 },
   lockedpump: { t: [2.4, 1, 4.2], theta: -0.3, phi: 1.25, r: 6 },
   extinguisher: { t: [6.2, 1.2, 3.2], theta: -1.4, phi: 1.3, r: 5 },
+  // Process-walk cameras. Gold station highlight is not a hazard finding.
+  'stage-inlet': { t: [-8.2, 1.3, 5.2], theta: 0.85, phi: 1.22, r: 8 },
+  'stage-separator': { t: [-6.2, 1.7, -2.2], theta: 0.35, phi: 1.18, r: 9 },
+  'stage-rack': { t: [0.2, 1.8, 0], theta: 0.2, phi: 1.15, r: 12 },
+  'stage-pumps': { t: [0.6, 1.0, 4.2], theta: -0.2, phi: 1.2, r: 9 },
+  // Look high enough that the tip label sits in frame, not above the picture.
+  'stage-flare': { t: [8.6, 7.2, -6.2], theta: -0.85, phi: 1.18, r: 11 },
+  'stage-export': { t: [9.2, 0.8, 4.7], theta: -1.7, phi: 1.25, r: 8 },
 };
 
-/** Calm world-space stage marker — not selectable, not a hazard hint. */
-function stageLabelTex(text) {
+/** Calm station pill. Active state is gold on Fable navy — not a finding badge. */
+function stageLabelTex(text, active) {
   const c = document.createElement('canvas');
   c.width = 512; c.height = 128;
   const g = c.getContext('2d');
   g.clearRect(0, 0, 512, 128);
-  g.fillStyle = 'rgba(11,18,32,.78)';
+  g.fillStyle = active ? 'rgba(11,18,32,.94)' : 'rgba(11,18,32,.78)';
   roundRect(g, 12, 28, 488, 72, 18); g.fill();
-  g.strokeStyle = 'rgba(182,196,214,.35)'; g.lineWidth = 3;
+  g.strokeStyle = active ? '#F2B544' : 'rgba(182,196,214,.35)';
+  g.lineWidth = active ? 6 : 3;
   roundRect(g, 12, 28, 488, 72, 18); g.stroke();
+  if (active) {
+    g.fillStyle = '#F2B544';
+    g.beginPath(); g.arc(48, 64, 8, 0, Math.PI * 2); g.fill();
+  }
   g.fillStyle = '#F5F8FC';
   g.font = '600 42px Manrope, Helvetica, Arial, sans-serif';
   g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.fillText(text, 256, 64);
+  g.fillText(text, active ? 268 : 256, 64);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
@@ -189,7 +203,7 @@ function buildScene() {
 
   // ---------------------------------------------------------------------------
   // Illustrative process chain (fictional pad only): inlet → separator → rack →
-  // pumps → flare / export. Connecting runs + calm stage labels; not selectable.
+  // pumps → flare → export. Station markers are selectable. They are not hazards.
   // ---------------------------------------------------------------------------
   const flow = new THREE.Group(); scene.add(flow);
   const Mflow = std({ color: 0x6f8496, roughness: .42, metalness: .5 });
@@ -212,15 +226,31 @@ function buildScene() {
   function elbow(x, y, z, mat = Mflow, r = .13) {
     return mesh(new THREE.SphereGeometry(r, 12, 12), mat, x, y, z, flow);
   }
-  function stageMarker(text, x, y, z, scale = 1.9) {
-    const tx = stageLabelTex(text);
-    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tx, transparent: true, depthTest: true, opacity: .94 }));
-    const aspect = tx.image.width / tx.image.height;
+  const stagePick = [];
+  const stageNames = {};
+  const stageAnchors = {};
+  const stageVisuals = {};
+  function stageMarker(stage) {
+    const [x, y, z] = stage.anchor;
+    const idleMap = stageLabelTex(stage.marker, false);
+    const activeMap = stageLabelTex(stage.marker, true);
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: idleMap, transparent: true, depthTest: true, opacity: .94 }));
+    const aspect = idleMap.image.width / idleMap.image.height;
+    const scale = stage.scale || 1.8;
     s.scale.set(scale * aspect * .42, scale * .42, 1);
     s.position.set(x, y, z);
     s.renderOrder = 6;
+    s.userData.stageId = stage.id;
     flow.add(s);
-    return s;
+    stagePick.push(s);
+    // Pip under the pill — a selectable station mark, not a finding badge.
+    const pipMat = std({ color: 0x0b1220, roughness: .45, metalness: .25, emissive: 0x000000, emissiveIntensity: 0 });
+    const pip = mesh(new THREE.SphereGeometry(.16, 18, 14), pipMat, x, y - .52, z, flow);
+    pip.userData.stageId = stage.id;
+    stagePick.push(pip);
+    stageNames[stage.id] = stage.name;
+    stageAnchors[stage.id] = s;
+    stageVisuals[stage.id] = { sprite: s, baseScale: s.scale.clone(), idleMap, activeMap, pip, pipMat };
   }
 
   // Wellhead / inlet → separator train (west side of vessels)
@@ -269,13 +299,23 @@ function buildScene() {
   cyl(.22, .22, .14, M.yellow, 9.55, .55, 4.82, flow).rotation.z = Math.PI / 2;
   box(.5, .08, .35, M.dark, 9.85, .25, 4.82, flow);
 
-  // Calm stage labels (no hazard wording)
-  stageMarker('1  Inlet', -8.2, 3.0, 5.2, 1.7);
-  stageMarker('2  Separator', -6.2, 3.6, -3.4, 1.85);
-  stageMarker('3  Pipe rack', 0.2, 3.85, -0.15, 1.85);
-  stageMarker('4  Transfer pumps', 0.6, 2.55, 4.5, 1.85);
-  stageMarker('5  Flare', 8.6, 9.4, -6.2, 1.7);
-  stageMarker('5  Export', 10.3, 1.35, 4.5, 1.55);
+  // Calm station labels. Gold active state is the walk highlight, not a finding.
+  STAGES.forEach(stageMarker);
+
+  function setActiveStage(id) {
+    Object.keys(stageVisuals).forEach((key) => {
+      const vis = stageVisuals[key];
+      const on = key === id;
+      vis.sprite.material.map = on ? vis.activeMap : vis.idleMap;
+      vis.sprite.material.opacity = on ? 1 : .94;
+      vis.sprite.material.needsUpdate = true;
+      vis.sprite.scale.copy(vis.baseScale).multiplyScalar(on ? 1.06 : 1);
+      vis.pipMat.color.setHex(on ? 0xf2b544 : 0x0b1220);
+      vis.pipMat.emissive.setHex(on ? 0xf2b544 : 0x000000);
+      vis.pipMat.emissiveIntensity = on ? .4 : 0;
+      vis.pip.scale.setScalar(on ? 1.35 : 1);
+    });
+  }
 
   // Subtle ground ribbon + chevrons along the main process path
   // Path on pad: wellhead → separator → rack mid → pumps → split (flare / export)
@@ -343,7 +383,94 @@ function buildScene() {
   const line = mesh(new THREE.PlaneGeometry(14, .12), M.yellow, 0, .03, 2.2); line.rotation.x = -Math.PI / 2; line.receiveShadow = true;
   [[-9, -6], [9, -6], [-9, 6], [9, 6]].forEach(([x, z]) => cyl(.12, .12, .8, M.yellow, x, .4, z));
 
-  return { scene, insp, pick, anim };
+  // In-headset station card. Hidden on desktop; the HTML panel carries the same copy.
+  const boardCanvas = document.createElement('canvas');
+  boardCanvas.width = 1024; boardCanvas.height = 512;
+  const boardMap = new THREE.CanvasTexture(boardCanvas);
+  boardMap.colorSpace = THREE.SRGBColorSpace;
+  const board = new THREE.Group();
+  board.name = 'process-board';
+  board.visible = false;
+  scene.add(board);
+  const boardMat = new THREE.MeshBasicMaterial({ map: boardMap, transparent: true, toneMapped: false });
+  const boardMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.22, .78), boardMat);
+  board.add(boardMesh);
+  const walkUiPick = [];
+  function boardButton(action, x) {
+    const mat = new THREE.MeshBasicMaterial({ color: action === 'next' ? 0xf2b544 : 0x0b1220, toneMapped: false });
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(.4, .16), mat);
+    m.position.set(x, -.3, .02);
+    m.userData.walkAction = action;
+    board.add(m);
+    walkUiPick.push(m);
+    return m;
+  }
+  const prevBtn = boardButton('prev', -.34);
+  const nextBtn = boardButton('next', .34);
+
+  function wrapText(g, text, x, y, maxWidth, lineHeight) {
+    const words = String(text || '').split(/\s+/);
+    let line = '';
+    let yy = y;
+    words.forEach((word) => {
+      const trial = line ? line + ' ' + word : word;
+      if (g.measureText(trial).width > maxWidth && line) {
+        g.fillText(line, x, yy);
+        line = word;
+        yy += lineHeight;
+      } else line = trial;
+    });
+    if (line) g.fillText(line, x, yy);
+    return yy;
+  }
+  function setWalkCopy(stage) {
+    const g = boardCanvas.getContext('2d');
+    g.clearRect(0, 0, 1024, 512);
+    g.fillStyle = '#0B1220';
+    g.fillRect(0, 0, 1024, 512);
+    g.strokeStyle = '#F2B544';
+    g.lineWidth = 8;
+    g.strokeRect(8, 8, 1008, 496);
+    g.fillStyle = '#F2B544';
+    g.font = '700 28px Manrope, Helvetica, Arial, sans-serif';
+    g.textAlign = 'left';
+    g.fillText(`STATION ${stage.n} OF 6  ·  NOT SCORED`, 48, 64);
+    g.fillStyle = '#F5F8FC';
+    g.font = '800 54px Manrope, Helvetica, Arial, sans-serif';
+    g.fillText(stage.name, 48, 128);
+    g.fillStyle = '#B6C4D6';
+    g.font = '500 28px Manrope, Helvetica, Arial, sans-serif';
+    const y = wrapText(g, stage.purpose, 48, 184, 920, 36);
+    g.fillStyle = '#F5F8FC';
+    g.font = '600 24px Manrope, Helvetica, Arial, sans-serif';
+    wrapText(g, stage.disclaimer, 48, Math.min(y + 48, 300), 920, 32);
+    g.fillStyle = '#0B1220';
+    g.fillRect(120, 400, 300, 72);
+    g.strokeStyle = '#F2B544';
+    g.strokeRect(120, 400, 300, 72);
+    g.fillStyle = '#F5F8FC';
+    g.font = '700 28px Manrope, Helvetica, Arial, sans-serif';
+    g.textAlign = 'center';
+    g.fillText('Previous', 270, 446);
+    g.fillStyle = '#F2B544';
+    g.fillRect(604, 400, 300, 72);
+    g.fillStyle = '#0B1220';
+    g.fillText('Next', 754, 446);
+    boardMap.needsUpdate = true;
+    prevBtn.material.color.setHex(0x0b1220);
+    nextBtn.material.color.setHex(0xf2b544);
+  }
+  function positionWalkBoard(pose) {
+    if (!pose) return;
+    board.position.set(pose.x, pose.y, pose.z);
+    board.rotation.set(0, pose.yaw || 0, 0);
+  }
+  function setBoardVisible(on) { board.visible = !!on; }
+
+  return {
+    scene, insp, pick, anim, stagePick, stageNames, stageAnchors, walkUiPick,
+    setActiveStage, setWalkCopy, positionWalkBoard, setBoardVisible,
+  };
 }
 
 bootLesson({

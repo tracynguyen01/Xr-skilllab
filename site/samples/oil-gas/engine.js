@@ -89,19 +89,81 @@ export function bootLesson({ buildScene, presets, accent, ariaLabel }) {
       this.controls = new Orbit(this.camera, canvas);
       this.controls.set(presets.hero);
       this.ray = new THREE.Raycaster(); this.ptr = new THREE.Vector2();
-      this.hover = null; this.focused = null; this.active = false; this.clock = new THREE.Clock(); this.t = 0; this.pulses = [];
+      this.hover = null; this.stageHover = null; this.focused = null; this.active = false; this.clock = new THREE.Clock(); this.t = 0; this.pulses = [];
+      this.stagePick = this.stagePick || []; this.walkUiPick = this.walkUiPick || []; this.stageNames = this.stageNames || {};
       this.ro = new ResizeObserver(() => this.resize());
       let down = null;
       canvas.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY, performance.now()]; });
-      canvas.addEventListener('pointerup', e => { if (!down) return; const moved = Math.hypot(e.clientX - down[0], e.clientY - down[1]); const dt = performance.now() - down[2]; down = null; if (moved < 6 && dt < 600 && this.controls.enabled && !this.controls.tween) { const id = this.pickAt(e); if (id && this.onInspect) this.onInspect(id); } });
-      canvas.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse' || !this.controls.enabled || e.buttons) { if (this.hover) this.setHover(null); return; } const id = this.pickAt(e); const r = canvas.getBoundingClientRect(); this.setHover(id, e.clientX - r.left, e.clientY - r.top); });
-      canvas.addEventListener('pointerleave', () => this.setHover(null));
-      const loop = () => { this.raf = requestAnimationFrame(loop); const dt = Math.min(.05, this.clock.getDelta()); if (!this.active) return; this.t += dt; this.controls.update(dt); (this.anim || []).forEach(f => f(this.t, this.controls.reduced)); this.tickPulses(dt); this.renderer.render(this.scene, this.camera); };
-      loop();
+      canvas.addEventListener('pointerup', e => {
+        if (!down) return;
+        const moved = Math.hypot(e.clientX - down[0], e.clientY - down[1]);
+        const dt = performance.now() - down[2];
+        down = null;
+        if (moved >= 6 || dt >= 600 || !this.controls.enabled || this.controls.tween) return;
+        const intent = this.pickIntent(e);
+        if (!intent) return;
+        // Closest hit wins, so a station marker cannot cover a hazard mesh that is in front.
+        if (intent.type === 'inspect' && this.onInspect) this.onInspect(intent.id);
+        else if (intent.type === 'stage' && this.onProcessStage) this.onProcessStage(intent.id);
+      });
+      canvas.addEventListener('pointermove', e => {
+        if (e.pointerType !== 'mouse' || !this.controls.enabled || e.buttons) {
+          if (this.hover) this.setHover(null);
+          this.clearStageHover();
+          return;
+        }
+        const intent = this.pickIntent(e);
+        const r = canvas.getBoundingClientRect();
+        const x = e.clientX - r.left, y = e.clientY - r.top;
+        if (intent && intent.type === 'inspect') {
+          this.clearStageHover();
+          this.setHover(intent.id, x, y);
+          return;
+        }
+        if (this.hover) this.setHover(null);
+        if (intent && intent.type === 'stage') {
+          this.stageHover = intent.id;
+          this.canvas.style.cursor = 'pointer';
+          if (this.onProcessHover) this.onProcessHover({ id: intent.id, label: this.stageNames[intent.id] || intent.id, x, y });
+        } else this.clearStageHover();
+      });
+      canvas.addEventListener('pointerleave', () => { this.setHover(null); this.clearStageHover(); });
+      // setAnimationLoop (not raw rAF) is required for renderer.xr. While a headset
+      // session is presenting, Three stops this window loop and calls the same
+      // callback from the XR frame. Orbit updates stay off so the headset owns the camera.
+      this.renderer.setAnimationLoop(() => {
+        const dt = Math.min(.05, this.clock.getDelta());
+        const presenting = !!(this.renderer.xr && this.renderer.xr.isPresenting);
+        if (!this.active && !presenting) return;
+        this.t += dt;
+        if (!presenting) this.controls.update(dt);
+        (this.anim || []).forEach(f => f(this.t, this.controls.reduced));
+        this.tickPulses(dt);
+        if (presenting) this.pollXrInput();
+        if (this._xrRays) for (const c of this._xrRays) c.visible = presenting;
+        this.renderer.render(this.scene, this.camera);
+      });
     }
     mount(host) { if (this.canvas.parentElement !== host) host.appendChild(this.canvas); this.ro.disconnect(); this.ro.observe(host); this.resize(); }
     resize() { const h = this.canvas.parentElement; if (!h) return; const w = h.clientWidth, hh = h.clientHeight; if (!w || !hh) return; this.renderer.setSize(w, hh, false); this.camera.aspect = w / hh; this.camera.updateProjectionMatrix(); }
-    pickAt(e) { const r = this.canvas.getBoundingClientRect(); this.ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); this.ray.setFromCamera(this.ptr, this.camera); const hit = this.ray.intersectObjects(this.pick, false)[0]; return hit ? hit.object.userData.inspectId : null; }
+    aimRay(e) { const r = this.canvas.getBoundingClientRect(); this.ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); this.ray.setFromCamera(this.ptr, this.camera); }
+    pickAt(e) { this.aimRay(e); const hit = this.ray.intersectObjects(this.pick, false)[0]; return hit ? hit.object.userData.inspectId : null; }
+    pickIntent(e) {
+      this.aimRay(e);
+      const objs = this.stagePick && this.stagePick.length ? this.pick.concat(this.stagePick) : this.pick;
+      const hit = this.ray.intersectObjects(objs, false)[0];
+      if (!hit) return null;
+      const stageId = hit.object.userData.stageId;
+      if (stageId && this.stagePick.includes(hit.object)) return { type: 'stage', id: stageId };
+      const id = hit.object.userData.inspectId;
+      return id ? { type: 'inspect', id } : null;
+    }
+    clearStageHover() {
+      if (!this.stageHover && this.canvas.style.cursor !== 'pointer') return;
+      this.stageHover = null;
+      if (!this.hover) this.canvas.style.cursor = 'grab';
+      if (this.onProcessHover) this.onProcessHover(null);
+    }
     tint(id, hex, k) { const it = this.insp[id]; if (!it) return; it.group.traverse(o => { if (!o.isMesh) return; (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => { if (!m.emissive || !m.userData.base) return; if (hex == null) { m.emissive.setHex(m.userData.base.e); m.emissiveIntensity = m.userData.base.i; } else { m.emissive.setHex(hex); m.emissiveIntensity = k; } }); }); }
     setHover(id, x, y) { if (this.hover && this.hover !== id && this.hover !== this.focused) this.tint(this.hover, null); if (id && id !== this.focused) this.tint(id, 0x84bfff, .22); this.hover = id; this.canvas.style.cursor = id ? 'pointer' : 'grab'; if (this.onHover) this.onHover(id ? { id, label: this.insp[id].label, x, y } : null); }
     focus(id) { if (this.focused) this.tint(this.focused, null); this.focused = id; if (id) this.tint(id, accent, .16); }
@@ -112,6 +174,95 @@ export function bootLesson({ buildScene, presets, accent, ariaLabel }) {
     preset(name, ms) { return this.controls.tweenTo(presets[name] || presets.inspection, ms); }
     setPreset(name) { this.controls.set(presets[name] || presets.hero); }
     setReduced(v) { this.controls.reduced = v; }
+    // WebXR. Support is queried from the page; this only runs after a Headset click.
+    applyXrOffset(pose) {
+      const base = this._xrBaseSpace;
+      if (!base || !pose || typeof XRRigidTransform !== 'function') return;
+      const transform = new XRRigidTransform(pose.position, pose.orientation);
+      this.renderer.xr.setReferenceSpace(base.getOffsetReferenceSpace(transform));
+    }
+    async enterVR(offset) {
+      if (!navigator.xr) throw new Error('WebXR unavailable');
+      const session = await navigator.xr.requestSession('immersive-vr', { optionalFeatures: ['local-floor', 'bounded-floor'] });
+      this.renderer.xr.enabled = true;
+      this._bindXrControllers();
+      const end = () => {
+        session.removeEventListener('end', end);
+        this._xrBaseSpace = null;
+        this._xrBtnNext = false; this._xrBtnPrev = false; this._xrStick = 0;
+        this.renderer.xr.enabled = false;
+        this.controls.tween = null;
+        this.controls.apply();
+        if (this._xrRays) for (const c of this._xrRays) c.visible = false;
+        if (typeof this.setBoardVisible === 'function') this.setBoardVisible(false);
+        this.resize();
+        if (this.onXrEnd) this.onXrEnd();
+      };
+      session.addEventListener('end', end);
+      await this.renderer.xr.setSession(session);
+      // setSession clears any custom space. Capture the base, then offset from it.
+      this._xrBaseSpace = this.renderer.xr.getReferenceSpace();
+      if (offset) this.applyXrOffset(offset);
+      if (typeof this.setBoardVisible === 'function') this.setBoardVisible(true);
+      return session;
+    }
+    _bindXrControllers() {
+      if (this._xrBound) return;
+      this._xrBound = true;
+      this._xrRays = [];
+      const raycaster = new THREE.Raycaster();
+      const select = (controller) => {
+        if (!this.renderer.xr.isPresenting) return;
+        const origin = new THREE.Vector3().setFromMatrixPosition(controller.matrixWorld);
+        const dir = new THREE.Vector3(0, 0, -1).transformDirection(controller.matrixWorld);
+        raycaster.set(origin, dir);
+        const equip = raycaster.intersectObjects(this.pick, false)[0];
+        if (equip && equip.object.userData.inspectId && this.onInspect) {
+          this.onInspect(equip.object.userData.inspectId);
+          return;
+        }
+        const stageHit = this.stagePick.length ? raycaster.intersectObjects(this.stagePick, false)[0] : null;
+        if (stageHit && stageHit.object.userData.stageId && this.onProcessStage) {
+          this.onProcessStage(stageHit.object.userData.stageId);
+          return;
+        }
+        const ui = this.walkUiPick.length ? raycaster.intersectObjects(this.walkUiPick, false)[0] : null;
+        const action = ui && ui.object.userData.walkAction;
+        if (action === 'next' && this.onWalkStep) this.onWalkStep(1);
+        else if (action === 'prev' && this.onWalkStep) this.onWalkStep(-1);
+      };
+      for (let i = 0; i < 2; i++) {
+        const controller = this.renderer.xr.getController(i);
+        controller.addEventListener('select', () => select(controller));
+        const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -2)]);
+        controller.add(new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xf2b544 })));
+        controller.visible = false;
+        this.scene.add(controller);
+        this._xrRays.push(controller);
+      }
+    }
+    pollXrInput() {
+      const session = this.renderer.xr.getSession();
+      if (!session || !this.onWalkStep) return;
+      let next = false, prev = false, stick = 0;
+      for (const source of session.inputSources) {
+        const pad = source.gamepad;
+        if (!pad) continue;
+        const buttons = pad.buttons || [];
+        if (buttons[4] && buttons[4].pressed) next = true;
+        if (buttons[5] && buttons[5].pressed) prev = true;
+        const axes = pad.axes || [];
+        const x = axes.length > 2 ? axes[2] : (axes[0] || 0);
+        if (x > .7) stick = 1;
+        else if (x < -.7) stick = -1;
+      }
+      if (next && !this._xrBtnNext) this.onWalkStep(1);
+      else if (prev && !this._xrBtnPrev) this.onWalkStep(-1);
+      else if (stick && stick !== this._xrStick) this.onWalkStep(stick);
+      this._xrBtnNext = next;
+      this._xrBtnPrev = prev;
+      this._xrStick = stick;
+    }
   }
   window.XRWarehouse = { createView: (opts) => { try { return new View(opts); } catch (e) { console.warn('WebGL unavailable', e); return null; } }, PRESETS: presets };
   window.dispatchEvent(new Event('xrwarehouse-ready'));
